@@ -61,6 +61,7 @@ public class Map extends Fragment {
         options.position(lat);
         // タイトル・スニペット
         options.title("ワイはここにおるで！");
+        //options.snippet(lat.toString());
         // アイコン(マップ上に表示されるデフォルトピン)
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         // マーカーを貼り付け
@@ -71,9 +72,6 @@ public class Map extends Fragment {
                         .target(lat)
                         .zoom(15).build());
         mMap.moveCamera(camera);
-
-        //todo プログレスダイアログを追加
-
     }
 }
 

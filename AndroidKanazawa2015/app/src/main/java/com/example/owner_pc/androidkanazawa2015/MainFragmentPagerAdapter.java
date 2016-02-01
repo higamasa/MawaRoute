@@ -6,7 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
-import com.google.android.gms.maps.model.LatLng;
+import com.example.owner_pc.androidkanazawa2015.list.List;
+
 /**
  * Created by atsusuke on 2015/12/31.
  */
@@ -32,7 +33,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
         Bundle bundle = new Bundle();
         switch(arg0){
             case 0:
-                return new TestPage1();
+                return new List();
             case 1:
                 bundle.putDouble("latitude" , latitude);
                 bundle.putDouble("longitude" , longitude);

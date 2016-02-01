@@ -13,8 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
-import com.google.android.gms.maps.model.LatLng;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         //現在地取得
         Location location = locationManager.getLastKnownLocation(provider);
         Log.d("check", "緯度:" + location.getLatitude() + "軽度:" + location.getLongitude());
-        LatLng lat = new LatLng(location.getLatitude() , location.getLongitude());
 
         //TabとSwipeの読み込み
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -62,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         Position position = new Position(36.594682, 136.625573);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
-
     }
 
     @Override
