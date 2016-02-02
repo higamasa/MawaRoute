@@ -44,7 +44,7 @@ public class List extends Fragment{
         final ListView listView = (ListView)view.findViewById(R.id.list);
         /* データの作成 */
         final ArrayList<CustomData> objects = new ArrayList<CustomData>();
-        image = BitmapFactory.decodeResource(getResources(), R.drawable.umebachi_usu_parts_gre);
+        image = BitmapFactory.decodeResource(getResources(), R.drawable.cir_g);
         for (int i=0; i < 100; i++){
         CustomData item = new CustomData();
         item.setImagaData(image);

@@ -36,7 +36,7 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
     private FrameLayout frameLayout;
 
     //家紋の円
-    private ImageView[] circle = new ImageView[CIR_NUM];
+    private ImageView[] circle = new ImageView[CIR_NUM + 1];
 
     //円の上に乗るアイコン
     private BitmapDrawable[] Icon = new BitmapDrawable[CIR_NUM];
@@ -85,7 +85,7 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         cirSize = size.x*2/7;
 
         //円のグラビティを中心に設定
-        FrameLayout.LayoutParams[] params = new FrameLayout.LayoutParams[CIR_NUM];
+        FrameLayout.LayoutParams[] params = new FrameLayout.LayoutParams[CIR_NUM + 1];
         for(int i = 0; i < CIR_NUM; ++i){
             params[i] = new FrameLayout.LayoutParams(cirSize, cirSize, Gravity.CENTER);
         }
@@ -95,12 +95,13 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         params[2].setMargins((int) (0.59 * cirSize), (int) (0.81 * cirSize), 0, 0);
         params[3].setMargins(0, (int) (0.81 * cirSize), (int) (0.59 * cirSize), 0);
         params[4].setMargins(0, 0, (int)(0.95*cirSize), (int)(0.31*cirSize));
+        params[5] = new FrameLayout.LayoutParams(cirSize/2, cirSize/2, Gravity.CENTER);
 
         //IDの箱
-        int[] circleId = new int[5];
-        int[] categoryId = new int[5];
+        int[] circleId = new int[CIR_NUM + 1];
+        int[] categoryId = new int[CIR_NUM + 1];
         //ID名
-        String[] circleStr = {"cir_r", "cir_b", "cir_y", "cir_p", "cir_g"};
+        String[] circleStr = {"cir_r", "cir_b", "cir_y", "cir_p", "cir_g", "cir_gray"};
         String[] categoryStr = {"category1", "category2", "category2", "category2", "category2"};
         Drawable[][] drawables = new Drawable[5][2];
         LayerDrawable[] layerDrawable = new LayerDrawable[5];
@@ -130,6 +131,11 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
             circle[i].setImageDrawable(layerDrawable[i]);
             frameLayout.addView(circle[i], params[i]);
         }
+
+        circle[5] = new ImageView(activity);
+        circle[5].setImageResource(R.drawable.cir_gray);
+        frameLayout.addView(circle[5], params[5]);
+
 
         //レンダリング後
         //回転の中心座標を家紋の一番上の画像から割り出す
