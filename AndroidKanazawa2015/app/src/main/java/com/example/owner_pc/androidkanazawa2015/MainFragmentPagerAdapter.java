@@ -33,7 +33,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
         Bundle bundle = new Bundle();
         switch(arg0){
             case 0:
-                return new List();
+                return new TestPage1();
             case 1:
                 bundle.putDouble("latitude" , latitude);
                 bundle.putDouble("longitude" , longitude);
@@ -41,7 +41,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
                 map.setArguments(bundle);
                 return map;
             case 2:
-                return new TestPage3();
+                return new List();
         }
         return null;
     }

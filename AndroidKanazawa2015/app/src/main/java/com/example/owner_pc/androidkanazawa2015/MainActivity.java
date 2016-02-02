@@ -11,54 +11,35 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ListView;
+
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 
 public class MainActivity extends AppCompatActivity {
 
     GnaviCtrl gnaviCtrl = new GnaviCtrl(this);
+    private double latitude;
+    private double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //位置情報の取得
-        // LocationManagerを取得
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Criteriaオブジェクトを生成
-        Criteria criteria = new Criteria();
-        //位置情報の精度
-        criteria.setAccuracy(Criteria.NO_REQUIREMENT);
-        //消費電力
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        //ロケーションプロバイダの取得
-        String provider = locationManager.getBestProvider(criteria, true);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        //現在地取得
-        Location location = locationManager.getLastKnownLocation(provider);
-        Log.d("check", "緯度:" + location.getLatitude() + "軽度:" + location.getLongitude());
-
+        getLocation();
         //TabとSwipeの読み込み
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
-                , MainActivity.this , location.getLatitude() , location.getLongitude()));
+                , MainActivity.this , latitude , longitude));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
         //todo 現在地を入れてください
-        Position position = new Position(36.594682, 136.625573);
+        Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
+
+        //final ListView listView = (ListView)findViewById(R.id.list);
     }
 
     @Override
@@ -81,6 +62,35 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    //位置情報の取得
+    public void getLocation(){
+        // LocationManagerを取得
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Criteriaオブジェクトを生成
+        Criteria criteria = new Criteria();
+        //位置情報の精度
+        criteria.setAccuracy(Criteria.NO_REQUIREMENT);
+        //消費電力
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        //ロケーションプロバイダの取得
+        String provider = locationManager.getBestProvider(criteria, true);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        //現在地取得
+        Location location = locationManager.getLastKnownLocation(provider);
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
+    }
+
 }
 
 
