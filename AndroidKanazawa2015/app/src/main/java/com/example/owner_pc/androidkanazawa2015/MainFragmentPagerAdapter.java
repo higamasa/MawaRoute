@@ -13,7 +13,7 @@ import com.example.owner_pc.androidkanazawa2015.list.List;
  */
 public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[] { "L", "G", "R" };
+    private String tabTitles[] = new String[] { "L", "M", "R" };
     private Context context;
     private double latitude;
     private double longitude;
@@ -33,7 +33,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
         Bundle bundle = new Bundle();
         switch(arg0){
             case 0:
-                return new TestPage1();
+                return new List();
             case 1:
                 bundle.putDouble("latitude" , latitude);
                 bundle.putDouble("longitude" , longitude);
@@ -41,7 +41,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
                 map.setArguments(bundle);
                 return map;
             case 2:
-                return new List();
+                return new TestPage3();
         }
         return null;
     }
