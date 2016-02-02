@@ -41,7 +41,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
                 map.setArguments(bundle);
                 return map;
             case 2:
-                return new TestPage3();
+                return new RoulettePage();
         }
         return null;
     }
