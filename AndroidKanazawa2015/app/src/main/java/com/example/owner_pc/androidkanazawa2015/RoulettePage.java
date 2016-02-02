@@ -2,7 +2,6 @@ package com.example.owner_pc.androidkanazawa2015;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,8 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -29,10 +26,9 @@ import android.widget.Toast;
 import java.util.Random;
 
 /**
- * Created by atsusuke on 2015/12/31.
- * テスト用のページです
+ * Created by owner-PC on 2016/02/02.
  */
-public class TestPage4 extends Fragment implements Animation.AnimationListener{
+public class RoulettePage extends Fragment implements Animation.AnimationListener{
 
     private Activity activity = new Activity();
 

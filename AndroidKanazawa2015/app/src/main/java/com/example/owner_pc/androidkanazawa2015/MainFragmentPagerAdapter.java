@@ -31,7 +31,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return new TestPage2();
             case 2:
-                return new TestPage3();
+                return new RoulettePage();
             case 3:
                 return new TestPage4();
         }
