@@ -11,4 +11,65 @@
         android:textSize="30sp"
         android:text="ルーレット" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/umebachi_usu_parts_bl"
+            android:layout_marginTop="160dp"
+            android:layout_marginLeft="240dp"
+            />
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/umebachi_usu_parts_gre"
+            android:layout_marginTop="90dp"
+            android:layout_marginLeft="150dp"
+            />
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/umebachi_usu_parts_pu"
+            android:layout_marginTop="270dp"
+            android:layout_marginLeft="210dp"/>
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/umebachi_usu_parts_re"
+            android:layout_marginTop="270dp"
+            android:layout_marginLeft="90dp"/>
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/umebachi_usu_parts_ye"
+            android:layout_marginTop="160dp"
+            android:layout_marginLeft="60dp"
+            />
+
+        <ImageButton
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/under_button_p_r"
+            android:layout_gravity="right|bottom"/>
+        <ImageButton
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/under_button_p"
+            android:layout_gravity="left|bottom"/>
+
+
+        <ImageButton
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/umebachi_usu_parts_gray"
+            android:layout_marginTop="200dp"
+            android:layout_marginLeft="160dp"
+/>
+    </FrameLayout>
+
 </LinearLayout>

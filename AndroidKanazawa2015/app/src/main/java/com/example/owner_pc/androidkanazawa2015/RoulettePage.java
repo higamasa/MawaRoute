@@ -73,7 +73,7 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.testpage4, container, false);
+        View view = inflater.inflate(R.layout.roulette_fragment, container, false);
         //ViewGroupのフレームレイアウトをセット
         frameLayout = (FrameLayout)view.findViewById(R.id.roulette_page);
 
