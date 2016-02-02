@@ -1,5 +1,4 @@
 package com.example.owner_pc.androidkanazawa2015.gnavi;
-
 /**
  * Created by owner-PC on 2016/01/15.
  */
