@@ -11,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 
@@ -32,13 +31,9 @@ public class MainActivity extends AppCompatActivity {
                 , MainActivity.this , latitude , longitude));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-
-        //todo 現在地を入れてください
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
-
-        //final ListView listView = (ListView)findViewById(R.id.list);
     }
 
     @Override
@@ -61,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
     //位置情報の取得
     public void getLocation(){
         // LocationManagerを取得
