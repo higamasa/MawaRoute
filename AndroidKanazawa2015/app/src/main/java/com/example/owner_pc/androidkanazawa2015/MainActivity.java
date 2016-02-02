@@ -18,8 +18,8 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 public class MainActivity extends AppCompatActivity {
 
     GnaviCtrl gnaviCtrl = new GnaviCtrl(this);
-    private double latitude;
-    private double longitude;
+    private double latitude = 0;
+    private double longitude = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
         }
         //現在地取得
         Location location = locationManager.getLastKnownLocation(provider);
-        this.latitude = location.getLatitude();
-        this.longitude = location.getLongitude();
+        //this.latitude = location.getLatitude();
+        //this.longitude = location.getLongitude();
     }
 
 }
