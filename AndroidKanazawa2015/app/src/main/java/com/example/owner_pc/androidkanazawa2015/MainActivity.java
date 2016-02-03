@@ -11,15 +11,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.PopupWindow;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 
 public class MainActivity extends AppCompatActivity {
-
     GnaviCtrl gnaviCtrl = new GnaviCtrl(this);
-    private double latitude = 0;
-    private double longitude = 0;
+    private double latitude = 36.594682;
+    private double longitude = 136.625573;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         //final ListView listView = (ListView)findViewById(R.id.list);
     }
-
     @Override
     public void onPause() {
         super.onPause();
