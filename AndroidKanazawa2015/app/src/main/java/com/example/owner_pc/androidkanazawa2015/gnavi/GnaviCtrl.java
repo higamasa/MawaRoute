@@ -89,8 +89,7 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
         //店クラスに店リストとカテゴリ分けした文字配列をセット
         ShopCtrl shopCtrl = new ShopCtrl();
         shopCtrl.setShopList(shopList);
-        //shopCtrl.setCategory(
-        //        categoryDividing());
+        shopCtrl.setCategory(categoryDividing());
 
         // 読み出し元Activityに設置してあるTextViewを取得
 //        TextView textView = (TextView)this.activity.findViewById(R.id.textView);

@@ -22,8 +22,8 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 
 public class MainActivity extends AppCompatActivity {
     GnaviCtrl gnaviCtrl = new GnaviCtrl(this);
-    private double latitude = 0;
-    private double longitude = 0;
+    private double latitude = 36.594682;
+    private double longitude = 136.625573;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
