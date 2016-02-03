@@ -16,10 +16,9 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 
 public class MainActivity extends AppCompatActivity {
-
     GnaviCtrl gnaviCtrl = new GnaviCtrl(this);
-    private double latitude;
-    private double longitude;
+    private double latitude = 36.594682;
+    private double longitude = 136.625573;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
     }
-
     @Override
     public void onPause() {
         super.onPause();
