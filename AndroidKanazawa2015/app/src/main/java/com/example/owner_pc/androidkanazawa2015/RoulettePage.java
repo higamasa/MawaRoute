@@ -1,6 +1,7 @@
 package com.example.owner_pc.androidkanazawa2015;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -9,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -17,11 +19,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
+
+import com.example.owner_pc.androidkanazawa2015.google_map.RouteShop;
 
 import java.util.Random;
 
@@ -29,7 +36,7 @@ import java.util.Random;
  * Created by owner-PC on 2016/02/02.
  */
 public class RoulettePage extends Fragment implements Animation.AnimationListener{
-
+    PopupWindow mPopupWindow;
     private Activity activity = new Activity();
 
     //家紋のViewGroup
@@ -231,7 +238,73 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
     //アニメーション後
     @Override
     public void onAnimationEnd(Animation animation) {
-        Toast.makeText(activity, "AnimationEnd", Toast.LENGTH_SHORT).show();
+        // ポップアップ作成
+        final PopupWindow mPopupWindow = new PopupWindow(
+                null,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        LayoutInflater layoutInflater = (LayoutInflater)getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View popupView = layoutInflater.inflate(R.layout.popup_layout, null);
+
+        // 閉じるボタンを押したとき
+        popupView.findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ポップアップが表示されている場合
+                if (mPopupWindow.isShowing()) {
+                    // ポップアップ破棄
+                    // todo ここに処理
+                    mPopupWindow.dismiss();
+                }
+            }
+        });
+
+        // OKボタンを押したとき
+        popupView.findViewById(R.id.ok_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ポップアップが表示されている場合
+                if (mPopupWindow.isShowing()) {
+                    // ポップアップ破棄
+                    // todo ここに処理
+                    mPopupWindow.dismiss();
+                }
+            }
+        });
+
+        // 詳細ボタンを押したとき
+        popupView.findViewById(R.id.detail_button).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                // ポップアップが表示されている場合
+                if(mPopupWindow.isShowing()){
+                    // ポップアップ破棄
+                    // todo ここに処理
+                    mPopupWindow.dismiss();
+                }
+            }
+        });
+
+        mPopupWindow.setContentView(popupView);
+
+        // 背景設定
+        mPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
+
+        // タップ時に他のViewでキャッチされないための設定
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setFocusable(true);
+
+        // 表示サイズの設定 今回は仮に幅300dp
+        float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
+        mPopupWindow.setWindowLayoutMode((int) width, WindowManager.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setWidth((int) width);
+        mPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+
+        // 画面表示
+        mPopupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
     }
 
     //アニメーション繰り返し
@@ -244,6 +317,16 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
     @Override
     public void onAnimationStart(Animation animation) {
         Toast.makeText(activity, "AnimationStart", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroy(){
+        // ポップアップが表示されている場合
+        if (mPopupWindow != null && mPopupWindow.isShowing()) {
+            // ポップアップを閉じる
+            mPopupWindow.dismiss();
+        }
+        super.onDestroy();
     }
 
 }

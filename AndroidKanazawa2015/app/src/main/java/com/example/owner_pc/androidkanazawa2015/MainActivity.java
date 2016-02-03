@@ -21,7 +21,6 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 
 public class MainActivity extends AppCompatActivity {
-    private PopupWindow mPopupWindow;
     GnaviCtrl gnaviCtrl = new GnaviCtrl(this);
     private double latitude = 0;
     private double longitude = 0;
