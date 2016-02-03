@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.example.owner_pc.androidkanazawa2015.R;
+import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
+import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
@@ -41,17 +44,22 @@ public class List extends Fragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        ShopCtrl shopCtrl = (ShopCtrl)bundle.getSerializable("shopCtrl");
+        //Log.d("check", String.valueOf(shopCtrl.getShopList().size()));
+
         final ListView listView = (ListView)view.findViewById(R.id.list);
         /* データの作成 */
         final ArrayList<CustomData> objects = new ArrayList<CustomData>();
         image = BitmapFactory.decodeResource(getResources(), R.drawable.cir_g);
         for (int i=0; i < 100; i++){
-        CustomData item = new CustomData();
-        item.setImagaData(image);
-        item.setTextData("Example");
-        objects.add(item);
-        customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects);
-        listView.setAdapter(customAdapter);
+            CustomData item = new CustomData();
+            item.setImagaData(image);
+            item.setTextData("Example");
+            objects.add(item);
+            customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects);
+            listView.setAdapter(customAdapter);
         }
 
         //リスト項目が選択された時のイベントを追加
