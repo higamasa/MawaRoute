@@ -5,35 +5,43 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import com.example.owner_pc.androidkanazawa2015.google_map.Map;
+import com.example.owner_pc.androidkanazawa2015.list.List;
+
 /**
  * Created by atsusuke on 2015/12/31.
  */
 public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
-    final int PAGE_COUNT = 4;
-    private String tabTitles[] = new String[] { "L", "G", "R", "S" };
+    final int PAGE_COUNT = 3;
+    private String tabTitles[] = new String[] { "L", "M", "R" };
     private Context context;
+    private double latitude;
+    private double longitude;
 
-    public MainFragmentPagerAdapter(FragmentManager fm, Context context) {
+    public MainFragmentPagerAdapter(FragmentManager fm, Context context , double latitude , double longitude) {
         super(fm);
         this.context = context;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
-
     @Override
     public int getCount() {
         return PAGE_COUNT;
     }
     @Override
     public Fragment getItem(int arg0) {
-        Bundle data = new Bundle();
+        Bundle bundle = new Bundle();
         switch(arg0){
             case 0:
-                return new TestPage1();
+                return new List();
             case 1:
-                return new TestPage2();
+                bundle.putDouble("latitude" , latitude);
+                bundle.putDouble("longitude" , longitude);
+                Map map = new Map();
+                map.setArguments(bundle);
+                return map;
             case 2:
-                return new TestPage3();
-            case 3:
-                return new TestPage4();
+                return new RoulettePage();
         }
         return null;
     }

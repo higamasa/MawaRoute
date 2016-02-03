@@ -134,6 +134,9 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
                             case "category":
                                 tmpShop.setShopCategory(xmlPullParser.nextText());
                                 break;
+                            case "url_mobile":
+                                tmpShop.setShopUrl(xmlPullParser.nextText());
+                                break;
                             case "shop_image1":
                                 tmpShop.setShopImage(xmlPullParser.nextText());
                                 break;
