@@ -18,8 +18,8 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 public class MainActivity extends AppCompatActivity {
 
     GnaviCtrl gnaviCtrl = new GnaviCtrl(this);
-    private double latitude = 0;
-    private double longitude = 0;
+    private double latitude = 36.594682;
+    private double longitude = 136.625573;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
-        //todo 現在地を入れてください
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
@@ -86,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
         }
         //現在地取得
         Location location = locationManager.getLastKnownLocation(provider);
-        //this.latitude = location.getLatitude();
-        //this.longitude = location.getLongitude();
+//        this.latitude = location.getLatitude();
+//        this.longitude = location.getLongitude();
     }
 
 }
