@@ -17,11 +17,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
+import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 
-public class MainActivity extends AppCompatActivity {
-    GnaviCtrl gnaviCtrl = new GnaviCtrl(this);
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks{
+    GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
     private double latitude = 36.594682;
     private double longitude = 136.625573;
 
@@ -30,12 +31,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getLocation();
-        //TabとSwipeの読み込み
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
-                , MainActivity.this , latitude , longitude));
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
 
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
@@ -43,6 +38,24 @@ public class MainActivity extends AppCompatActivity {
 
         //final ListView listView = (ListView)findViewById(R.id.list);
     }
+
+    //ぐるナビ読み込み完了
+    @Override
+    public void onTaskFinished(){
+        //TabとSwipeの読み込み
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
+                , MainActivity.this , latitude , longitude));
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    //ぐるナビ読み込み失敗
+    @Override
+    public void onTaskCancelled(){
+
+    }
+
     @Override
     public void onPause() {
         super.onPause();
