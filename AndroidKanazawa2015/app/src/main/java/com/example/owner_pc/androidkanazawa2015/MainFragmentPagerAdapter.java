@@ -1,22 +1,14 @@
 package com.example.owner_pc.androidkanazawa2015;
 
-import android.bluetooth.BluetoothAssignedNumbers;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
-
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
-import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
-import com.google.android.gms.maps.model.LatLng;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-
 /**
  * Created by atsusuke on 2015/12/31.
  */

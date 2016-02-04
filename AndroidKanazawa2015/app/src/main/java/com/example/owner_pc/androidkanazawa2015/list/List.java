@@ -14,11 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import com.example.owner_pc.androidkanazawa2015.R;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
-import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
-
 /**
  * Created by atsusuke on 2016/02/01.
  */

@@ -29,13 +29,13 @@ public class MainActivity extends AppCompatActivity {
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
-
         //TabとSwipeの読み込み
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
                 , MainActivity.this, latitude, longitude , new ShopCtrl()));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+        //tabLayout.getTabAt(0).setIcon(R.drawable.cir_y);
     }
     @Override
     public void onPause() {
@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
     //位置情報の取得
     public void getLocation() {
         // LocationManagerを取得
@@ -85,5 +84,4 @@ public class MainActivity extends AppCompatActivity {
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
     }
-
 }
