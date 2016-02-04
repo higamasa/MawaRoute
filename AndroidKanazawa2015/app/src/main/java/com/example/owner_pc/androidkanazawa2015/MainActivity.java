@@ -11,14 +11,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.PopupWindow;
-
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
+import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 
 public class MainActivity extends AppCompatActivity {
     GnaviCtrl gnaviCtrl = new GnaviCtrl(this);
@@ -29,20 +24,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //位置情報の読み込み
         getLocation();
-        //TabとSwipeの読み込み
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
-                , MainActivity.this , latitude , longitude));
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-
-        //todo 現在地を入れてください
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
 
-        //final ListView listView = (ListView)findViewById(R.id.list);
+        //TabとSwipeの読み込み
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
+                , MainActivity.this, latitude, longitude , new ShopCtrl()));
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
     }
     @Override
     public void onPause() {
@@ -66,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //位置情報の取得
-    public void getLocation(){
+    public void getLocation() {
         // LocationManagerを取得
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // Criteriaオブジェクトを生成
@@ -77,23 +70,20 @@ public class MainActivity extends AppCompatActivity {
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         //ロケーションプロバイダの取得
         String provider = locationManager.getBestProvider(criteria, true);
+        //現在地取得
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        //現在地取得
         Location location = locationManager.getLastKnownLocation(provider);
-        //this.latitude = location.getLatitude();
-        //this.longitude = location.getLongitude();
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
     }
 
 }
-
-
-
