@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.owner_pc.androidkanazawa2015.R;
+import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +25,7 @@ public class Map extends Fragment {
 
     private SupportMapFragment fragment;
     private GoogleMap mMap;
+    private int away = 4;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class Map extends Fragment {
         Bundle bundle = getArguments();
         double latitude = bundle.getDouble("latitude");
         double longitude = bundle.getDouble("longitude");
+        ShopCtrl shopCtrl = (ShopCtrl)bundle.getSerializable("shopCtrl");
+        //Log.d("check", String.valueOf(shopCtrl.getShopList().get(1).shop.get(0).getLatitude()));
+
         if (mMap == null) {
             mMap = fragment.getMap();
             // コンパスの有効化
@@ -51,6 +56,10 @@ public class Map extends Fragment {
             // 拡大・縮小ボタンを表示
             mMap.getUiSettings().setZoomControlsEnabled(true);
             MakerSetting(new LatLng(latitude, longitude));
+            for (int i=0; i < shopCtrl.getShopList().size(); i++){
+                MakerSetting(new LatLng(shopCtrl.getShopList().get(away).shop.get(i).getLatitude() ,
+                        shopCtrl.getShopList().get(away).shop.get(i).getLongitude()));
+            }
         }
     }
 

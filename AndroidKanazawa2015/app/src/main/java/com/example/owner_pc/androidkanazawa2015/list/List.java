@@ -23,6 +23,7 @@ public class List extends Fragment{
     Bitmap image;
     private CustomAdapter customAdapter;
     Activity activity;
+    private int away = 4;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -43,16 +44,16 @@ public class List extends Fragment{
 
         Bundle bundle = getArguments();
         ShopCtrl shopCtrl = (ShopCtrl)bundle.getSerializable("shopCtrl");
-        Log.d("check", String.valueOf(shopCtrl.getShopList().size()));
+        //Log.d("check", String.valueOf(shopCtrl.getShopList().get(1).shop.get(0).getShopName()));
 
         final ListView listView = (ListView)view.findViewById(R.id.list);
         /* データの作成 */
         final ArrayList<CustomData> objects = new ArrayList<CustomData>();
         image = BitmapFactory.decodeResource(getResources(), R.drawable.cir_g);
-        for (int i=0; i < 100; i++){
+        for (int i = 0; i < shopCtrl.getShopList().size(); i++){
             CustomData item = new CustomData();
             item.setImagaData(image);
-            item.setTextData("Example");
+            item.setTextData(shopCtrl.getShopList().get(away).shop.get(i).getShopName());
             objects.add(item);
             customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects);
             listView.setAdapter(customAdapter);

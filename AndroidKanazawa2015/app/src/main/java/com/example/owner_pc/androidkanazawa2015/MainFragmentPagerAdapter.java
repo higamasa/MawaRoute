@@ -44,6 +44,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
             case 1:
                 bundle.putDouble("latitude" , latitude);
                 bundle.putDouble("longitude" , longitude);
+                bundle.putSerializable("shopCtrl", shopCtrl);
                 Map map = new Map();
                 map.setArguments(bundle);
                 return map;
