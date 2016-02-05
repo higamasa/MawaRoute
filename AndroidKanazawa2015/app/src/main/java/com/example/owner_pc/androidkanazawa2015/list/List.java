@@ -43,7 +43,7 @@ public class List extends Fragment{
 
         Bundle bundle = getArguments();
         ShopCtrl shopCtrl = (ShopCtrl)bundle.getSerializable("shopCtrl");
-        //Log.d("check", String.valueOf(shopCtrl.getShopList().size()));
+        Log.d("check", String.valueOf(shopCtrl.getShopList().size()));
 
         final ListView listView = (ListView)view.findViewById(R.id.list);
         /* データの作成 */

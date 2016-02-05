@@ -11,12 +11,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 
-public class MainActivity extends AppCompatActivity {
-    GnaviCtrl gnaviCtrl = new GnaviCtrl(this);
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks{
+    GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
     private double latitude = 36.594682;
     private double longitude = 136.625573;
 
@@ -29,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
+    }
+
+    //ぐるナビ読み込み完了
+    @Override
+    public void onTaskFinished(){
         //TabとSwipeの読み込み
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
@@ -37,6 +44,13 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         //tabLayout.getTabAt(0).setIcon(R.drawable.cir_y);
     }
+
+    //ぐるナビ読み込み失敗
+    @Override
+    public void onTaskCancelled(){
+
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -81,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Location location = locationManager.getLastKnownLocation(provider);
+
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
     }
