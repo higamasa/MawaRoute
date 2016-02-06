@@ -21,6 +21,23 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/tab_layout"/>
+        android:layout_below="@+id/tab_layout"/>
 
+    <ImageButton
+        android:id="@+id/right_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@null"
+        android:scaleType="fitXY" />
+
+    <ImageButton
+        android:id="@+id/left_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:background="@null"
+        android:scaleType="fitXY" />
 </RelativeLayout>
