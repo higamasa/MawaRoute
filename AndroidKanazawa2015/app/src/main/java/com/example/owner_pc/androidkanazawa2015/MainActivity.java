@@ -1,9 +1,7 @@
 package com.example.owner_pc.androidkanazawa2015;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -13,9 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Display;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
@@ -23,14 +18,12 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks, View.OnClickListener, ViewPager.OnPageChangeListener{
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks, ViewPager.OnPageChangeListener{
 
     private GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
+    private SettingButton settingButton = new SettingButton(this);
     private double latitude  = 36.594682;
     private double longitude = 136.625573;
-    private ImageButton rightButton = null;
-    private ImageButton leftButton  = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.setupWithViewPager(viewPager);
 
         //ボタンの表示
-        onDrawButton();
+        settingButton.onDrawButton();
     }
 
     //ぐるナビ読み込み失敗
@@ -87,58 +80,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         }
     }
 
-    //画面下部のピンク色のボタン表示
-    private void onDrawButton(){
-
-        //スマホ画面サイズ取得
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-
-        //ボタンに画像をセット
-        rightButton = (ImageButton)findViewById(R.id.right_button);
-        leftButton = (ImageButton)findViewById(R.id.left_button);
-        rightButton.setImageResource(R.drawable.under_button_p_r);
-        leftButton.setImageResource(R.drawable.under_button_p);
-
-        //ボタンの位置、グラビティ...etc取得
-        ViewGroup.LayoutParams[] params = new ViewGroup.LayoutParams[2];
-        params[0] = rightButton.getLayoutParams();
-        params[1] = leftButton.getLayoutParams();
-
-        //ボタンサイズ変更
-        for(int i = 0; i < 2; ++i){
-            params[i].width  = size.x / 3;
-            params[i].height = size.y / 3;
-        }
-
-        //サイズ変更を反映
-        rightButton.setLayoutParams(params[0]);
-        leftButton.setLayoutParams(params[1]);
-
-        //クリック可能
-        rightButton.setOnClickListener(this);
-        leftButton.setOnClickListener(this);
-
-    }
-
-    //ボタンが押されたらポップアップ表示
-    @Override
-    public void onClick(View view){
-        switch (view.getId()){
-            case R.id.right_button:
-                Log.d("MainActivity", "pushed right");
-                //todo ポップアップ（距離、カテゴリ）
-                //todo listに条件絞り込みを渡す
-                break;
-            case R.id.left_button:
-                Log.d("MainActivity", "pushed left");
-                //todo ポップアップ（キーワード検索）
-                //todo listに条件絞り込みを渡す
-                break;
-        }
-    }
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 //        Log.d("MainActivity", "onPageScrolled() position="+position);
@@ -147,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void onPageSelected(int position) {
         Log.d("MainActivity", "onPageSelected() position="+position);
+        ImageButton rightButton = settingButton.getRightButton();
+        ImageButton leftButton  = settingButton.getLeftButton();
         if(rightButton != null && leftButton != null) {
             if (position == 1) {
                 //マップ画面時透過(灰色重ねる)
