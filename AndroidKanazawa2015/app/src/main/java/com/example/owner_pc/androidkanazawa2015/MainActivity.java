@@ -11,15 +11,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageButton;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks{
-    GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
-    private double latitude = 36.594682;
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks, ViewPager.OnPageChangeListener{
+
+    private GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
+    private SettingButton settingButton = new SettingButton(this);
+    private double latitude  = 36.594682;
     private double longitude = 136.625573;
 
     @Override
@@ -41,9 +44,13 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //TabとSwipeの読み込み
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
-                , MainActivity.this, latitude, longitude , new ShopCtrl()));
+                , MainActivity.this, latitude, longitude, new ShopCtrl()));
+        viewPager.addOnPageChangeListener(this);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+
+        //ボタンの表示
+        settingButton.onDrawButton();
     }
 
     //ぐるナビ読み込み失敗
@@ -71,6 +78,42 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
                 this.gnaviCtrl.progressDialog.dismiss();
             }
         }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//        Log.d("MainActivity", "onPageScrolled() position="+position);
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        Log.d("MainActivity", "onPageSelected() position="+position);
+        ImageButton rightButton = settingButton.getRightButton();
+        ImageButton leftButton  = settingButton.getLeftButton();
+        if(rightButton != null && leftButton != null) {
+            if (position == 1) {
+                //マップ画面時透過(灰色重ねる)
+                rightButton.setEnabled(false);
+                leftButton.setEnabled(false);
+                rightButton.setAlpha(0.5f);
+                leftButton.setAlpha(0.5f);
+                rightButton.setColorFilter(0xaa808080);
+                leftButton.setColorFilter(0xaa808080);
+            } else {
+                //リスト、ルーレット画面では通常表示
+                rightButton.setEnabled(true);
+                leftButton.setEnabled(true);
+                rightButton.setAlpha(1.0f);
+                leftButton.setAlpha(1.0f);
+                rightButton.setColorFilter(BIND_NOT_FOREGROUND);
+                leftButton.setColorFilter(BIND_NOT_FOREGROUND);
+            }
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+//        Log.d("MainActivity", "onPageScrollStateChanged() state="+state);
     }
 
     //位置情報の取得
