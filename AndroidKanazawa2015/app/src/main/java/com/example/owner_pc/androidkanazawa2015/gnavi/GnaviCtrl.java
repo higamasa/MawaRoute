@@ -25,16 +25,20 @@ import java.util.ArrayList;
  */
 public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
 
+    //コールバックインターフェース
+    private AsyncTaskCallbacks callback = null;
+
     //プログレスダイアログ表示に必要
-    private Activity activity;
+    private Activity activity = null;
     public ProgressDialog progressDialog;
     //距離ごとのリスト（5種類）、それぞれの中に店のリスト（複数）がある
     private ArrayList<ShopList> shopList = new ArrayList<ShopList>();
     //5種類の距離(300m, 500m, 1000m, 2000m, 3000m)
     private static final int RANGE = 5;
 
-    public GnaviCtrl(Activity activity){
+    public GnaviCtrl(Activity activity, AsyncTaskCallbacks callback){
         this.activity = activity;
+        this.callback = callback;
         for(int i=0;i<5;i++) {
             shopList.add(new ShopList());
         }
@@ -91,16 +95,19 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
         shopCtrl.setShopList(shopList);
         shopCtrl.setCategory(categoryDividing());
 
-        // 読み出し元Activityに設置してあるTextViewを取得
-//        TextView textView = (TextView)this.activity.findViewById(R.id.textView);
-
-        // TextViewの文字列をセット
-//        textView.setText("読み込み完了");
-
         // プログレスダイアログを閉じる
         if (this.progressDialog != null && this.progressDialog.isShowing()) {
             this.progressDialog.dismiss();
         }
+
+        //終了をActivityに通知
+        callback.onTaskFinished();
+    }
+
+    @Override
+    protected void onCancelled(){
+        Log.v("AsyncTask", "onCancelled");
+        callback.onTaskCancelled();
     }
 
     public void xmlWriteInList(String[] xmlData) {
