@@ -11,10 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.example.owner_pc.androidkanazawa2015.R;
-
-import java.util.*;
 
 /**
  * Created by atsusuke on 2016/02/02.

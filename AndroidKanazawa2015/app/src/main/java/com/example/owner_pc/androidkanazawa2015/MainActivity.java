@@ -11,46 +11,48 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
+import com.example.owner_pc.androidkanazawa2015.list.List;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks{
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks , List.FragmentTopCallback {
     GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
     private double latitude = 36.594682;
     private double longitude = 136.625573;
+    private int count = 0;
+    //てきとうに500とりますた(^p^)
+    private String[] list = new String[500];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //位置情報の読み込み
-        getLocation();
+        //getLocation();
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
     }
-
     //ぐるナビ読み込み完了
     @Override
     public void onTaskFinished(){
         //TabとSwipeの読み込み
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
-                , MainActivity.this, latitude, longitude , new ShopCtrl()));
+                , MainActivity.this, latitude, longitude, new ShopCtrl()));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-        //tabLayout.getTabAt(0).setIcon(R.drawable.cir_y);
+        tabLayout.getTabAt(0).setIcon(R.drawable.list_tab);
+        tabLayout.getTabAt(1).setIcon(R.drawable.map_tab);
+        tabLayout.getTabAt(2).setIcon(R.drawable.cir_gray);
     }
-
     //ぐるナビ読み込み失敗
     @Override
     public void onTaskCancelled(){
 
     }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -84,7 +86,9 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //ロケーションプロバイダの取得
         String provider = locationManager.getBestProvider(criteria, true);
         //現在地取得
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -95,8 +99,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             return;
         }
         Location location = locationManager.getLastKnownLocation(provider);
-
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
+    }
+
+    @Override
+    public void listCallback(int position, boolean bool) {
     }
 }
