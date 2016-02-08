@@ -52,6 +52,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
                 Map map = new Map();
                 map.setArguments(bundle);
                 return map;
+                //return new TestPage1();
             case 2:
                 return new RoulettePage();
         }

@@ -81,8 +81,6 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.roulette_fragment, container, false);
-        //ViewGroupのフレームレイアウトをセット
-        frameLayout = (FrameLayout)view.findViewById(R.id.roulette_page);
 
         //スマホ画面の大きさから家紋のサイズを計算
         Display display = activity.getWindowManager().getDefaultDisplay();
@@ -90,6 +88,10 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         display.getSize(size);
         //円一つを画面サイズ（横）の2/7の大きさにする
         cirSize = size.x*2/7;
+
+        //ViewGroupのフレームレイアウトをセット
+        frameLayout = (FrameLayout)view.findViewById(R.id.roulette_page);
+        frameLayout.setPadding(0, 0, 0, cirSize);
 
         //円のグラビティを中心に設定
         FrameLayout.LayoutParams[] params = new FrameLayout.LayoutParams[CIR_NUM + 1];
@@ -104,7 +106,7 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         params[4].setMargins(0, 0, (int)(0.95*cirSize), (int)(0.31*cirSize));
         params[5] = new FrameLayout.LayoutParams(cirSize/2, cirSize/2, Gravity.CENTER);
 
-        //IDの箱
+        //画像ID（家紋、カテゴリ）
         int[] circleId = new int[CIR_NUM + 1];
         int[] categoryId = new int[CIR_NUM + 1];
         //ID名
