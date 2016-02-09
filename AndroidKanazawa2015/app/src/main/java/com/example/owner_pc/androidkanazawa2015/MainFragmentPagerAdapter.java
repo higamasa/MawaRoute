@@ -1,28 +1,24 @@
 package com.example.owner_pc.androidkanazawa2015;
 
-import android.bluetooth.BluetoothAssignedNumbers;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-
+import android.view.ViewGroup;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
-import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
-import com.google.android.gms.maps.model.LatLng;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-
 /**
  * Created by atsusuke on 2015/12/31.
  */
 public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Serializable {
     final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[] { "L", "M", "R" };
+    //private String tabTitles[] = new String[] { "L", "M", "R" };
     private Context context;
     private double latitude;
     private double longitude;
@@ -52,9 +48,11 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
             case 1:
                 bundle.putDouble("latitude" , latitude);
                 bundle.putDouble("longitude" , longitude);
+                bundle.putSerializable("shopCtrl", shopCtrl);
                 Map map = new Map();
                 map.setArguments(bundle);
                 return map;
+                //return new TestPage1();
             case 2:
                 return new RoulettePage();
         }
@@ -63,7 +61,8 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
     @Override
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position
-        return tabTitles[position];
+        //return tabTitles[position];
+        return null;
     }
 }
 

@@ -12,18 +12,21 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageButton;
-
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
+import com.example.owner_pc.androidkanazawa2015.list.List;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks, ViewPager.OnPageChangeListener{
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks, ViewPager.OnPageChangeListener
+        ,List.FragmentTopCallback{
 
     private GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
     private SettingButton settingButton = new SettingButton(this);
     private double latitude  = 36.594682;
     private double longitude = 136.625573;
+    //てきとうに500とりますた(^p^)
+    private String[] list = new String[500];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +37,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
-
-        //final ListView listView = (ListView)findViewById(R.id.list);
     }
-
     //ぐるナビ読み込み完了
     @Override
     public void onTaskFinished(){
@@ -45,20 +45,20 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
                 , MainActivity.this, latitude, longitude, new ShopCtrl()));
-        viewPager.addOnPageChangeListener(this);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-
+        tabLayout.getTabAt(0).setIcon(R.drawable.list_tab);
+        tabLayout.getTabAt(1).setIcon(R.drawable.map_tab);
+        tabLayout.getTabAt(2).setIcon(R.drawable.cir_gray);
+        viewPager.addOnPageChangeListener(this);
         //ボタンの表示
-        settingButton.onDrawButton();
+        //settingButton.onDrawButton();
     }
-
     //ぐるナビ読み込み失敗
     @Override
     public void onTaskCancelled(){
 
     }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     public void onPageScrollStateChanged(int state) {
 //        Log.d("MainActivity", "onPageScrollStateChanged() state="+state);
     }
-
     //位置情報の取得
     public void getLocation() {
         // LocationManagerを取得
@@ -129,7 +128,9 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //ロケーションプロバイダの取得
         String provider = locationManager.getBestProvider(criteria, true);
         //現在地取得
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -140,9 +141,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             return;
         }
         Location location = locationManager.getLastKnownLocation(provider);
-
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
     }
 
+    @Override
+    public void listCallback(int position, boolean bool) {
+    }
 }
