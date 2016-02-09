@@ -80,6 +80,14 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+        Bundle bundle = getArguments();
+        int[] data = bundle.getIntArray("data");
+        for(int i=0;i<5;++i){
+            System.out.println(data[i]);
+        }
+
         View view = inflater.inflate(R.layout.roulette_fragment, container, false);
 
         //スマホ画面の大きさから家紋のサイズを計算

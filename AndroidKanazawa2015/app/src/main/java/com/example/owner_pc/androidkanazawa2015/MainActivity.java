@@ -11,15 +11,22 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
+import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks, ViewPager.OnPageChangeListener{
 
+    private MainFragmentPagerAdapter pagerAdapter;
+    private ViewPager viewPager;
     private GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
     private SettingButton settingButton = new SettingButton(this);
     private double latitude  = 36.594682;
@@ -38,19 +45,62 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //final ListView listView = (ListView)findViewById(R.id.list);
     }
 
+    private void updateFragment(){
+        int[] data = new int[5];
+        for(int i=0;i<5;++i){
+            data[i] = i+5;
+        }
+        viewPager.addOnPageChangeListener(this);
+        viewPager.setOffscreenPageLimit(2);
+
+        pagerAdapter.destroyAllItem(viewPager);
+        pagerAdapter.setData(data);
+        pagerAdapter.notifyDataSetChanged();
+        viewPager.setCurrentItem(0);
+        viewPager.setAdapter(pagerAdapter);
+    }
+
     //ぐるナビ読み込み完了
     @Override
     public void onTaskFinished(){
+
+        //todo お試しデータ引継ぎ
+        int[] data = new int[5];
+        for(int i=0;i<5;++i){
+            data[i] = i;
+            System.out.println(data[i]);
+        }
+
         //TabとSwipeの読み込み
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()
-                , MainActivity.this, latitude, longitude, new ShopCtrl()));
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.addOnPageChangeListener(this);
+        viewPager.setOffscreenPageLimit(2);
+        pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(),
+                MainActivity.this, latitude, longitude, new ShopCtrl());
+        pagerAdapter.setData(data);
+        viewPager.setAdapter(pagerAdapter);
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+//        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         //ボタンの表示
         settingButton.onDrawButton();
+
+        Button updateButton = (Button) findViewById(R.id.update_button);
+//        updateButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+
+        //読み込み完了後スプラッシュ画面閉じる
+//        setTheme(R.style.AppTheme_NoActionBar);
+
+
+        updateButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                updateFragment();
+            }
+        });
     }
 
     //ぐるナビ読み込み失敗
@@ -144,5 +194,4 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
     }
-
 }

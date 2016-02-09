@@ -61,7 +61,6 @@ public class SettingButton implements View.OnClickListener{
         //クリック可能
         rightButton.setOnClickListener(this);
         leftButton.setOnClickListener(this);
-
     }
 
     //ボタンが押されたらポップアップ表示
