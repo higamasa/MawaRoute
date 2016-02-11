@@ -40,6 +40,9 @@ public class SettingButton implements View.OnClickListener{
         //ボタンに画像をセット
         rightButton = (ImageButton)activity.findViewById(R.id.right_button);
         leftButton = (ImageButton)activity.findViewById(R.id.left_button);
+//        rightButton.setImageResource(R.drawable.category1);
+//        leftButton.setImageResource(R.drawable.category2);
+        //todo 画像サイズ変更
         rightButton.setImageResource(R.drawable.under_button_p_r);
         leftButton.setImageResource(R.drawable.under_button_p);
 
@@ -50,8 +53,10 @@ public class SettingButton implements View.OnClickListener{
 
         //ボタンサイズ変更
         for(int i = 0; i < 2; ++i){
-            params[i].width  = size.x / 3;
+            params[i].width  = size.x / 2;
             params[i].height = size.y / 3;
+//            params[i].width  = size.x / 3;
+//            params[i].height = size.y / 3;
         }
 
         //サイズ変更を反映
