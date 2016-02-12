@@ -1,6 +1,10 @@
 package com.example.owner_pc.androidkanazawa2015;
 
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -23,7 +27,7 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 import java.util.ArrayList;
 import com.example.owner_pc.androidkanazawa2015.list.List;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback{
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks, List.FragmentTopCallback{
 
     private MainFragmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
@@ -39,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //位置情報の読み込み
-        //getLocation();
+//        getLocation();
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
@@ -180,6 +184,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 //    }
     //位置情報の取得
     public void getLocation() {
+
+        //位置情報がオンになっているかの確認
+        checkGpsSettings();
+
         // LocationManagerを取得
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // Criteriaオブジェクトを生成
@@ -190,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         //ロケーションプロバイダの取得
         String provider = locationManager.getBestProvider(criteria, true);
+
         //現在地取得
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
@@ -207,6 +216,35 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
     }
+
+    private boolean checkGpsSettings() {
+        // 位置情報の設定の取得
+        String gps = android.provider.Settings.Secure.getString(
+                getContentResolver(),
+                android.provider.Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        // GPS機能か無線ネットワークがONになっているかを確認
+        if (gps.indexOf("gps", 0) < 0 && gps.indexOf("network", 0) < 0) {
+            // GPSサービスがOFFになっている場合、ダイアログを表示
+            new AlertDialog.Builder(this)
+                    .setTitle("位置情報の設定")
+            .setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // 位置情報設定画面へ移動する
+                            Intent intent = new Intent(
+                                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            intent.addCategory(Intent.CATEGORY_DEFAULT);
+                            startActivity(intent);
+                }
+            })
+                    .create()
+                    .show();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 
     @Override
     public void listCallback(int position, boolean bool) {

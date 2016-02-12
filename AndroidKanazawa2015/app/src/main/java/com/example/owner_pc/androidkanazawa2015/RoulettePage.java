@@ -21,15 +21,15 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
-import com.example.owner_pc.androidkanazawa2015.google_map.RouteShop;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -37,9 +37,11 @@ import java.util.Random;
 /**
  * Created by owner-PC on 2016/02/02.
  */
-public class RoulettePage extends Fragment implements Animation.AnimationListener{
+public class RoulettePage extends Fragment{
 
     PopupWindow mPopupWindow;
+
+    TranslateAnimation translate;
 
     private Activity activity = new Activity();
 
@@ -51,6 +53,12 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
 
     //家紋のViewGroup
     private FrameLayout frameLayout;
+    private FrameLayout kamonLayout;
+    private FrameLayout yumiyaLayout;
+
+    //弓矢
+    private ImageView bow;
+    private ImageView arrow;
 
     //家紋の円
     private ImageView[] circle = new ImageView[CIR_NUM + 1];
@@ -110,21 +118,41 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         cirSize = size.x*2/7;
 
         //ViewGroupのフレームレイアウトをセット
-        frameLayout = (FrameLayout)view.findViewById(R.id.roulette_page);
-        frameLayout.setPadding(0, 0, 0, cirSize);
+        frameLayout  = (FrameLayout)view.findViewById(R.id.roulette_page);
+        kamonLayout  = (FrameLayout)view.findViewById(R.id.kamon);
+        yumiyaLayout = (FrameLayout)view.findViewById(R.id.yumiya);
+        kamonLayout.setPadding(0, cirSize, 0, 0);
+
+        //弓矢のグラビティを設定
+        FrameLayout.LayoutParams bowParam   = new FrameLayout.LayoutParams(cirSize, cirSize, Gravity.CENTER);
+        FrameLayout.LayoutParams arrowParam = new FrameLayout.LayoutParams(cirSize, cirSize, Gravity.CENTER);
 
         //円のグラビティを中心に設定
         FrameLayout.LayoutParams[] params = new FrameLayout.LayoutParams[CIR_NUM + 1];
         for(int i = 0; i < CIR_NUM; ++i){
             params[i] = new FrameLayout.LayoutParams(cirSize, cirSize, Gravity.CENTER);
         }
+        cirSize = cirSize - (cirSize/8);
+        //弓矢の位置設定
+        bowParam.setMargins(0, 0, 0, 2 * cirSize);
+        arrowParam.setMargins(0, 0, 0, 2 * cirSize);
         //五角形の位置設定
         params[0].setMargins(0, 0, 0, 1 * cirSize);
         params[1].setMargins((int) (0.95 * cirSize), 0, 0, (int) (0.31 * cirSize));
         params[2].setMargins((int) (0.59 * cirSize), (int) (0.81 * cirSize), 0, 0);
         params[3].setMargins(0, (int) (0.81 * cirSize), (int) (0.59 * cirSize), 0);
-        params[4].setMargins(0, 0, (int)(0.95*cirSize), (int)(0.31*cirSize));
-        params[5] = new FrameLayout.LayoutParams(cirSize/2, cirSize/2, Gravity.CENTER);
+        params[4].setMargins(0, 0, (int) (0.95 * cirSize), (int) (0.31 * cirSize));
+        params[5] = new FrameLayout.LayoutParams(cirSize*9/12, cirSize*9/12, Gravity.CENTER);
+
+        //弓矢
+//        bow.setImageResource(R.drawable.bow);
+//        arrow.setImageResource(R.drawable.arrow);
+        bow   = new ImageView(activity);
+        arrow = new ImageView(activity);
+        bow.setImageResource(R.drawable.bow);
+        arrow.setImageResource(R.drawable.arrow);
+        yumiyaLayout.addView(bow, bowParam);
+        yumiyaLayout.addView(arrow, arrowParam);
 
         //画像ID（家紋、カテゴリ）
         int[] circleId = new int[CIR_NUM + 1];
@@ -161,21 +189,23 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
             //frameLayoutに表示
             layerDrawable[i] = new LayerDrawable(drawables[i]);
             circle[i].setImageDrawable(layerDrawable[i]);
-            frameLayout.addView(circle[i], params[i]);
+            kamonLayout.addView(circle[i], params[i]);
         }
 
         //真ん中の円を表示
         circle[5] = new ImageView(activity);
         circle[5].setImageResource(R.drawable.cir_gray);
-        frameLayout.addView(circle[5], params[5]);
+        kamonLayout.addView(circle[5], params[5]);
 
         //レンダリング後
         //回転の中心座標を家紋の一番上の画像から割り出す
         globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                center.x = circle[0].getLeft()   + cirSize/2;
-                center.y = circle[0].getBottom() + cirSize/2;
+//                center.x = circle[0].getLeft()   + cirSize/2;
+//                center.y = circle[0].getBottom() + cirSize/2;
+                center.x = circle[5].getLeft() + circle[5].getWidth()/2;
+                center.y = circle[5].getTop() + circle[5].getHeight()/2;
 
                 // removeOnGlobalLayoutListener()の削除
                 circle[0].getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
@@ -213,6 +243,7 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
                                 System.out.println("右から左");
                                 //todo toast表示
 //                                if(shopList.size() != 0) {
+//                                    setTranslate();
                                     setRotate((int) (Math.abs(velocityX) / 1000));
                                     startRotate();
 //                                }else{
@@ -298,6 +329,112 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         }
     }
 
+    private void setTranslate(){
+    }
+
+    private void backTranslate(){
+        translate = new TranslateAnimation(0, 0, 0, 0);
+        translate.setDuration(500);
+        translate.setFillAfter(true);
+        arrow.startAnimation(translate);
+    }
+
+    private void startTranslate(){
+        translate = new TranslateAnimation(0, 0, 0, cirSize);
+//        translate = new TranslateAnimation(0, 0, 0, 0);
+        translate.setDuration(500);
+        translate.setFillAfter(true);
+        arrow.startAnimation(translate);
+        translate.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // ポップアップ作成
+                final PopupWindow mPopupWindow = new PopupWindow(
+                        null,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                LayoutInflater layoutInflater = (LayoutInflater)getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                View popupView = layoutInflater.inflate(R.layout.popup_layout, null);
+
+                // 閉じるボタンを押したとき
+                popupView.findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // ポップアップが表示されている場合
+                        if (mPopupWindow.isShowing()) {
+                            // ポップアップ破棄
+                            // todo ここに処理
+                            //hitNumで回転後の店情報にアクセスする
+//                    shopList.get(hitNum).getShopName();
+                            backTranslate();
+                            mPopupWindow.dismiss();
+                        }
+                    }
+                });
+
+                // OKボタンを押したとき
+                popupView.findViewById(R.id.ok_button).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // ポップアップが表示されている場合
+                        if (mPopupWindow.isShowing()) {
+                            // ポップアップ破棄
+                            // todo ここに処理
+                            backTranslate();
+                            mPopupWindow.dismiss();
+                        }
+                    }
+                });
+
+                // 詳細ボタンを押したとき
+                popupView.findViewById(R.id.detail_button).setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        // ポップアップが表示されている場合
+                        if(mPopupWindow.isShowing()){
+                            // ポップアップ破棄
+                            // todo ここに処理
+                            backTranslate();
+                            mPopupWindow.dismiss();
+                        }
+                    }
+                });
+
+                mPopupWindow.setContentView(popupView);
+
+                // 背景設定
+                mPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
+
+                // タップ時に他のViewでキャッチされないための設定
+                mPopupWindow.setOutsideTouchable(false);
+                mPopupWindow.setFocusable(false);
+
+                // 表示サイズの設定 今回は仮に幅300dp
+                float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
+                mPopupWindow.setWindowLayoutMode((int) width, WindowManager.LayoutParams.WRAP_CONTENT);
+                mPopupWindow.setWidth((int) width);
+                mPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+
+                // 画面表示
+                mPopupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+//                arrow.setY(bow.getY() + cirSize);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
     //回転アニメーション初期化
     private void setRotate(int rotateTime){
         Random r = new Random();
@@ -324,98 +461,47 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         //アニメーション後の状態保持（回った後そのまま）
         rotate.setFillAfter(true);
         rotate.setFillEnabled(true);
-        rotate.setAnimationListener(this);
+        rotate.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+//                setTranslate();
+//                translate.setFillAfter(false);
+//                arrow.setY(bow.getTop());
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                startTranslate();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         //アニメーション開始
-        frameLayout.startAnimation(rotate);
+        kamonLayout.startAnimation(rotate);
         //店の番号
         hitNum = Hit();
     }
 
-    //アニメーション後
-    @Override
-    public void onAnimationEnd(Animation animation) {
-        // ポップアップ作成
-        final PopupWindow mPopupWindow = new PopupWindow(
-                null,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        LayoutInflater layoutInflater = (LayoutInflater)getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View popupView = layoutInflater.inflate(R.layout.popup_layout, null);
-
-        // 閉じるボタンを押したとき
-        popupView.findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // ポップアップが表示されている場合
-                if (mPopupWindow.isShowing()) {
-                    // ポップアップ破棄
-                    // todo ここに処理
-                    //hitNumで回転後の店情報にアクセスする
-//                    shopList.get(hitNum).getShopName();
-                    mPopupWindow.dismiss();
-                }
-            }
-        });
-
-        // OKボタンを押したとき
-        popupView.findViewById(R.id.ok_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // ポップアップが表示されている場合
-                if (mPopupWindow.isShowing()) {
-                    // ポップアップ破棄
-                    // todo ここに処理
-                    mPopupWindow.dismiss();
-                }
-            }
-        });
-
-        // 詳細ボタンを押したとき
-        popupView.findViewById(R.id.detail_button).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                // ポップアップが表示されている場合
-                if(mPopupWindow.isShowing()){
-                    // ポップアップ破棄
-                    // todo ここに処理
-                    mPopupWindow.dismiss();
-                }
-            }
-        });
-
-        mPopupWindow.setContentView(popupView);
-
-        // 背景設定
-        mPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
-
-        // タップ時に他のViewでキャッチされないための設定
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);
-
-        // 表示サイズの設定 今回は仮に幅300dp
-        float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
-        mPopupWindow.setWindowLayoutMode((int) width, WindowManager.LayoutParams.WRAP_CONTENT);
-        mPopupWindow.setWidth((int) width);
-        mPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-
-        // 画面表示
-        mPopupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-
-    }
-
-    //アニメーション繰り返し
-    @Override
-    public void onAnimationRepeat(Animation animation) {
-        Toast.makeText(activity, "AnimationRepeat", Toast.LENGTH_SHORT).show();
-    }
-
-    //アニメーション開始
-    @Override
-    public void onAnimationStart(Animation animation) {
-        Toast.makeText(activity, "AnimationStart", Toast.LENGTH_SHORT).show();
-    }
+//    //アニメーション後
+//    @Override
+//    public void onAnimationEnd(Animation animation) {
+//
+//    }
+//
+//    //アニメーション繰り返し
+//    @Override
+//    public void onAnimationRepeat(Animation animation) {
+//        Toast.makeText(activity, "AnimationRepeat", Toast.LENGTH_SHORT).show();
+//    }
+//
+//    //アニメーション開始
+//    @Override
+//    public void onAnimationStart(Animation animation) {
+//        Toast.makeText(activity, "AnimationStart", Toast.LENGTH_SHORT).show();
+//    }
 
     @Override
     public void onDestroy(){
