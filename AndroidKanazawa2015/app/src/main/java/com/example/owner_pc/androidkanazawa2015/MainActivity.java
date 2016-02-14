@@ -1,24 +1,17 @@
 package com.example.owner_pc.androidkanazawa2015;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
@@ -98,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.getTabAt(0).setIcon(R.drawable.list_tab);
         tabLayout.getTabAt(1).setIcon(R.drawable.map_tab);
         tabLayout.getTabAt(2).setIcon(R.drawable.cir_gray);
+        tabLayout.getTabAt(0).setText("List");
+        tabLayout.getTabAt(1).setText("Map");
+        tabLayout.getTabAt(2).setText("Roulette");
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 //        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         //ボタンの表示

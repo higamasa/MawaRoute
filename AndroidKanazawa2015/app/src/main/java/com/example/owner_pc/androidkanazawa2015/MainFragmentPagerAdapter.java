@@ -18,7 +18,6 @@ import java.io.Serializable;
  */
 public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Serializable {
     final int PAGE_COUNT = 3;
-    //private String tabTitles[] = new String[] { "L", "M", "R" };
     private Context context;
     private double latitude;
     private double longitude;
