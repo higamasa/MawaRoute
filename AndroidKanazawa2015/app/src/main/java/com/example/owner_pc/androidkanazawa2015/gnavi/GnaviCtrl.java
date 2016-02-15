@@ -5,16 +5,9 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Xml;
-import android.widget.TextView;
-
-import com.example.owner_pc.androidkanazawa2015.R;
-
 import org.xmlpull.v1.XmlPullParser;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
