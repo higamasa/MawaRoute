@@ -28,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 
@@ -99,15 +100,6 @@ public class RoulettePage extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Bundle bundle = getArguments();
-        //todo bundleデータ受け取り（data->shop）
-//        ShopParameter shop = (ShopParameter)bundle.getSerializable("shop");
-//        editShopList(shop);
-        int[] data = bundle.getIntArray("data");
-        for(int i=0;i<5;++i){
-            System.out.println(data[i]);
-        }
-
         View view = inflater.inflate(R.layout.roulette_fragment, container, false);
 
         //スマホ画面の大きさから家紋のサイズを計算
@@ -145,8 +137,6 @@ public class RoulettePage extends Fragment{
         params[5] = new FrameLayout.LayoutParams(cirSize*9/12, cirSize*9/12, Gravity.CENTER);
 
         //弓矢
-//        bow.setImageResource(R.drawable.bow);
-//        arrow.setImageResource(R.drawable.arrow);
         bow   = new ImageView(activity);
         arrow = new ImageView(activity);
         bow.setImageResource(R.drawable.bow);
@@ -159,7 +149,7 @@ public class RoulettePage extends Fragment{
         int[] categoryId = new int[CIR_NUM];
         //ID名
         String[] circleStr = {"cir_r", "cir_b", "cir_y", "cir_p", "cir_g", "cir_gray"};
-        //todo
+        //todo カテゴリを店情報から決める
         String[] categoryStr = {"category1", "category2", "category2", "category2", "category2"};
 //        String[] categoryStr = setCategoryID();
         //円とカテゴリマークを重ねる変数
@@ -202,8 +192,6 @@ public class RoulettePage extends Fragment{
         globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-//                center.x = circle[0].getLeft()   + cirSize/2;
-//                center.y = circle[0].getBottom() + cirSize/2;
                 center.x = circle[5].getLeft() + circle[5].getWidth()/2;
                 center.y = circle[5].getTop() + circle[5].getHeight()/2;
 
@@ -242,13 +230,12 @@ public class RoulettePage extends Fragment{
                                     && e1.getX() > center.x - cirSize/2) {
                                 System.out.println("右から左");
                                 //todo toast表示
-//                                if(shopList.size() != 0) {
-//                                    setTranslate();
+                                if(shopList.size() != 0) {
                                     setRotate((int) (Math.abs(velocityX) / 1000));
                                     startRotate();
-//                                }else{
-//                                    Toast.makeText(getActivity(), "店を一個以上選択してください", Toast.LENGTH_SHORT).show();
-//                                }
+                                }else{
+                                    Toast.makeText(getActivity(), "店を一個以上選択してください", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         } catch (Exception e) {
                             // nothing
@@ -266,24 +253,6 @@ public class RoulettePage extends Fragment{
         });
 
         return view;
-    }
-
-    private void editShopList(ShopParameter shop){
-        //ショップが空なら追加して終了
-        if(shopList.isEmpty()){
-            shopList.add(shop);
-            return;
-        }
-        //同じ店があったら排除する
-        for(int i = 0; i < shopList.size(); ++i){
-            String shopName = shopList.get(i).getShopName();
-            if(shopName.equals(shop.getShopName())){
-                shopList.remove(i);
-                return;
-            }
-        }
-        //同じ店がないので追加する
-        shopList.add(shop);
     }
 
     private String[] setCategoryID(){
@@ -329,9 +298,7 @@ public class RoulettePage extends Fragment{
         }
     }
 
-    private void setTranslate(){
-    }
-
+    //弓矢を戻す(上昇)
     private void backTranslate(){
         translate = new TranslateAnimation(0, 0, 0, 0);
         translate.setDuration(500);
@@ -339,9 +306,9 @@ public class RoulettePage extends Fragment{
         arrow.startAnimation(translate);
     }
 
+    //弓矢を放つ(下降)
     private void startTranslate(){
         translate = new TranslateAnimation(0, 0, 0, cirSize);
-//        translate = new TranslateAnimation(0, 0, 0, 0);
         translate.setDuration(500);
         translate.setFillAfter(true);
         arrow.startAnimation(translate);
@@ -351,6 +318,7 @@ public class RoulettePage extends Fragment{
 
             }
 
+            //弓矢で刺した家紋のお店情報をポップアップで表示
             @Override
             public void onAnimationEnd(Animation animation) {
                 // ポップアップ作成
@@ -359,7 +327,7 @@ public class RoulettePage extends Fragment{
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                LayoutInflater layoutInflater = (LayoutInflater)getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater layoutInflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
                 View popupView = layoutInflater.inflate(R.layout.popup_layout, null);
 
@@ -371,8 +339,10 @@ public class RoulettePage extends Fragment{
                         if (mPopupWindow.isShowing()) {
                             // ポップアップ破棄
                             // todo ここに処理
-                            //hitNumで回転後の店情報にアクセスする
+                            //todo hitNumで回転後の店情報にアクセスする
 //                    shopList.get(hitNum).getShopName();
+
+                            //弓矢戻す
                             backTranslate();
                             mPopupWindow.dismiss();
                         }
@@ -387,6 +357,8 @@ public class RoulettePage extends Fragment{
                         if (mPopupWindow.isShowing()) {
                             // ポップアップ破棄
                             // todo ここに処理
+
+                            //弓矢戻す
                             backTranslate();
                             mPopupWindow.dismiss();
                         }
@@ -394,13 +366,15 @@ public class RoulettePage extends Fragment{
                 });
 
                 // 詳細ボタンを押したとき
-                popupView.findViewById(R.id.detail_button).setOnClickListener(new View.OnClickListener(){
+                popupView.findViewById(R.id.detail_button).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v){
+                    public void onClick(View v) {
                         // ポップアップが表示されている場合
-                        if(mPopupWindow.isShowing()){
+                        if (mPopupWindow.isShowing()) {
                             // ポップアップ破棄
                             // todo ここに処理
+
+                            //弓矢戻す
                             backTranslate();
                             mPopupWindow.dismiss();
                         }
@@ -425,7 +399,6 @@ public class RoulettePage extends Fragment{
                 // 画面表示
                 mPopupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
 
-//                arrow.setY(bow.getY() + cirSize);
             }
 
             @Override
@@ -439,9 +412,8 @@ public class RoulettePage extends Fragment{
     private void setRotate(int rotateTime){
         Random r = new Random();
         //todo 格納されている店の個数で回転角度を決める
-//        int shopNum = (CIR_NUM - shopList.size());
-//        hitAngle = r.nextInt(72*shopList.size()) + 72 * shopNum;
-        hitAngle = r.nextInt(360);
+        int shopNum = (CIR_NUM - shopList.size());
+        hitAngle = r.nextInt(72*shopList.size()) + 72 * shopNum;
         //回転数制限
         if(rotateTime >= 8){
             rotateTime = 8;
@@ -464,11 +436,9 @@ public class RoulettePage extends Fragment{
         rotate.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-//                setTranslate();
-//                translate.setFillAfter(false);
-//                arrow.setY(bow.getTop());
             }
 
+            //回転後弓矢を放つ
             @Override
             public void onAnimationEnd(Animation animation) {
                 startTranslate();
@@ -485,24 +455,6 @@ public class RoulettePage extends Fragment{
         hitNum = Hit();
     }
 
-//    //アニメーション後
-//    @Override
-//    public void onAnimationEnd(Animation animation) {
-//
-//    }
-//
-//    //アニメーション繰り返し
-//    @Override
-//    public void onAnimationRepeat(Animation animation) {
-//        Toast.makeText(activity, "AnimationRepeat", Toast.LENGTH_SHORT).show();
-//    }
-//
-//    //アニメーション開始
-//    @Override
-//    public void onAnimationStart(Animation animation) {
-//        Toast.makeText(activity, "AnimationStart", Toast.LENGTH_SHORT).show();
-//    }
-
     @Override
     public void onDestroy(){
         // ポップアップが表示されている場合
@@ -511,6 +463,27 @@ public class RoulettePage extends Fragment{
             mPopupWindow.dismiss();
         }
         super.onDestroy();
+    }
+
+    private void editShopList(ShopParameter shop, boolean flag){
+        if(flag){
+            //リストに同じ店がないので追加する
+            shopList.add(shop);
+        }else{
+            //リストに同じ店があるので排除する
+            for(int i = 0; i < shopList.size(); ++i){
+                String shopName = shopList.get(i).getShopName();
+                if(shopName.equals(shop.getShopName())){
+                    shopList.remove(i);
+                    return;
+                }
+            }
+        }
+    }
+
+    //MainActivityから選択された店の情報を受け取り、追加判定をする
+    public void setShopParameter(ShopParameter shop, boolean flag){
+        editShopList(shop, flag);
     }
 
 }

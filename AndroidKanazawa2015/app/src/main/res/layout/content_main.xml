@@ -41,15 +41,4 @@
         android:layout_alignParentBottom="true"
         android:background="@null"
         android:scaleType="fitXY" />
-    <!--<Button-->
-        <!--android:id="@+id/update_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:background="@null"-->
-        <!--android:scaleType="fitXY"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentTop="false"-->
-        <!--android:layout_alignWithParentIfMissing="false"-->
-        <!--android:layout_alignParentRight="true" />-->
 </RelativeLayout>
