@@ -1,5 +1,7 @@
 package com.example.owner_pc.androidkanazawa2015;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -17,6 +19,7 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
+import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 
@@ -201,8 +204,13 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     }
 
     @Override
-    public void listCallback(ShopParameter shopParameter, boolean bool) {
-
+    public void listCallback(ShopParameter shop, boolean flag) {
+        //rouletteFragmentを取得し、店情報セット
+        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        roulettePage.setShopParameter(shop, flag);
+        //todo マップでも同様な処理をする
+//        Map map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
+//        map.setShopParameter(shop, flag);
     }
 
     @Override
@@ -234,9 +242,5 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void onProviderDisabled(String s) {
 
-    }
-
-    public void listCallback(int position, boolean bool) {
-        updateFragment();
     }
 }

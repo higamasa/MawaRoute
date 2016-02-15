@@ -91,15 +91,6 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Bundle bundle = getArguments();
-        //todo bundleデータ受け取り（data->shop）
-//        ShopParameter shop = (ShopParameter)bundle.getSerializable("shop");
-//        editShopList(shop);
-        int[] data = bundle.getIntArray("data");
-        for(int i=0;i<5;++i){
-            System.out.println(data[i]);
-        }
-
         View view = inflater.inflate(R.layout.roulette_fragment, container, false);
 
         //スマホ画面の大きさから家紋のサイズを計算
@@ -131,7 +122,7 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         int[] categoryId = new int[CIR_NUM];
         //ID名
         String[] circleStr = {"cir_r", "cir_b", "cir_y", "cir_p", "cir_g", "cir_gray"};
-        //todo
+        //todo カテゴリを店情報から決める
         String[] categoryStr = {"category1", "category2", "category2", "category2", "category2"};
 //        String[] categoryStr = setCategoryID();
         //円とカテゴリマークを重ねる変数
@@ -237,22 +228,20 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         return view;
     }
 
-    private void editShopList(ShopParameter shop){
-        //ショップが空なら追加して終了
-        if(shopList.isEmpty()){
+    private void editShopList(ShopParameter shop, boolean flag){
+        if(flag){
+            //リストに同じ店がないので追加する
             shopList.add(shop);
-            return;
-        }
-        //同じ店があったら排除する
-        for(int i = 0; i < shopList.size(); ++i){
-            String shopName = shopList.get(i).getShopName();
-            if(shopName.equals(shop.getShopName())){
-                shopList.remove(i);
-                return;
+        }else{
+            //リストに同じ店があるので排除する
+            for(int i = 0; i < shopList.size(); ++i){
+                String shopName = shopList.get(i).getShopName();
+                if(shopName.equals(shop.getShopName())){
+                    shopList.remove(i);
+                    return;
+                }
             }
         }
-        //同じ店がないので追加する
-        shopList.add(shop);
     }
 
     private String[] setCategoryID(){
@@ -425,6 +414,14 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
             mPopupWindow.dismiss();
         }
         super.onDestroy();
+    }
+
+    public void setShopParameter(ShopParameter shop, boolean flag){
+        editShopList(shop, flag);
+        for(int i = 0; i < shopList.size(); ++i){
+            String shopName = shopList.get(i).getShopName();
+            System.out.println(shopName);
+        }
     }
 
 }

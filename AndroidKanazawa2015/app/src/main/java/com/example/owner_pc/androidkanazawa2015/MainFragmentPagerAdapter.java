@@ -125,5 +125,10 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
         //return tabTitles[position];
         return null;
     }
+
+    public Fragment findFragmentByPosition(ViewPager viewPager, int position) {
+        return (Fragment) instantiateItem(viewPager, position);
+    }
+
 }
 
