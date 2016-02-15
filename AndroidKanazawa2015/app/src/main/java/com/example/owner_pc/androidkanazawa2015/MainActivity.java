@@ -191,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         //ロケーションプロバイダの取得
         String provider = locationManager.getBestProvider(criteria, true);
-
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
             ActivityCompat.requestPermissions(this, permissions, 0);
@@ -211,11 +210,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         Log.d("check", String.valueOf(location.getLongitude()));
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
-        //位置情報取得を破棄
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        locationManager.removeUpdates(this);
+        onDestroyLocation();
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
@@ -238,5 +233,19 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     public void listCallback(int position, boolean bool) {
         updateFragment();
+    }
+
+    private void onDestroyLocation(){
+        //位置情報取得を破棄
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        onDestroyLocation();
     }
 }

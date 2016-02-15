@@ -1,6 +1,7 @@
 package com.example.owner_pc.androidkanazawa2015.google_map;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,26 +13,30 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by atsusuke on 2016/01/29
  * 村田篤亮.
  */
-public class Map extends Fragment {
-
+public class Map extends Fragment implements View.OnClickListener {
     private SupportMapFragment fragment;
     private GoogleMap mMap;
     private int away = 2;
     private boolean flag = true;
+    private FloatingActionButton mFab;
     MarkerOptions options = new MarkerOptions();
+    View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.map_fragment, container, false);
+        view = inflater.inflate(R.layout.map_fragment, container, false);
+        return view;
     }
 
     @Override
@@ -40,8 +45,9 @@ public class Map extends Fragment {
         //マップの初期化
         android.support.v4.app.FragmentManager fm = getChildFragmentManager();
         fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+        mFab = (FloatingActionButton)view.findViewById(R.id.fab);
+        this.mFab.setOnClickListener(this);
     }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -52,10 +58,6 @@ public class Map extends Fragment {
         LatLng lat = new LatLng(latitude, longitude);
         if (mMap == null) {
             mMap = fragment.getMap();
-            // コンパスの有効化
-            mMap.getUiSettings().setCompassEnabled(true);
-            // 拡大・縮小ボタンを表示
-            mMap.getUiSettings().setZoomControlsEnabled(true);
             MakerSetting(lat);
             for (int i=0; i < shopCtrl.getShopList().get(away).shop.size(); i++) {
                 MakerSetting(new LatLng(shopCtrl.getShopList().get(away).shop.get(i).getLatitude(),
@@ -67,7 +69,15 @@ public class Map extends Fragment {
                             .target(lat)
                             .zoom(15).build());
             mMap.moveCamera(camera);
-            flag = true;
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    marker.showInfoWindow();
+                    return true;
+                }
+            });
+            MapUiSettings();
+            this.flag = true;
         }
     }
     private void MakerSetting(LatLng lat){
@@ -75,16 +85,38 @@ public class Map extends Fragment {
         options.position(lat);
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         options.title(null);
-        if (flag == true) {
+        if (this.flag == true) {
             // タイトル・スニペット
             options.title("ワイはここにおるで！");
             //options.snippet(lat.toString());
             // アイコン(マップ上に表示されるデフォルトピン)
             options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-            flag = false;
+            this.flag = false;
         }
         // マーカーを貼り付け
         mMap.addMarker(options);
+    }
+    @Override
+    public void onClick(View v) {
+        if (flag == true){
+            MapUiSettings();
+            this.flag = false;
+        }else{
+            MapUiSettings();
+            this.flag = true;
+        }
+    }
+    private void MapUiSettings(){
+        // コンパスの有効化
+        mMap.getUiSettings().setCompassEnabled(false);
+        // 拡大・縮小ボタンを表示
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        // スクロールの有効化
+        mMap.getUiSettings().setScrollGesturesEnabled(flag);
+        // ズームの有効化
+        mMap.getUiSettings().setZoomGesturesEnabled(flag);
+        // 回転ジェスチャーの有効化
+        mMap.getUiSettings().setRotateGesturesEnabled(flag);
     }
 }
 
