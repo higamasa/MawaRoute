@@ -29,7 +29,6 @@ public class CustomAdapter extends ArrayAdapter<CustomData>{
         layoutInflater_ = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         display.getSize(size);
     }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // 特定の行(position)のデータを得る
