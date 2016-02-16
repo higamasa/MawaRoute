@@ -3,6 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/roulette_page">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/kamon">
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/yumiya">
 
+        <ImageView
+            android:layout_width="202dp"
+            android:layout_height="212dp"
+            android:id="@+id/yazirushi2"
+            android:src="@drawable/yazirushi2"
+            android:scaleType="fitXY"
+            android:layout_gravity="right|bottom" />
 
+    </FrameLayout>
 </FrameLayout>
