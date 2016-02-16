@@ -1,6 +1,8 @@
 package com.example.owner_pc.androidkanazawa2015;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -24,7 +26,11 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
+import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
+
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener{
@@ -56,24 +62,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         getLocation();
     }
 
-    private void updateFragment(){
-        int[] data = new int[5];
-        for(int i=0;i<5;++i){
-            data[i] = i+5;
-        }
-//        viewPager.addOnPageChangeListener(this);
-        viewPager.setOffscreenPageLimit(2);
-
-        pagerAdapter.destroyAllItem(viewPager);
-        pagerAdapter.setData(data);
-        pagerAdapter.setShopCtrl(new ShopCtrl());
-        pagerAdapter.notifyDataSetChanged();
-        viewPager.setCurrentItem(0);
-        viewPager.setAdapter(pagerAdapter);
-    }
-
-    //設定ActivityのCallBackで呼ぶ
-    private void updateListFragment(ShopList shopList){
+    //ListFragmentを再生成して絞り込み条件を反映する
+    private void updateListFragment(ArrayList<ShopParameter> shopList){
         viewPager.setOffscreenPageLimit(2);
         pagerAdapter.destroyListItem(viewPager);
         pagerAdapter.setShopList(shopList);
@@ -86,20 +76,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void onTaskFinished(){
 
-        //todo お試しデータ引継ぎ
-        int[] data = new int[5];
-        for(int i=0;i<5;++i){
-            data[i] = i;
-            System.out.println(data[i]);
-        }
-
         //TabとSwipeの読み込み
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-//        viewPager.addOnPageChangeListener(this);
         viewPager.setOffscreenPageLimit(2);
         pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(),
-                MainActivity.this, latitude, longitude, new ShopCtrl());
-        pagerAdapter.setData(data);
+                MainActivity.this, latitude, longitude, new ShopCtrl().getShopList());
         viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -111,21 +92,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.getTabAt(1).setText("Map");
         tabLayout.getTabAt(2).setText("Roulette");
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-//        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-
-        //ボタンの表示
-        //settingButton.onDrawButton();
-
-        //読み込み完了後スプラッシュ画面閉じる
-//        setTheme(R.style.AppTheme_NoActionBar);
-
-//        updateButton.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                updateFragment();
-//            }
-//        });
     }
 
     //ぐるナビ読み込み失敗
@@ -154,45 +120,12 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         }
     }
 
-//    @Override
-//    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//        Log.d("MainActivity", "onPageScrolled() position="+position);
-//    }
-
-
-//    @Override
-//    public void onPageSelected(int position) {
-//        Log.d("MainActivity", "onPageSelected() position="+position);
-//        ImageButton rightButton = settingButton.getRightButton();
-//        ImageButton leftButton  = settingButton.getLeftButton();
-//        if(rightButton != null && leftButton != null) {
-//            if (position == 1) {
-//                //マップ画面時透過(灰色重ねる)
-//                rightButton.setEnabled(false);
-//                leftButton.setEnabled(false);
-//                rightButton.setAlpha(0.5f);
-//                leftButton.setAlpha(0.5f);
-//                rightButton.setColorFilter(0xaa808080);
-//                leftButton.setColorFilter(0xaa808080);
-//            } else {
-//                //リスト、ルーレット画面では通常表示
-//                rightButton.setEnabled(true);
-//                leftButton.setEnabled(true);
-//                rightButton.setAlpha(1.0f);
-//                leftButton.setAlpha(1.0f);
-//                rightButton.setColorFilter(BIND_NOT_FOREGROUND);
-//                leftButton.setColorFilter(BIND_NOT_FOREGROUND);
-//            }
-//        }
-//    }
-
-//    @Override
-//    public void onPageScrollStateChanged(int state) {
-//        Log.d("MainActivity", "onPageScrollStateChanged() state="+state);
-
-
     //位置情報の取得
     public void getLocation() {
+
+        //位置情報がオンになっているかの確認
+        checkGpsSettings();
+
         // LocationManagerを取得
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // Criteriaオブジェクトを生成
@@ -213,8 +146,13 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     }
 
     @Override
-    public void listCallback(ShopParameter shopParameter, boolean bool) {
-
+    public void listCallback(ShopParameter shop, boolean flag) {
+        //rouletteFragmentを取得し、店情報セット
+        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        roulettePage.setShopParameter(shop, flag);
+        //todo マップでも同様な処理をする(マップクラスでsetShopParameterと同義なメソッド作って)
+        Map map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
+        map.setShopParameter(shop, flag);
     }
 
     @Override
@@ -237,6 +175,36 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     public void onStatusChanged(String s, int i, Bundle bundle) {
 
     }
+
+    //GPSがオフの時、GPS設定画面を開く
+    private boolean checkGpsSettings() {
+        // 位置情報の設定の取得
+        String gps = android.provider.Settings.Secure.getString(
+                getContentResolver(),
+                android.provider.Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        // GPS機能か無線ネットワークがONになっているかを確認
+        if (gps.indexOf("gps", 0) < 0 && gps.indexOf("network", 0) < 0) {
+            // GPSサービスがOFFになっている場合、ダイアログを表示
+            new AlertDialog.Builder(this)
+                    .setTitle("位置情報の設定")
+            .setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // 位置情報設定画面へ移動する
+                            Intent intent = new Intent(
+                                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            intent.addCategory(Intent.CATEGORY_DEFAULT);
+                            startActivity(intent);
+                }
+            })
+                    .create()
+                    .show();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -288,9 +256,5 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void onProviderDisabled(String s) {
 
-    }
-
-    public void listCallback(int position, boolean bool) {
-        updateFragment();
     }
 }
