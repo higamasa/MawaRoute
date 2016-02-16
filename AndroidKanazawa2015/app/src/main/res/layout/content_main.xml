@@ -22,7 +22,8 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        app:tabBackground="@color/colorBlack"
+        app:tabIndicatorColor="@color/colorRed"
         android:elevation="6dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -55,4 +56,15 @@
         android:scaleType="fitXY" />
 
 
+    <!--<Button-->
+        <!--android:id="@+id/update_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@null"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentTop="false"-->
+        <!--android:layout_alignWithParentIfMissing="false"-->
+        <!--android:layout_alignParentRight="true" />-->
 </RelativeLayout>

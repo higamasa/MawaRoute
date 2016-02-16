@@ -7,6 +7,7 @@ public class ShopParameter {
 
     private String shopName;
     private String shopCategory;
+    private String shopCategoryType;
     private String shopUrl;
     private String openTime;
     private String shopAddress;
@@ -18,6 +19,9 @@ public class ShopParameter {
     }
     public void setShopCategory(String category){
         shopCategory = category;
+    }
+    public void setShopCategoryType(String categoryType){
+        shopCategoryType = categoryType;
     }
     public void setShopUrl(String url){
         shopUrl = url;
@@ -43,6 +47,9 @@ public class ShopParameter {
     }
     public String getShopCategory(){
         return shopCategory;
+    }
+    public String getShopCategoryType(){
+        return shopCategoryType;
     }
     public String getShopUrl(){
         return shopUrl;

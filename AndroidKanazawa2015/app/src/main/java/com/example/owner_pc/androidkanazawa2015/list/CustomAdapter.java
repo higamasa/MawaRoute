@@ -11,10 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.example.owner_pc.androidkanazawa2015.R;
-
-import java.util.*;
 
 /**
  * Created by atsusuke on 2016/02/02.
@@ -51,11 +48,12 @@ public class CustomAdapter extends ArrayAdapter<CustomData>{
         Resources resources = context.getResources();
         SparseBooleanArray checkedItemPositions = listView.getCheckedItemPositions();
 
-
         if (checkedItemPositions.get(position) == true) {
-            convertView.setBackgroundColor(Color.rgb(176, 224, 230));
+            convertView.setBackgroundColor(resources.getColor(R.color.colorGold));
+//            convertView.setBackgroundColor(Color.rgb(176, 224, 230));
         } else {
-            convertView.setBackgroundColor(Color.rgb(255, 255, 255));
+//            convertView.setBackgroundColor(Color.rgb(255, 255, 255));
+            convertView.setBackgroundColor(resources.getColor(R.color.colorYellow));
         }
 
         return convertView;

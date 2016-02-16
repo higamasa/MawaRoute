@@ -28,16 +28,26 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.google_map.RouteShop;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * Created by owner-PC on 2016/02/02.
  */
 public class RoulettePage extends Fragment implements Animation.AnimationListener{
+
     PopupWindow mPopupWindow;
+
     private Activity activity = new Activity();
+
+    //家紋ごとの店の情報リスト
+    private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
+
+    //回転後の店番号
+    private int hitNum;
 
     //家紋のViewGroup
     private FrameLayout frameLayout;
@@ -80,6 +90,16 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Bundle bundle = getArguments();
+        //todo bundleデータ受け取り（data->shop）
+//        ShopParameter shop = (ShopParameter)bundle.getSerializable("shop");
+//        editShopList(shop);
+        int[] data = bundle.getIntArray("data");
+        for(int i=0;i<5;++i){
+            System.out.println(data[i]);
+        }
+
         View view = inflater.inflate(R.layout.roulette_fragment, container, false);
 
         //スマホ画面の大きさから家紋のサイズを計算
@@ -108,14 +128,17 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
 
         //画像ID（家紋、カテゴリ）
         int[] circleId = new int[CIR_NUM + 1];
-        int[] categoryId = new int[CIR_NUM + 1];
+        int[] categoryId = new int[CIR_NUM];
         //ID名
         String[] circleStr = {"cir_r", "cir_b", "cir_y", "cir_p", "cir_g", "cir_gray"};
+        //todo
         String[] categoryStr = {"category1", "category2", "category2", "category2", "category2"};
+//        String[] categoryStr = setCategoryID();
+        //円とカテゴリマークを重ねる変数
         Drawable[][] drawables = new Drawable[5][2];
         LayerDrawable[] layerDrawable = new LayerDrawable[5];
 
-        //それぞれの円のマージンを調整しFrameLayoutに追加
+        //家紋の位置、向きを調整しFrameLayoutに追加する
         for(int i=0; i < CIR_NUM; ++i){
             circle[i] = new ImageView(activity);
             //ID設定
@@ -141,10 +164,10 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
             frameLayout.addView(circle[i], params[i]);
         }
 
+        //真ん中の円を表示
         circle[5] = new ImageView(activity);
         circle[5].setImageResource(R.drawable.cir_gray);
         frameLayout.addView(circle[5], params[5]);
-
 
         //レンダリング後
         //回転の中心座標を家紋の一番上の画像から割り出す
@@ -188,8 +211,13 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
                                     && e1.getY() < center.y + cirSize*2
                                     && e1.getX() > center.x - cirSize/2) {
                                 System.out.println("右から左");
-                                setRotate((int) (Math.abs(velocityX) / 1000));
-                                startRotate();
+                                //todo toast表示
+//                                if(shopList.size() != 0) {
+                                    setRotate((int) (Math.abs(velocityX) / 1000));
+                                    startRotate();
+//                                }else{
+//                                    Toast.makeText(getActivity(), "店を一個以上選択してください", Toast.LENGTH_SHORT).show();
+//                                }
                             }
                         } catch (Exception e) {
                             // nothing
@@ -209,9 +237,73 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         return view;
     }
 
+    private void editShopList(ShopParameter shop){
+        //ショップが空なら追加して終了
+        if(shopList.isEmpty()){
+            shopList.add(shop);
+            return;
+        }
+        //同じ店があったら排除する
+        for(int i = 0; i < shopList.size(); ++i){
+            String shopName = shopList.get(i).getShopName();
+            if(shopName.equals(shop.getShopName())){
+                shopList.remove(i);
+                return;
+            }
+        }
+        //同じ店がないので追加する
+        shopList.add(shop);
+    }
+
+    private String[] setCategoryID(){
+        //カテゴリ画像のID
+        String[] categoryID = new String[5];
+        //ショップがあるならカテゴリ画像を、無いならナシ画像を入れる
+        for(int i = 0; i < 5; ++i){
+            if(shopList.get(i) != null){
+                categoryID[i] = shopList.get(i).getShopCategoryType();
+            }else{
+                //todo noItem画像追加
+                categoryID[i] = "noItem";
+            }
+        }
+
+        return categoryID;
+    }
+
+    private int Hit(){
+        switch (hitAngle / 72) {
+            case 0:
+                System.out.println("5番");
+                System.out.println(hitAngle);
+                return 4;
+            case 1:
+                System.out.println("4番");
+                System.out.println(hitAngle);
+                return 3;
+            case 2:
+                System.out.println("3番");
+                System.out.println(hitAngle);
+                return 2;
+            case 3:
+                System.out.println("2番");
+                System.out.println(hitAngle);
+                return 1;
+            case 4:
+                System.out.println("1番");
+                System.out.println(hitAngle);
+                return 0;
+            default:
+                return 0;
+        }
+    }
+
     //回転アニメーション初期化
     private void setRotate(int rotateTime){
         Random r = new Random();
+        //todo 格納されている店の個数で回転角度を決める
+//        int shopNum = (CIR_NUM - shopList.size());
+//        hitAngle = r.nextInt(72*shopList.size()) + 72 * shopNum;
         hitAngle = r.nextInt(360);
         //回転数制限
         if(rotateTime >= 8){
@@ -235,6 +327,8 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
         rotate.setAnimationListener(this);
         //アニメーション開始
         frameLayout.startAnimation(rotate);
+        //店の番号
+        hitNum = Hit();
     }
 
     //アニメーション後
@@ -258,6 +352,8 @@ public class RoulettePage extends Fragment implements Animation.AnimationListene
                 if (mPopupWindow.isShowing()) {
                     // ポップアップ破棄
                     // todo ここに処理
+                    //hitNumで回転後の店情報にアクセスする
+//                    shopList.get(hitNum).getShopName();
                     mPopupWindow.dismiss();
                 }
             }
