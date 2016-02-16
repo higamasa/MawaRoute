@@ -113,7 +113,7 @@ public class RoulettePage extends Fragment{
         frameLayout  = (FrameLayout)view.findViewById(R.id.roulette_page);
         kamonLayout  = (FrameLayout)view.findViewById(R.id.kamon);
         yumiyaLayout = (FrameLayout)view.findViewById(R.id.yumiya);
-        kamonLayout.setPadding(0, cirSize, 0, 0);
+        kamonLayout.setPadding(0, cirSize/2, 0, 0);
 
         //弓矢のグラビティを設定
         FrameLayout.LayoutParams bowParam   = new FrameLayout.LayoutParams(cirSize, cirSize, Gravity.CENTER);

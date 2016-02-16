@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     //ListFragmentを再生成して絞り込み条件を反映する
     private void updateListFragment(ArrayList<ShopParameter> shopList){
         viewPager.setOffscreenPageLimit(2);
-//        pagerAdapter.destroyListItem(viewPager);
         pagerAdapter.destroyAllItem(viewPager);
         pagerAdapter.setShopList(shopList);
         pagerAdapter.notifyDataSetChanged();
