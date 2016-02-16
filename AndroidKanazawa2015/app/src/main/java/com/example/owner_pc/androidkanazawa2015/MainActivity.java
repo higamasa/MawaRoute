@@ -44,21 +44,19 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     private LocationManager locationManager;
     private double latitude  = 36.594682;
     private double longitude = 136.625573;
+    private static final int SETTING_ACTIVITY = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //位置情報の読み込み
-        //getLocation();
-        Position position = new Position(latitude, longitude);
-        //final ListView listView = (ListView)findViewById(R.id.list);
-
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(_toolBar);
         //search();
+
+        //位置情報の読み込み
         getLocation();
     }
 
@@ -224,13 +222,20 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, RangeCategorySettings.class);
-            //intent.setClassName("com.example.owner_pc.androidkanazawa2015", "com.example.owner_pc.androidkanazawa2015.RangeCategorySettings");
-            //startActivity(intent);
-            startActivity(intent);
+            startActivityForResult(intent, SETTING_ACTIVITY);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+        if(requestCode == SETTING_ACTIVITY){
+            if(resultCode == RESULT_OK){
+                updateListFragment((ArrayList<ShopParameter>)data.getSerializableExtra("ShopList"));
+            }
+        }
     }
 
     public void search(){

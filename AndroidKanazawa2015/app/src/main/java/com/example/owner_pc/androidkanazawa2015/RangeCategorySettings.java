@@ -1,5 +1,6 @@
 package com.example.owner_pc.androidkanazawa2015;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,7 +19,7 @@ public class RangeCategorySettings extends AppCompatActivity implements View.OnC
 
     private RadioGroup _radioGroup;
     private SettingParameter _settingParam = new SettingParameter();
-    private ShopCtrl _shopCtrl;
+    private ShopCtrl _shopCtrl = new ShopCtrl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -78,7 +79,9 @@ public class RangeCategorySettings extends AppCompatActivity implements View.OnC
 
     public void onClick_ok(View v){
         _shopCtrl.categoryDividing();
-        // todo shopCtrl.getshopList に値を返す?
+        Intent data = new Intent();
+        data.putExtra("ShopList", _shopCtrl.getShopList());
+        setResult(RESULT_OK, data);
         finish();
 
         //Toast.makeText(RangeCategorySettings.this, "設定を変更しました", Toast.LENGTH_SHORT).show();
