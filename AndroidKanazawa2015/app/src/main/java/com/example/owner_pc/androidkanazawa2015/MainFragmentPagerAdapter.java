@@ -73,6 +73,18 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
         return POSITION_NONE;
     }
 
+    public void destroyAllItem(ViewPager pager) {
+        for (int i = 0; i < getCount(); i++) {
+            try {
+                Object objectobject = this.instantiateItem(pager, i);
+                if (objectobject != null)
+                    destroyItem(pager, i, objectobject);
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
     public void destroyListItem(ViewPager pager) {
         try {
             Object object = this.instantiateItem(pager, 0);
@@ -91,7 +103,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
             FragmentManager manager = ((Fragment) object).getFragmentManager();
             FragmentTransaction trans = manager.beginTransaction();
             trans.remove((Fragment) object);
-            trans.commit();
+            trans.commitAllowingStateLoss();
         }
     }
 

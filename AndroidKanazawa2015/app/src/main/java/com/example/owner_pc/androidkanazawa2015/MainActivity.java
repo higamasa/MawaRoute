@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
+import com.example.owner_pc.androidkanazawa2015.gnavi.SettingParameter;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     //ListFragmentを再生成して絞り込み条件を反映する
     private void updateListFragment(ArrayList<ShopParameter> shopList){
         viewPager.setOffscreenPageLimit(2);
-        pagerAdapter.destroyListItem(viewPager);
+//        pagerAdapter.destroyListItem(viewPager);
+        pagerAdapter.destroyAllItem(viewPager);
         pagerAdapter.setShopList(shopList);
         pagerAdapter.notifyDataSetChanged();
         viewPager.setCurrentItem(0);

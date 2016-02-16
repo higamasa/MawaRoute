@@ -36,14 +36,15 @@ public class RangeCategorySettings extends AppCompatActivity implements View.OnC
         _radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton radioButton = (RadioButton) findViewById(checkedId);
+                //todo if文がスルーされとる
                 if (radioButton.getText() == "300") {
-                    _settingParam.setRangeType(0);
+                    System.out.println(_settingParam.getRangeType());
                 }
                 if (radioButton.getText() == "500") {
-                    _settingParam.setRangeType(1);
+                    System.out.println(_settingParam.getRangeType());
                 }
                 if (radioButton.getText() == "1000") {
-                    _settingParam.setRangeType(2);
+                    System.out.println(_settingParam.getRangeType());
                 }
                 Log.d("radiobutton", "onCheckedChanged():" + radioButton.getId());
             }
@@ -53,6 +54,7 @@ public class RangeCategorySettings extends AppCompatActivity implements View.OnC
 
 
     // チェックボタン
+    //todo on,off処理
     @Override
     public void onClick(View v) {
         switch (v.getId()){
