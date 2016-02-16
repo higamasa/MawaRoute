@@ -8,8 +8,6 @@ import java.util.Collections;
  * Created by owner-PC on 2016/01/15.
  */
 public class ShopCtrl {
-
-//    private static ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
     private static ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
     private static ArrayList<RangeList> rangeList = new ArrayList<RangeList>();
 
