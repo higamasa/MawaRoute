@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -16,30 +17,27 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
-import com.example.owner_pc.androidkanazawa2015.gnavi.OnActivityResultCallback;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 
+import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.list.List;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks, List.FragmentTopCallback {
+
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener{
 
     private Toolbar _toolBar = null;
     private SearchView _searchView = null;
     private Menu menu = null;
-    private SettingButton settingButton = new SettingButton(this);
     private MainFragmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
-    //    private SettingButton settingButton = new SettingButton(this);
-    private double latitude = 36.594682;
+    private LocationManager locationManager;
+    private double latitude  = 36.594682;
     private double longitude = 136.625573;
-    //てきとうに500とりますた(^p^)
-    private String[] list = new String[500];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +47,13 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //位置情報の読み込み
         //getLocation();
         Position position = new Position(latitude, longitude);
-        //ぐるナビの読み込み
-        gnaviCtrl.execute(position);
         //final ListView listView = (ListView)findViewById(R.id.list);
 
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(_toolBar);
         //search();
+        getLocation();
     }
 
     private void updateFragment(){
@@ -110,6 +107,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.getTabAt(0).setIcon(R.drawable.list_tab);
         tabLayout.getTabAt(1).setIcon(R.drawable.map_tab);
         tabLayout.getTabAt(2).setIcon(R.drawable.cir_gray);
+        tabLayout.getTabAt(0).setText("List");
+        tabLayout.getTabAt(1).setText("Map");
+        tabLayout.getTabAt(2).setText("Roulette");
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 //        tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         //ボタンの表示
@@ -126,11 +127,13 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 //            }
 //        });
     }
+
     //ぐるナビ読み込み失敗
     @Override
     public void onTaskCancelled() {
 
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -155,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 //    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 //        Log.d("MainActivity", "onPageScrolled() position="+position);
 //    }
+
 
 //    @Override
 //    public void onPageSelected(int position) {
@@ -185,11 +189,12 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 //    @Override
 //    public void onPageScrollStateChanged(int state) {
 //        Log.d("MainActivity", "onPageScrollStateChanged() state="+state);
-//    }
+
+
     //位置情報の取得
     public void getLocation() {
         // LocationManagerを取得
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // Criteriaオブジェクトを生成
         Criteria criteria = new Criteria();
         //位置情報の精度
@@ -198,22 +203,39 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         //ロケーションプロバイダの取得
         String provider = locationManager.getBestProvider(criteria, true);
-        //現在地取得
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                (this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
+            ActivityCompat.requestPermissions(this, permissions, 0);
             return;
         }
-        Location location = locationManager.getLastKnownLocation(provider);
+        locationManager.requestLocationUpdates(provider, 0, 0, this);
+    }
+
+    @Override
+    public void listCallback(ShopParameter shopParameter, boolean bool) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d("check", String.valueOf(location.getLatitude()));
+        Log.d("check", String.valueOf(location.getLongitude()));
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
+        //位置情報取得を破棄
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.removeUpdates(this);
+        Position position = new Position(latitude, longitude);
+        //ぐるナビの読み込み
+        gnaviCtrl.execute(position);
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
     }
 
     @Override
@@ -259,6 +281,15 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     }
 
     @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
     public void listCallback(int position, boolean bool) {
         updateFragment();
     }
