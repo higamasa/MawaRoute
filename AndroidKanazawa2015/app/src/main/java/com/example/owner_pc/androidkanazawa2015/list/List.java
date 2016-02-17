@@ -24,11 +24,13 @@ public class List extends Fragment{
     View view;
     Bitmap image;
     Activity activity;
+    private ArrayList<CustomData> objects;
     private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
     private CustomAdapter customAdapter;
     private int size;
     private FragmentTopCallback mCallback;
     private CustomData item;
+    private ListView listView;
 
     public interface FragmentTopCallback {
         void listCallback(ShopParameter shopParameter , boolean bool);
@@ -65,9 +67,9 @@ public class List extends Fragment{
         Bundle bundle = getArguments();
         shopList = (ArrayList<ShopParameter>)bundle.getSerializable("ShopList");
         //Log.d("check", String.valueOf(shopCtrl.getShopList().get(away).shop.size()));
-        ListView listView = (ListView)view.findViewById(R.id.list);
+        listView = (ListView)view.findViewById(R.id.list);
         /* データの作成 */
-        ArrayList<CustomData> objects = new ArrayList<CustomData>();
+        objects = new ArrayList<CustomData>();
         size = shopList.size();
         image = BitmapFactory.decodeResource(getResources(), R.drawable.cir_g);
         for (int i = 0; i < size; i++){
@@ -100,6 +102,18 @@ public class List extends Fragment{
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        view = null;
+        listView.setAdapter(null);
+        customAdapter = null;
+        image = null;
+        item.setImagaData(null);
+        item.setTextData(null);
+        objects.clear();
     }
 
     public void setShopList(ArrayList<ShopParameter> shopList){

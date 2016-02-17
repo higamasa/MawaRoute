@@ -17,7 +17,9 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
  */
 public class RangeCategorySettings extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
+    private static int CATEGORY_NUM = 6;
     private RadioGroup _radioGroup;
+    private CheckBox[] checkBoxes = new CheckBox[CATEGORY_NUM];
     private SettingParameter _settingParam = new SettingParameter();
     private ShopCtrl _shopCtrl = new ShopCtrl();
 
@@ -26,9 +28,49 @@ public class RangeCategorySettings extends AppCompatActivity implements RadioGro
         super.onCreate(savedInstanceState);
         setTitle("絞り込み設定");
         setContentView(R.layout.range_category_settings);
+        initSetting();
+
+    }
+
+    private void initSetting(){
+        //ラジオボタンの初期状態設定
         _radioGroup = (RadioGroup)findViewById(R.id.RadioGroup);
         _radioGroup.setOnCheckedChangeListener(this);
-        _radioGroup.check(R.id.RadioButton1);
+        switch (_settingParam.getRangeType()){
+            case 0:
+                //300m
+                _radioGroup.check(R.id.RadioButton1);
+                break;
+            case 1:
+                //500m
+                _radioGroup.check(R.id.RadioButton2);
+                break;
+            case 2:
+                //1000m
+                _radioGroup.check(R.id.RadioButton3);
+        }
+
+        //絞り込みの状態取得
+        boolean[] checkFlag = new boolean[CATEGORY_NUM];
+        checkFlag[0] = _settingParam.isHighCal();
+        checkFlag[1] = _settingParam.isFastFood();
+        checkFlag[2] = _settingParam.isOther();
+        checkFlag[3] = _settingParam.isWine();
+        checkFlag[4] = _settingParam.isHighGrade();
+        checkFlag[5] = _settingParam.isCafe();
+
+        //checkBoxのID指定
+        checkBoxes[0] = (CheckBox)findViewById(R.id.high_cal);
+        checkBoxes[1] = (CheckBox)findViewById(R.id.fastfood);
+        checkBoxes[2] = (CheckBox)findViewById(R.id.other);
+        checkBoxes[3] = (CheckBox)findViewById(R.id.wine);
+        checkBoxes[4] = (CheckBox)findViewById(R.id.high_grade);
+        checkBoxes[5] = (CheckBox)findViewById(R.id.cafe);
+
+        //チェックボックスの初期状態設定
+        for(int i = 0; i < CATEGORY_NUM ; ++i){
+            checkBoxes[i].setChecked(checkFlag[i]);
+        }
     }
 
     // ラジオボタン
@@ -56,6 +98,7 @@ public class RangeCategorySettings extends AppCompatActivity implements RadioGro
     //todo on,off処理
     public void onCheckBoxClick(View v) {
         final boolean checked = ((CheckBox) v).isChecked();
+
         switch (v.getId()){
             case R.id.high_cal:
                 if(checked) {
@@ -114,7 +157,7 @@ public class RangeCategorySettings extends AppCompatActivity implements RadioGro
         //Toast.makeText(RangeCategorySettings.this, "設定を変更しました", Toast.LENGTH_SHORT).show();
     }
 
-    public void onClickCansel(View v){
+    public void onClickCancel(View v){
         finish();
     }
 

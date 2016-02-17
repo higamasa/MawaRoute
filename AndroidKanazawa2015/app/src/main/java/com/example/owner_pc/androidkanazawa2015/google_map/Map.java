@@ -26,6 +26,7 @@ import java.util.ArrayList;
  */
 public class Map extends Fragment {
 
+    private View view;
     private SupportMapFragment fragment;
     private GoogleMap mMap;
     private boolean flag = true;
@@ -34,7 +35,8 @@ public class Map extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.map_fragment, container, false);
+        view = inflater.inflate(R.layout.map_fragment, container, false);
+        return view;
     }
 
     @Override
@@ -116,7 +118,14 @@ public class Map extends Fragment {
         }
     }
 
-
-
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        view = null;
+        fragment = null;
+        options.icon(null);
+        options = null;
+        mMap.clear();
+    }
 }
 

@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     private double latitude  = 36.594682;
     private double longitude = 136.625573;
     private static final int SETTING_ACTIVITY = 1000;
+    private RoulettePage roulettePage;
+    private Map map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +65,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         getLocation();
     }
 
-    //ListFragmentを再生成して絞り込み条件を反映する
-    private void updateListFragment(ArrayList<ShopParameter> shopList){
-        viewPager.setOffscreenPageLimit(2);
-        pagerAdapter.destroyAllItem(viewPager);
-        pagerAdapter.setShopList(shopList);
-        pagerAdapter.notifyDataSetChanged();
-        viewPager.setCurrentItem(0);
-        viewPager.setAdapter(pagerAdapter);
-    }
-
     //ぐるナビ読み込み完了
     @Override
     public void onTaskFinished(){
@@ -81,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(2);
         pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(),
-                MainActivity.this, latitude, longitude, new ShopCtrl().getShopList());
+                getApplicationContext(), latitude, longitude, new ShopCtrl().getShopList());
         viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -138,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //ロケーションプロバイダの取得
         String provider = locationManager.getBestProvider(criteria, true);
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
             ActivityCompat.requestPermissions(this, permissions, 0);
             return;
@@ -146,13 +138,23 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         locationManager.requestLocationUpdates(provider, 0, 0, this);
     }
 
+    //ListFragmentを再生成して絞り込み条件を反映する
+    private void updateListFragment(ArrayList<ShopParameter> shopList){
+        viewPager.setOffscreenPageLimit(2);
+        pagerAdapter.destroyAllItem(viewPager);
+        pagerAdapter.setShopList(shopList);
+        pagerAdapter.notifyDataSetChanged();
+        viewPager.setCurrentItem(0);
+        viewPager.setAdapter(pagerAdapter);
+    }
+
     @Override
     public void listCallback(ShopParameter shop, boolean flag) {
         //rouletteFragmentを取得し、店情報セット
-        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
         roulettePage.setShopParameter(shop, flag);
         //todo マップでも同様な処理をする(マップクラスでsetShopParameterと同義なメソッド作って)
-        Map map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
+        map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
         map.setShopParameter(shop, flag);
     }
 
@@ -163,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
         //位置情報取得を破棄
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         locationManager.removeUpdates(this);
@@ -186,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // GPS機能か無線ネットワークがONになっているかを確認
         if (gps.indexOf("gps", 0) < 0 && gps.indexOf("network", 0) < 0) {
             // GPSサービスがOFFになっている場合、ダイアログを表示
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(getApplicationContext())
                     .setTitle("位置情報の設定")
             .setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -225,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
         // SettingButtonが押されたとき
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, RangeCategorySettings.class);
+            Intent intent = new Intent(getApplicationContext(), RangeCategorySettings.class);
             startActivityForResult(intent, SETTING_ACTIVITY);
             return true;
         }
@@ -239,7 +241,15 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
         if(requestCode == SETTING_ACTIVITY){
             if(resultCode == RESULT_OK){
+                roulettePage = null;
+                map = null;
+                //Listを更新
                 updateListFragment((ArrayList<ShopParameter>)data.getSerializableExtra("ShopList"));
+                //Fragmentを取得し、店情報リセット
+//                RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+//                roulettePage.celarShopParameter();
+//                Map map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
+//                map.celarShopParameter();
             }
         }
     }
@@ -267,5 +277,12 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        viewPager.setAdapter(null);
+        pagerAdapter = null;
     }
 }
