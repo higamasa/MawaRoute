@@ -10,9 +10,12 @@ import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
+import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
 import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
  * Created by atsusuke on 2015/12/31.
  */
@@ -21,18 +24,15 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
     private Context context;
     private double latitude;
     private double longitude;
-    private ShopCtrl shopCtrl;
-    private int[] data = new int[5];
-    private ShopList shopList = new ShopList();
-
+    private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
 
     public MainFragmentPagerAdapter(FragmentManager fm, Context context , double latitude , double longitude ,
-                                    ShopCtrl shopCtrl) {
+                                    ArrayList<ShopParameter> shopList) {
         super(fm);
         this.context = context;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.shopCtrl = shopCtrl;
+        this.shopList = shopList;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
         switch(arg0){
             //リスト
             case 0:
-                bundle.putSerializable("shopCtrl", shopCtrl);
+                bundle.putSerializable("ShopList", shopList);
                 List list = new List();
                 list.setArguments(bundle);
                 return list;
@@ -55,17 +55,14 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
                 //todo ショップリスト渡す
                 bundle.putDouble("latitude" , latitude);
                 bundle.putDouble("longitude" , longitude);
-                bundle.putSerializable("shopCtrl", shopCtrl);
+                bundle.putSerializable("ShopList", shopList);
                 Map map = new Map();
                 map.setArguments(bundle);
                 return map;
 //                return new TestPage1();
             //ルーレット
             case 2:
-                //todo ショップリスト渡す
-                bundle.putIntArray("data", data);
                 RoulettePage roulettePage = new RoulettePage();
-                roulettePage.setArguments(bundle);
                 return roulettePage;
         }
         return null;
@@ -77,7 +74,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
     }
 
     public void destroyAllItem(ViewPager pager) {
-        for (int i = 1; i < getCount(); i++) {
+        for (int i = 0; i < getCount(); i++) {
             try {
                 Object objectobject = this.instantiateItem(pager, i);
                 if (objectobject != null)
@@ -90,13 +87,14 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
 
     public void destroyListItem(ViewPager pager) {
         try {
-            Object objectobject = this.instantiateItem(pager, 0);
-            if (objectobject != null)
-                destroyItem(pager, 0, objectobject);
+            Object object = this.instantiateItem(pager, 0);
+            if (object != null)
+                destroyItem(pager, 0, object);
         } catch (Exception e) {
 
         }
     }
+
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         super.destroyItem(container, position, object);
@@ -105,18 +103,12 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
             FragmentManager manager = ((Fragment) object).getFragmentManager();
             FragmentTransaction trans = manager.beginTransaction();
             trans.remove((Fragment) object);
-            trans.commit();
+            trans.commitAllowingStateLoss();
         }
     }
 
-    public void setData(int[] data){
-        this.data = data;
-    }
-    public void setShopList(ShopList shopList){
+    public void setShopList(ArrayList<ShopParameter> shopList){
         this.shopList = shopList;
-    }
-    public void setShopCtrl(ShopCtrl shopCtrl){
-        this.shopCtrl = shopCtrl;
     }
 
     @Override
@@ -125,5 +117,10 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
         //return tabTitles[position];
         return null;
     }
+
+    public Fragment findFragmentByPosition(ViewPager viewPager, int position) {
+        return (Fragment) instantiateItem(viewPager, position);
+    }
+
 }
 

@@ -1,9 +1,11 @@
 package com.example.owner_pc.androidkanazawa2015.gnavi;
 
+import java.io.Serializable;
+
 /**
  * Created by owner-PC on 2016/01/15.
  */
-public class ShopParameter {
+public class ShopParameter implements Serializable{
 
     private String shopName;
     private String shopCategory;

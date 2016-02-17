@@ -23,7 +23,7 @@ public class SettingParameter {
         highGrade = true;
         wine      = true;
         other     = true;
-        rangeType = 0;
+        rangeType = 2;
         keyword   = null;
     }
 
