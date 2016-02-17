@@ -22,14 +22,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:checked="true"
             android:text="300"
             android:textSize="30dp">
 
         </RadioButton>
 
         <RadioButton
-            android:id="@+id/RadioButtoni2"
+            android:id="@+id/RadioButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -73,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:checkMark="@android:drawable/checkbox_off_background"
                 android:checked="false"
+                android:onClick="onCheckBoxClick"
                 android:padding="5dp"
                 android:text="ガッツリ系"
                 android:textSize="20dp" />
@@ -83,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:checkMark="@android:drawable/checkbox_off_background"
                 android:checked="false"
+                android:onClick="onCheckBoxClick"
                 android:padding="5dp"
                 android:text="ファストフード"
                 android:textSize="20dp" />
@@ -93,6 +94,7 @@
                 android:layout_height="wrap_content"
                 android:checkMark="@android:drawable/checkbox_off_background"
                 android:checked="false"
+                android:onClick="onCheckBoxClick"
                 android:padding="5dp"
                 android:text="居酒屋"
                 android:textSize="20dp" />
@@ -109,6 +111,7 @@
                 android:layout_height="wrap_content"
                 android:checkMark="@android:drawable/checkbox_off_background"
                 android:checked="false"
+                android:onClick="onCheckBoxClick"
                 android:padding="5dp"
                 android:text="その他"
                 android:textSize="20dp" />
@@ -120,6 +123,7 @@
                 android:layout_height="wrap_content"
                 android:checkMark="@android:drawable/checkbox_off_background"
                 android:checked="false"
+                android:onClick="onCheckBoxClick"
                 android:padding="5dp"
                 android:text="高級料理屋"
                 android:textSize="20dp" />
@@ -130,6 +134,7 @@
                 android:layout_height="wrap_content"
                 android:checkMark="@android:drawable/checkbox_off_background"
                 android:checked="false"
+                android:onClick="onCheckBoxClick"
                 android:padding="5dp"
                 android:text="喫茶店"
                 android:textSize="20dp" />

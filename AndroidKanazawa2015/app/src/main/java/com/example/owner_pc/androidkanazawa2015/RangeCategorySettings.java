@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.SettingParameter;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
@@ -15,7 +15,7 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 /**
  * Created by nns on 2016/02/09.
  */
-public class RangeCategorySettings extends AppCompatActivity implements View.OnClickListener{
+public class RangeCategorySettings extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup _radioGroup;
     private SettingParameter _settingParam = new SettingParameter();
@@ -24,57 +24,82 @@ public class RangeCategorySettings extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setTitle("絞り込み設定");
         setContentView(R.layout.range_category_settings);
-        //getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
         _radioGroup = (RadioGroup)findViewById(R.id.RadioGroup);
-        checkradio();
+        _radioGroup.setOnCheckedChangeListener(this);
+        _radioGroup.check(R.id.RadioButton1);
     }
 
     // ラジオボタン
-    public void checkradio(){
-        _radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton radioButton = (RadioButton) findViewById(checkedId);
-                //todo if文がスルーされとる
-                if (radioButton.getText() == "300") {
-                    System.out.println(_settingParam.getRangeType());
-                }
-                if (radioButton.getText() == "500") {
-                    System.out.println(_settingParam.getRangeType());
-                }
-                if (radioButton.getText() == "1000") {
-                    System.out.println(_settingParam.getRangeType());
-                }
-                Log.d("radiobutton", "onCheckedChanged():" + radioButton.getId());
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        //int CheckedId = _radioGroup.getCheckedRadioButtonId();
+        RadioButton radioButton = (RadioButton) findViewById(checkedId);
+        if(radioButton.isChecked()) {
+            if (checkedId == R.id.RadioButton1) {
+                _settingParam.setRangeType(0);
+                //Log.d("radioCheck1", "radio1 Checking Complete!");
+            } else if (checkedId == R.id.RadioButton2) {
+                _settingParam.setRangeType(1);
+                //Log.d("radioCheck2", "radio2 Checking Complete!");
+            } else if (checkedId == R.id.RadioButton3) {
+                _settingParam.setRangeType(2);
+                //Log.d("radioCheck3", "radio3 Checking Complete!");
             }
-        });
-
+        } else {
+            _settingParam.setRangeType(0);
+        }
     }
-
 
     // チェックボタン
     //todo on,off処理
-    @Override
-    public void onClick(View v) {
+    public void onCheckBoxClick(View v) {
+        final boolean checked = ((CheckBox) v).isChecked();
         switch (v.getId()){
             case R.id.high_cal:
-                _settingParam.setHighCal(true);
+                if(checked) {
+                    _settingParam.setHighCal(true);
+                    Log.d("Check CheckBox Click", "set Completed!");
+                } else {
+                    _settingParam.setHighCal(false);
+                    Log.d("Check CheckBox Click", "unset Completed!");
+                }
                 break;
             case R.id.fastfood:
-                _settingParam.setFastFood(true);
+                if(checked) {
+                    _settingParam.setFastFood(true);
+                } else {
+                    _settingParam.setFastFood(false);
+                }
                 break;
             case R.id.other:
-                _settingParam.setOther(true);
+                if(checked) {
+                    _settingParam.setOther(true);
+                } else {
+                    _settingParam.setOther(false);
+                }
                 break;
             case R.id.wine:
-                _settingParam.setWine(true);
+                if(checked) {
+                    _settingParam.setWine(true);
+                } else {
+                    _settingParam.setWine(false);
+                }
                 break;
             case R.id.high_grade:
-                _settingParam.setHighGrade(true);
+                if(checked) {
+                    _settingParam.setHighGrade(true);
+                } else {
+                    _settingParam.setHighGrade(false);
+                }
                 break;
             case R.id.cafe:
-                _settingParam.setCafe(true);
+                if(checked) {
+                    _settingParam.setCafe(true);
+                } else {
+                    _settingParam.setCafe(false);
+                }
                 break;
         }
     }

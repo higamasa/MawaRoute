@@ -235,7 +235,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         return super.onOptionsItemSelected(item);
     }
 
-    // 検索バーの選択時
     @Override
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
         if(requestCode == SETTING_ACTIVITY){
@@ -245,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         }
     }
 
+    // 検索バーの選択時
     public void search(){
         _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
