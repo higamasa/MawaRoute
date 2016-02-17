@@ -93,6 +93,4 @@ public class RangeCategorySettings extends AppCompatActivity implements View.OnC
         finish();
     }
 
-
-
 }
