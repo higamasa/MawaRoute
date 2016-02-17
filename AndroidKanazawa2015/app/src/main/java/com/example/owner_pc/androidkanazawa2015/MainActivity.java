@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -36,8 +37,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener{
 
-    private Toolbar _toolBar = null;
-    private SearchView _searchView = null;
+    private Toolbar _toolBar;
+    private SearchView _searchView;
     private Menu menu = null;
     private MainFragmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(_toolBar);
+
         //search();
 
         //位置情報の読み込み
@@ -64,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     //ListFragmentを再生成して絞り込み条件を反映する
     private void updateListFragment(ArrayList<ShopParameter> shopList){
         viewPager.setOffscreenPageLimit(2);
-//        pagerAdapter.destroyListItem(viewPager);
         pagerAdapter.destroyAllItem(viewPager);
         pagerAdapter.setShopList(shopList);
         pagerAdapter.notifyDataSetChanged();
@@ -208,25 +209,28 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //Inflater inflate =
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        // 検索ボタン配置
+        MenuItem searchItem = menu.findItem(R.id.searchView);
+        _searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        // SettingButtonが押されたとき
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, RangeCategorySettings.class);
             startActivityForResult(intent, SETTING_ACTIVITY);
             return true;
         }
+        // SearchButtonが押されたとき
+        search();
 
         return super.onOptionsItemSelected(item);
     }
@@ -240,8 +244,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         }
     }
 
+    // 検索バーの選択時
     public void search(){
-        _searchView = (SearchView) _toolBar.getMenu().findItem(R.id.menu_search).getActionView();
         _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
