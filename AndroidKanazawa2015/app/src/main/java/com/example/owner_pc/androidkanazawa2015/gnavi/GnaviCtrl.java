@@ -29,7 +29,6 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
     public ProgressDialog progressDialog;
     //距離ごとのリスト（5種類）、それぞれの中に店のリスト（複数）がある
     private ArrayList<ShopList> shopList = new ArrayList<ShopList>();
-    //5種類の距離(300m, 500m, 1000m, 2000m, 3000m)
     //3種類の距離(300m, 500m, 1000m)
     private static final int RANGE = 3;
 
@@ -41,6 +40,7 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
         }
     }
 
+    //XMLデータ取得前
     @Override
     protected void onPreExecute() {
 
@@ -56,7 +56,7 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
         return;
     }
 
-
+    //XMLデータ取得
     @Override
     protected String[] doInBackground(Position... positions) {
 
@@ -81,20 +81,18 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
         return result;
     }
 
+    //XMLデータ取得後
     @Override
     protected void onPostExecute(String[] response) {
 
         //xmlデータをshopListに書き込む
         xmlWriteInList(response);
 
-        //店クラスに店リストとカテゴリ分けした文字配列をセット
+        //ShopListをカテゴリ分けし直す
         ArrayList<RangeList> rangeList = new ArrayList<RangeList>();
         ShopCtrl shopCtrl = new ShopCtrl();
         SettingParameter setting = new SettingParameter();
 
-
-        //todo setShopListコメントアウトする
-        shopCtrl.setShopList(shopList);
         //絞り込み条件を初期設定にする
         setting.initSetting();
         //ショップリストをカテゴリタイプ別に分ける
@@ -102,15 +100,6 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
         shopCtrl.setRangeList(rangeList);
         //絞り込み条件のもとショップリスト生成
         shopCtrl.categoryDividing();
-
-//        ArrayList<ShopParameter> shopPram = shopCtrl.getShopList2();
-//
-//        for(int i=0;i<shopPram.size();i++){
-//            System.out.println(shopPram.get(i).getShopName());
-//        }
-//        for(int i=0;i<rangeList.get(0).fastFood.size();i++){
-//            System.out.println(rangeList.get(0).fastFood.get(i).getShopName());
-//        }
 
         // プログレスダイアログを閉じる
         if (this.progressDialog != null && this.progressDialog.isShowing()) {
@@ -127,6 +116,7 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
         callback.onTaskCancelled();
     }
 
+    //ぐるなびからとってきた店データをArrayListに格納
     public void xmlWriteInList(String[] xmlData) {
 
         XmlPullParser xmlPullParser = Xml.newPullParser();
@@ -181,10 +171,10 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
         }
     }
 
+    //カテゴリ別に分け直す
     private ArrayList<RangeList> shopListDividing(){
 
         //カテゴリファイル読み込み
-
         String fastFood  = readTxtFile("fast_food.txt");
         String cafe      = readTxtFile("break.txt");
         String highCal   = readTxtFile("high_cal.txt");
@@ -192,20 +182,14 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
         String wine      = readTxtFile("wine.txt");
         String other     = readTxtFile("other.txt");
 
-        //配列に区分け
-//        String[] _fastFood  = fastFood.split(",", 0);
-//        String[] _cafe      = cafe.split(",", 0);
-//        String[] _highCal   = highCal.split(",", 0);
-//        String[] _highGrade = highGrade.split(",", 0);
-//        String[] _wine      = wine.split(",", 0);
-//        String[] _other     = other.split(",", 0);
-
         String category = new String();
         ShopParameter shop = new ShopParameter();
         ArrayList<RangeList> rangeList = new ArrayList<RangeList>();
 
         for(int i = 0; i < RANGE; ++i){
+            //範囲距離分(3個)追加
             rangeList.add(new RangeList());
+            //ぐるなびからとってきた店数分解析
             int size = shopList.get(i).shop.size();
             for(int j = 0; j < size; ++j){
                 //店情報とカテゴリ取得
@@ -236,64 +220,13 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
                     shop.setShopCategoryType("category6");
                     rangeList.get(i).other.add(shop);
                 }
-                //完全一致
-//                if      (equalsString(category, _fastFood))  rangeList.get(i).fastFood.add(shop);
-//                else if (equalsString(category, _cafe))      rangeList.get(i).cafe.add(shop);
-//                else if (equalsString(category, _highCal))   rangeList.get(i).highCal.add(shop);
-//                else if (category.contains("焼肉"))   rangeList.get(i).highCal.add(shop);
-//                else if (equalsString(category, _highGrade)) rangeList.get(i).highGrade.add(shop);
-//                else if (equalsString(category, _wine))      rangeList.get(i).wine.add(shop);
-//                else if (category.contains("酒")) rangeList.get(i).highCal.add(shop);
-//                else if (equalsString(category, _other))     rangeList.get(i).other.add(shop);
-//                else                                         rangeList.get(i).other.add(shop);
-
             }
         }
 
         return rangeList;
     }
 
-    //店リストのカテゴリ一覧作成
-//    private String[][] categoryDividing(){
-//        //一時的なカテゴリ一覧入力用
-//        String str;
-//        //店のカテゴリー入力用
-//        String keyword;
-//        //距離ごとに分けたカテゴリー一覧
-//        String[][] category = new String[RANGE][];
-//
-//        for(int i = 0; i < RANGE; ++i){
-//            //初めに","で区切ることで最初のカテゴリを判定できる
-//            str = shopList.get(i).shop.get(0).getShopCategory() + ",";
-//            //店の数ループする
-//            int size = shopList.get(i).shop.size();
-//            for(int j = 1;j < size;j++){
-//                //カテゴリを取得
-//                keyword = shopList.get(i).shop.get(j).getShopCategory();
-//                //重複チェック
-//                if(!str.contains(keyword)){
-//                    //カテゴリ一覧に追加
-//                    //str=今までの一覧、keyword=追加されるカテゴリ、","=区切り
-//                    str = str + keyword + ",";
-//                }
-//            }
-//            //一つの文字列を複数に分解
-//            category[i] = str.split(",",0);
-//        }
-//        return  category;
-//    }
-
-
-    //カテゴリの完全一致時に使用
-    private boolean equalsString(String str, String[] _str){
-        for(int i = 0; i < _str.length; ++i){
-            if(_str[i].equals(str)){
-                return true;
-            }
-        }
-        return false;
-    }
-
+    //txtファイル読み込み
     private String readTxtFile(String fileName){
         String text = new String();
         try{

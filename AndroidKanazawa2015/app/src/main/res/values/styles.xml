@@ -9,13 +9,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- スプラッシュ画面表示(使わない）-->
-    <style name="AppFirstTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@drawable/splash</item>
-    </style>
-
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
