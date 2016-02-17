@@ -154,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //todo マップでも同様な処理をする(マップクラスでsetShopParameterと同義なメソッド作って)
         Map map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
         map.setShopParameter(shop, flag);
+        roulettePage = null;
+        map          = null;
     }
 
     @Override

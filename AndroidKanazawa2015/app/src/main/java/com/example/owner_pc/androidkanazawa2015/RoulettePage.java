@@ -46,7 +46,7 @@ public class RoulettePage extends Fragment{
 
     TranslateAnimation translate;
 
-    private Activity activity;
+//    private Activity activity;
 
     //家紋ごとの店の情報リスト
     private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
@@ -99,7 +99,7 @@ public class RoulettePage extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = getActivity();
+//        activity = getActivity();
     }
 
     @Override
@@ -109,7 +109,7 @@ public class RoulettePage extends Fragment{
         view = inflater.inflate(R.layout.roulette_fragment, container, false);
 
         //スマホ画面の大きさから家紋のサイズを計算
-        Display display = activity.getWindowManager().getDefaultDisplay();
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         //円一つを画面サイズ（横）の2/7の大きさにする
@@ -147,15 +147,15 @@ public class RoulettePage extends Fragment{
         params[5] = new FrameLayout.LayoutParams(cirSize*9/12, cirSize*9/12, Gravity.CENTER);
 
         //弓矢
-        bow   = new ImageView(activity);
-        arrow = new ImageView(activity);
+        bow   = new ImageView(getActivity());
+        arrow = new ImageView(getActivity());
         bow.setImageResource(R.drawable.bow);
         arrow.setImageResource(R.drawable.arrow);
         yumiyaLayout.addView(bow, bowParam);
         yumiyaLayout.addView(arrow, arrowParam);
 
         //矢印
-        sign = new ImageView(activity);
+        sign = new ImageView(getActivity());
         sign.setImageResource(R.drawable.yazirushi2);
         signLayout.addView(sign, signParam);
 
@@ -173,10 +173,10 @@ public class RoulettePage extends Fragment{
 
         //家紋の位置、向きを調整しFrameLayoutに追加する
         for(int i=0; i < CIR_NUM; ++i){
-            circle[i] = new ImageView(activity);
+            circle[i] = new ImageView(getActivity());
             //ID設定
-            circleId[i] = getResources().getIdentifier(circleStr[i], "drawable", activity.getPackageName());
-            categoryId[i] = getResources().getIdentifier(categoryStr[i], "drawable", activity.getPackageName());
+            circleId[i] = getResources().getIdentifier(circleStr[i], "drawable", getActivity().getPackageName());
+            categoryId[i] = getResources().getIdentifier(categoryStr[i], "drawable", getActivity().getPackageName());
             //BitmapDrawableにキャスト
             Icon[i] = (BitmapDrawable)getResources().getDrawable(categoryId[i]);
             //Bitmapファイルを取る
@@ -205,7 +205,7 @@ public class RoulettePage extends Fragment{
         }
 
         //真ん中の円を表示
-        circle[5] = new ImageView(activity);
+        circle[5] = new ImageView(getActivity());
         circle[5].setImageResource(R.drawable.cir_gray);
         kamonLayout.addView(circle[5], params[5]);
 
@@ -480,7 +480,9 @@ public class RoulettePage extends Fragment{
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-        view = null;
+        //Listener解除
+        circle[0].getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+        globalLayoutListener = null;
         //矢印
         sign.setImageDrawable(null);
         //弓矢
@@ -500,6 +502,8 @@ public class RoulettePage extends Fragment{
         yumiyaLayout = null;
         signLayout   = null;
 
+        //ルーレットview削除
+        view = null;
     }
 
     @Override

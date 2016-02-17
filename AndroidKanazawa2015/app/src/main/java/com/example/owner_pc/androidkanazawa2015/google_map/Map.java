@@ -121,11 +121,11 @@ public class Map extends Fragment {
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-        view = null;
-        fragment = null;
         options.icon(null);
-        options = null;
-        mMap = null;
+        mMap     = null;
+        view     = null;
+        options  = null;
+        fragment = null;
     }
 }
 

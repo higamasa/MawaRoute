@@ -109,6 +109,7 @@ public class List extends Fragment{
         super.onDestroyView();
         view = null;
         listView.setAdapter(null);
+        customAdapter.clear();
         customAdapter = null;
         image = null;
         item.setImagaData(null);
