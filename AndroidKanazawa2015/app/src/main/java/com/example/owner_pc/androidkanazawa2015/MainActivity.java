@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     private double latitude  = 36.594682;
     private double longitude = 136.625573;
     private static final int SETTING_ACTIVITY = 1000;
-    private RoulettePage roulettePage;
-    private Map map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,10 +149,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void listCallback(ShopParameter shop, boolean flag) {
         //rouletteFragmentを取得し、店情報セット
-        roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
         roulettePage.setShopParameter(shop, flag);
         //todo マップでも同様な処理をする(マップクラスでsetShopParameterと同義なメソッド作って)
-        map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
+        Map map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
         map.setShopParameter(shop, flag);
     }
 
@@ -241,15 +239,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
         if(requestCode == SETTING_ACTIVITY){
             if(resultCode == RESULT_OK){
-                roulettePage = null;
-                map = null;
                 //Listを更新
                 updateListFragment((ArrayList<ShopParameter>)data.getSerializableExtra("ShopList"));
-                //Fragmentを取得し、店情報リセット
-//                RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
-//                roulettePage.celarShopParameter();
-//                Map map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
-//                map.celarShopParameter();
             }
         }
     }

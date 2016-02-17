@@ -125,7 +125,7 @@ public class Map extends Fragment {
         fragment = null;
         options.icon(null);
         options = null;
-        mMap.clear();
+        mMap = null;
     }
 }
 
