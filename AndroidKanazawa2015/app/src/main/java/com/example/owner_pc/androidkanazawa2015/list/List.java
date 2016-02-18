@@ -14,10 +14,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.example.owner_pc.androidkanazawa2015.R;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
-
 import java.util.ArrayList;
 /**
  * Created by atsusuke on 2016/02/01.
@@ -26,14 +24,16 @@ public class List extends Fragment {
     View view;
     Bitmap image;
     Activity activity;
+    private ArrayList<CustomData> objects;
     private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
     private CustomAdapter customAdapter;
     private int size;
     private FragmentTopCallback mCallback;
     private CustomData item;
+    private ListView listView;
 
     public interface FragmentTopCallback {
-        void listCallback(ShopParameter shopParameter , boolean bool);
+        void listCallback(ShopParameter shopParameter, boolean bool);
     }
 
     @Override
@@ -67,10 +67,11 @@ public class List extends Fragment {
         Bundle bundle = getArguments();
         shopList = (ArrayList<ShopParameter>)bundle.getSerializable("ShopList");
         //Log.d("check", String.valueOf(shopCtrl.getShopList().get(away).shop.size()));
-        ListView listView = (ListView)view.findViewById(R.id.list);
+        listView = (ListView)view.findViewById(R.id.list);
         /* データの作成 */
-        ArrayList<CustomData> objects = new ArrayList<CustomData>();
+        objects = new ArrayList<CustomData>();
         size = shopList.size();
+        // todo 適切な画像を配置する
         image = BitmapFactory.decodeResource(getResources(), R.drawable.cir_g);
         for (int i = 0; i < size; i++){
             item = new CustomData();
@@ -112,6 +113,19 @@ public class List extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        view = null;
+        listView.setAdapter(null);
+        customAdapter.clear();
+        customAdapter = null;
+        image = null;
+        item.setImagaData(null);
+        item.setTextData(null);
+        objects.clear();
     }
 
     public void setShopList(ArrayList<ShopParameter> shopList){

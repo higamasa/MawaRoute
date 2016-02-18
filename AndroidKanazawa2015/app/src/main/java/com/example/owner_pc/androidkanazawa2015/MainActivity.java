@@ -9,9 +9,11 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioTrack;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -32,8 +34,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener{
 
-    private Toolbar _toolBar = null;
-    private SearchView _searchView = null;
+    private Toolbar _toolBar;
+    private SearchView _searchView;
     private Menu menu = null;
     private MainFragmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
@@ -50,19 +52,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(_toolBar);
+
         //search();
         //位置情報の読み込み
         getLocation();
-    }
-
-    //ListFragmentを再生成して絞り込み条件を反映する
-    private void updateListFragment(ArrayList<ShopParameter> shopList){
-        viewPager.setOffscreenPageLimit(2);
-        pagerAdapter.destroyAllItem(viewPager);
-        pagerAdapter.setShopList(shopList);
-        pagerAdapter.notifyDataSetChanged();
-        viewPager.setCurrentItem(0);
-        viewPager.setAdapter(pagerAdapter);
     }
 
     //ぐるナビ読み込み完了
@@ -73,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(2);
         pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(),
-                MainActivity.this, latitude, longitude, new ShopCtrl().getShopList());
+                getApplicationContext(), latitude, longitude, new ShopCtrl().getShopList());
         viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -81,9 +74,9 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.getTabAt(0).setIcon(R.drawable.list_tab);
         tabLayout.getTabAt(1).setIcon(R.drawable.map_tab);
         tabLayout.getTabAt(2).setIcon(R.drawable.cir_gray);
-        tabLayout.getTabAt(0).setText("List");
-        tabLayout.getTabAt(1).setText("Map");
-        tabLayout.getTabAt(2).setText("Roulette");
+//        tabLayout.getTabAt(0).setText("List");
+//        tabLayout.getTabAt(1).setText("Map");
+//        tabLayout.getTabAt(2).setText("Roulette");
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
     }
 
@@ -127,12 +120,22 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         //ロケーションプロバイダの取得
         String provider = locationManager.getBestProvider(criteria, true);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
             ActivityCompat.requestPermissions(this, permissions, 0);
             return;
         }
         locationManager.requestLocationUpdates(provider, 0, 0, this);
+    }
+
+    //ListFragmentを再生成して絞り込み条件を反映する
+    private void updateListFragment(ArrayList<ShopParameter> shopList){
+        viewPager.setOffscreenPageLimit(2);
+        pagerAdapter.destroyAllItem(viewPager);
+        pagerAdapter.setShopList(shopList);
+        pagerAdapter.notifyDataSetChanged();
+        viewPager.setCurrentItem(0);
+        viewPager.setAdapter(pagerAdapter);
     }
 
     @Override
@@ -143,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //todo マップでも同様な処理をする(マップクラスでsetShopParameterと同義なメソッド作って)
         Map map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
         map.setShopParameter(shop, flag);
+        roulettePage = null;
+        map          = null;
     }
 
     @Override
@@ -152,6 +157,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
         onDestroyLocation();
+        //位置情報取得を破棄
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.removeUpdates(this);
         Position position = new Position(latitude, longitude);
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
@@ -171,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // GPS機能か無線ネットワークがONになっているかを確認
         if (gps.indexOf("gps", 0) < 0 && gps.indexOf("network", 0) < 0) {
             // GPSサービスがOFFになっている場合、ダイアログを表示
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(getApplicationContext())
                     .setTitle("位置情報の設定")
             .setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -194,25 +204,28 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //Inflater inflate =
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        // 検索ボタン配置
+        MenuItem searchItem = menu.findItem(R.id.searchView);
+        _searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        // SettingButtonが押されたとき
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, RangeCategorySettings.class);
+            Intent intent = new Intent(getApplicationContext(), RangeCategorySettings.class);
             startActivityForResult(intent, SETTING_ACTIVITY);
             return true;
         }
+        // SearchButtonが押されたとき
+        search();
 
         return super.onOptionsItemSelected(item);
     }
@@ -221,13 +234,14 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
         if(requestCode == SETTING_ACTIVITY){
             if(resultCode == RESULT_OK){
+                //Listを更新
                 updateListFragment((ArrayList<ShopParameter>)data.getSerializableExtra("ShopList"));
             }
         }
     }
 
+    // 検索バーの選択時
     public void search(){
-        _searchView = (SearchView) _toolBar.getMenu().findItem(R.id.menu_search).getActionView();
         _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
