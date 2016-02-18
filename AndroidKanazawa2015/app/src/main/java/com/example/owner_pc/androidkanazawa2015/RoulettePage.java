@@ -40,11 +40,13 @@ import java.util.Random;
  */
 public class RoulettePage extends Fragment{
 
+    private View view;
+
     PopupWindow mPopupWindow;
 
     TranslateAnimation translate;
 
-    private Activity activity = new Activity();
+//    private Activity activity;
 
     //家紋ごとの店の情報リスト
     private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
@@ -56,6 +58,10 @@ public class RoulettePage extends Fragment{
     private FrameLayout frameLayout;
     private FrameLayout kamonLayout;
     private FrameLayout yumiyaLayout;
+    private FrameLayout signLayout;
+
+    //矢印
+    private ImageView sign;
 
     //弓矢
     private ImageView bow;
@@ -93,17 +99,17 @@ public class RoulettePage extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = getActivity();
+//        activity = getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.roulette_fragment, container, false);
+        view = inflater.inflate(R.layout.roulette_fragment, container, false);
 
         //スマホ画面の大きさから家紋のサイズを計算
-        Display display = activity.getWindowManager().getDefaultDisplay();
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         //円一つを画面サイズ（横）の2/7の大きさにする
@@ -113,7 +119,11 @@ public class RoulettePage extends Fragment{
         frameLayout  = (FrameLayout)view.findViewById(R.id.roulette_page);
         kamonLayout  = (FrameLayout)view.findViewById(R.id.kamon);
         yumiyaLayout = (FrameLayout)view.findViewById(R.id.yumiya);
+        signLayout   = (FrameLayout)view.findViewById(R.id.sign);
         kamonLayout.setPadding(0, cirSize/2, 0, 0);
+
+        //矢印のグラビティ設定
+        FrameLayout.LayoutParams signParam  = new FrameLayout.LayoutParams(cirSize*2,cirSize*2, Gravity.RIGHT|Gravity.BOTTOM);
 
         //弓矢のグラビティを設定
         FrameLayout.LayoutParams bowParam   = new FrameLayout.LayoutParams(cirSize, cirSize, Gravity.CENTER);
@@ -137,12 +147,17 @@ public class RoulettePage extends Fragment{
         params[5] = new FrameLayout.LayoutParams(cirSize*9/12, cirSize*9/12, Gravity.CENTER);
 
         //弓矢
-        bow   = new ImageView(activity);
-        arrow = new ImageView(activity);
+        bow   = new ImageView(getActivity());
+        arrow = new ImageView(getActivity());
         bow.setImageResource(R.drawable.bow);
         arrow.setImageResource(R.drawable.arrow);
         yumiyaLayout.addView(bow, bowParam);
         yumiyaLayout.addView(arrow, arrowParam);
+
+        //矢印
+        sign = new ImageView(getActivity());
+        sign.setImageResource(R.drawable.yazirushi2);
+        signLayout.addView(sign, signParam);
 
         //画像ID（家紋、カテゴリ）
         int[] circleId = new int[CIR_NUM + 1];
@@ -158,10 +173,10 @@ public class RoulettePage extends Fragment{
 
         //家紋の位置、向きを調整しFrameLayoutに追加する
         for(int i=0; i < CIR_NUM; ++i){
-            circle[i] = new ImageView(activity);
+            circle[i] = new ImageView(getActivity());
             //ID設定
-            circleId[i] = getResources().getIdentifier(circleStr[i], "drawable", activity.getPackageName());
-            categoryId[i] = getResources().getIdentifier(categoryStr[i], "drawable", activity.getPackageName());
+            circleId[i] = getResources().getIdentifier(circleStr[i], "drawable", getActivity().getPackageName());
+            categoryId[i] = getResources().getIdentifier(categoryStr[i], "drawable", getActivity().getPackageName());
             //BitmapDrawableにキャスト
             Icon[i] = (BitmapDrawable)getResources().getDrawable(categoryId[i]);
             //Bitmapファイルを取る
@@ -180,10 +195,17 @@ public class RoulettePage extends Fragment{
             layerDrawable[i] = new LayerDrawable(drawables[i]);
             circle[i].setImageDrawable(layerDrawable[i]);
             kamonLayout.addView(circle[i], params[i]);
+
+            //解放
+            bmp = null;
+            flippedBmp = null;
+            drawables[i][0] = null;
+            drawables[i][1] = null;
+            layerDrawable[i] = null;
         }
 
         //真ん中の円を表示
-        circle[5] = new ImageView(activity);
+        circle[5] = new ImageView(getActivity());
         circle[5].setImageResource(R.drawable.cir_gray);
         kamonLayout.addView(circle[5], params[5]);
 
@@ -456,12 +478,43 @@ public class RoulettePage extends Fragment{
     }
 
     @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        //Listener解除
+        circle[0].getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+        globalLayoutListener = null;
+        //矢印
+        sign.setImageDrawable(null);
+        //弓矢
+        bow.setImageDrawable(null);
+        arrow.setImageDrawable(null);
+
+        //家紋の円
+        for(int i = 0; i < CIR_NUM; ++i){
+            circle[i].setImageDrawable(null);
+            Icon[i] = null;
+        }
+        circle[CIR_NUM].setImageDrawable(null);
+
+        //layout解放
+        frameLayout  = null;
+        kamonLayout  = null;
+        yumiyaLayout = null;
+        signLayout   = null;
+
+        //ルーレットview削除
+        view = null;
+    }
+
+    @Override
     public void onDestroy(){
         // ポップアップが表示されている場合
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
             // ポップアップを閉じる
             mPopupWindow.dismiss();
         }
+        //
+
         super.onDestroy();
     }
 
