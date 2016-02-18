@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // GPS機能か無線ネットワークがONになっているかを確認
         if (gps.indexOf("gps", 0) < 0 && gps.indexOf("network", 0) < 0) {
             // GPSサービスがOFFになっている場合、ダイアログを表示
-            new AlertDialog.Builder(getApplicationContext())
+            new AlertDialog.Builder(this)
                     .setTitle("位置情報の設定")
             .setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -200,8 +200,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
                             startActivity(intent);
                 }
             })
-                    .create()
-                    .show();
+                    .create().show();
             return false;
         } else {
             return true;
