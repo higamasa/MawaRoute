@@ -17,9 +17,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     private Toolbar _toolBar;
     private SearchView _searchView;
+    private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
     private Menu menu = null;
     private MainFragmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
@@ -56,8 +60,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(_toolBar);
-
-        //search();
 
         //位置情報の読み込み
         getLocation();
@@ -214,6 +216,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // 検索ボタン配置
         MenuItem searchItem = menu.findItem(R.id.searchView);
         _searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        // todo なんかいい言葉を
+        _searchView.setQueryHint("キーワードを入力してください");
 
         return true;
     }
@@ -251,9 +255,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             public boolean onQueryTextSubmit(String s) {
                 return false;
             }
-
+            // テキストかいたら呼び出されるクラス
             @Override
             public boolean onQueryTextChange(String s) {
+
                 return false;
             }
         });
