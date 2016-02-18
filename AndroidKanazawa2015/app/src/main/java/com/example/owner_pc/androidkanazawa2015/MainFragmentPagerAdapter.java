@@ -8,8 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
-import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
-import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;

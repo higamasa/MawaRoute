@@ -91,7 +91,6 @@ public class Map extends Fragment {
         // マーカーを貼り付け
         mMap.addMarker(options);
     }
-
     private void editShopList(ShopParameter shop, boolean flag){
         if(flag){
             //リストに同じ店がないので追加する

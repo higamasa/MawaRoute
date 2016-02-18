@@ -18,14 +18,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.PopupWindow;
+
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
-import com.example.owner_pc.androidkanazawa2015.gnavi.SettingParameter;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
-import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
@@ -37,6 +40,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener{
 
+    private PopupWindow splashPopup;
     private Toolbar _toolBar;
     private SearchView _searchView;
     private Menu menu = null;
@@ -57,8 +61,30 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(_toolBar);
 
-        //search();
+        //スプラッシュロゴ表示
+        splashPopup = new PopupWindow(MainActivity.this);
+        final View splashView = getLayoutInflater().inflate(R.layout.splash_popup, null);
+        splashPopup.setContentView(splashView);
 
+        // 背景設定
+        splashPopup.setBackgroundDrawable(getResources().getDrawable(R.drawable.splash_background));
+
+        // タップ時に他のViewでキャッチされないための設定
+        splashPopup.setOutsideTouchable(true);
+        splashPopup.setFocusable(true);
+
+        // 表示サイズの設定 今回は幅300dp
+        splashPopup.setWindowLayoutMode(WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.FILL_PARENT);
+        splashPopup.setWidth(WindowManager.LayoutParams.FILL_PARENT);
+        splashPopup.setHeight(WindowManager.LayoutParams.FILL_PARENT);
+
+        // 画面中央に表示
+        splashView.post(new Runnable() {
+            @Override
+            public void run() {
+                splashPopup.showAtLocation(splashView, Gravity.CENTER, 0, 0);
+            }
+        });
         //位置情報の読み込み
         getLocation();
     }
@@ -83,6 +109,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.getTabAt(1).setText("Map");
         tabLayout.getTabAt(2).setText("Roulette");
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        //スプラッシュロゴ削除
+        if (splashPopup != null && splashPopup.isShowing()) {
+            splashPopup.dismiss();
+        }
     }
 
     //ぐるナビ読み込み失敗
@@ -263,18 +294,14 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     @Override
     public void onProviderEnabled(String s) {
-
     }
 
     @Override
     public void onProviderDisabled(String s) {
-
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        viewPager.setAdapter(null);
-        pagerAdapter = null;
     }
 }
