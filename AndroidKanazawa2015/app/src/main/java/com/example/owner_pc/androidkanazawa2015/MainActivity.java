@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     private ViewPager viewPager;
     private GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
     private LocationManager locationManager;
-    private double latitude  = 36.594682;
-    private double longitude = 136.625573;
+    private double latitude  = 36.5299563;
+    private double longitude = 136.6260366;
     private static final int SETTING_ACTIVITY = 1000;
 
     @Override
@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //search();
         //位置情報の読み込み
         getLocation();
+        //Position position = new Position(latitude, longitude);
+        //gnaviCtrl.execute(position);
     }
 
     //ぐるナビ読み込み完了

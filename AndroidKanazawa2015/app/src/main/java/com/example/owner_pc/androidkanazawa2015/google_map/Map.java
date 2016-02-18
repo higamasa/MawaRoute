@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class Map extends Fragment implements View.OnClickListener {
     private SupportMapFragment fragment;
     private GoogleMap mMap;
-    private boolean flag;
+    private boolean flag = false;
     private FloatingActionButton mFab;
     View view;
     private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
@@ -138,13 +138,13 @@ public class Map extends Fragment implements View.OnClickListener {
         if (shopflag == true) {
             options.title(shop.getShopName());
             MakerSetting(new LatLng(shop.getLatitude(), shop.getLongitude()), shop);
-            Log.d("latitude", String.valueOf(shop.getShopName()));
+            Log.d("latitude", String.valueOf(shop.getLatitude()));
+            Log.d("latitude", String.valueOf(shop.getLongitude()));
         } else {
             MarkerDelete();
             for (int i = 0; i < shopList.size(); i++) {
                 options.title(shopList.get(i).getShopName());
                 MakerSetting(new LatLng(shopList.get(i).getLatitude(), shopList.get(i).getLongitude()), shop);
-                Log.d("latitude2", String.valueOf(shopList.get(i).getShopName()));
             }
         }
     }
