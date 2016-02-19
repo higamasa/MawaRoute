@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 public class CustomData {
     private Bitmap imageData_;
     private String textData_;
+    private int count;
     public void setImagaData(Bitmap image) {
         imageData_ = image;
     }
