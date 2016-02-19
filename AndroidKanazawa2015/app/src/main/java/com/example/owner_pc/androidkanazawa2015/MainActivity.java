@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(_toolBar);
-
         //search();
         //位置情報の読み込み
         getLocation();
@@ -108,12 +107,37 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         }
     }
 
+    private void checkGpsSettings(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent callGPSSettingIntent = new Intent(
+                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(callGPSSettingIntent);
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        finish();
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
     //位置情報の取得
     public void getLocation() {
-        //位置情報がオンになっているかの確認
-        checkGpsSettings();
-        // LocationManagerを取得
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false &&
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == false){
+            //位置情報がオンになっているかの確認
+            checkGpsSettings();
+        }
         // Criteriaオブジェクトを生成
         Criteria criteria = new Criteria();
         //位置情報の精度
@@ -174,34 +198,34 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     }
 
-    //GPSがオフの時、GPS設定画面を開く
-    private boolean checkGpsSettings() {
-        // 位置情報の設定の取得
-        String gps = android.provider.Settings.Secure.getString(
-                getContentResolver(),
-                android.provider.Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-        // GPS機能か無線ネットワークがONになっているかを確認
-        if (gps.indexOf("gps", 0) < 0 && gps.indexOf("network", 0) < 0) {
-            // GPSサービスがOFFになっている場合、ダイアログを表示
-            new AlertDialog.Builder(getApplicationContext())
-                    .setTitle("位置情報の設定")
-            .setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // 位置情報設定画面へ移動する
-                            Intent intent = new Intent(
-                                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            intent.addCategory(Intent.CATEGORY_DEFAULT);
-                            startActivity(intent);
-                }
-            })
-                    .create()
-                    .show();
-            return false;
-        } else {
-            return true;
-        }
-    }
+//    //GPSがオフの時、GPS設定画面を開く
+//    private boolean checkGpsSettings() {
+//        // 位置情報の設定の取得
+//        String gps = android.provider.Settings.Secure.getString(
+//                getContentResolver(),
+//                android.provider.Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+//        // GPS機能か無線ネットワークがONになっているかを確認
+//        if (gps.indexOf("gps", 0) < 0 && gps.indexOf("network", 0) < 0) {
+//            // GPSサービスがOFFになっている場合、ダイアログを表示
+//            new AlertDialog.Builder(getApplicationContext())
+//                    .setTitle("位置情報の設定")
+//            .setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
+//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            // 位置情報設定画面へ移動する
+//                            Intent intent = new Intent(
+//                                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                            intent.addCategory(Intent.CATEGORY_DEFAULT);
+//                            startActivity(intent);
+//                }
+//            })
+//                    .create()
+//                    .show();
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
 
 
     @Override
