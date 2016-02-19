@@ -17,18 +17,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.SettingParameter;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
-import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
@@ -38,7 +35,7 @@ import com.example.owner_pc.androidkanazawa2015.list.List;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener{
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener, SearchView.OnQueryTextListener {
 
     private Toolbar _toolBar;
     private SearchView _searchView;
@@ -48,8 +45,12 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     private ViewPager viewPager;
     private GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
     private LocationManager locationManager;
+    private ShopCtrl _shopCtrl = new ShopCtrl();
+    private SettingParameter _settingParam = new SettingParameter();
+    private String searchWord;
     private double latitude  = 36.594682;
     private double longitude = 136.625573;
+    private Position position = new Position();
     private static final int SETTING_ACTIVITY = 1000;
 
     @Override
@@ -85,6 +86,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.getTabAt(1).setText("Map");
         tabLayout.getTabAt(2).setText("Roulette");
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        roulettePage.setPosition(position);
+        roulettePage = null;
+
     }
 
     //ぐるナビ読み込み失敗
@@ -146,6 +152,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         pagerAdapter.notifyDataSetChanged();
         viewPager.setCurrentItem(0);
         viewPager.setAdapter(pagerAdapter);
+
+        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        roulettePage.setPosition(position);
+        roulettePage = null;
     }
 
     @Override
@@ -171,7 +181,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             return;
         }
         locationManager.removeUpdates(this);
-        Position position = new Position(latitude, longitude);
+        position.latitude  =latitude;
+        position.longitude = longitude;
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
     }
@@ -218,9 +229,9 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // 検索ボタン配置
         MenuItem searchItem = menu.findItem(R.id.searchView);
         _searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        // todo なんかいい言葉を
         _searchView.setQueryHint("キーワードを入力してください");
-
+        _searchView.setIconifiedByDefault(true);
+        _searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -235,8 +246,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             startActivityForResult(intent, SETTING_ACTIVITY);
             return true;
         }
-        // SearchButtonが押されたとき
-        search();
 
         return super.onOptionsItemSelected(item);
     }
@@ -251,20 +260,18 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         }
     }
 
-    // 検索バーの選択時
-    public void search(){
-        _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-            // テキストかいたら呼び出されるクラス
-            @Override
-            public boolean onQueryTextChange(String s) {
+    @Override
+    public boolean onQueryTextSubmit(String searchWord ){
+        _settingParam.setKeyword(searchWord);
+        _shopCtrl.categoryDividing();
+        updateListFragment(_shopCtrl.getShopList());
+        _searchView.clearFocus();
+        return true;
+    }
 
-                return false;
-            }
-        });
+    @Override
+    public boolean onQueryTextChange(String searchWord){
+        return true;
     }
 
     @Override
@@ -280,7 +287,5 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void onDestroy(){
         super.onDestroy();
-        viewPager.setAdapter(null);
-        pagerAdapter = null;
     }
 }
