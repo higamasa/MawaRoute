@@ -10,11 +10,13 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tool_bar"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlack"
         android:minHeight="?attr/actionBarSize"
-        android:background="@color/colorBlack">
+        app:theme="@style/AppTheme"
+        android:theme="@style/AppTheme"
+        app:titleTextColor="@color/colorGold">
 
     </android.support.v7.widget.Toolbar>
 
@@ -22,14 +24,14 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabBackground="@color/colorBlack"
-        app:tabIndicatorColor="@color/colorRed"
+        android:layout_below="@+id/tool_bar"
+        android:layout_toEndOf="@+id/left_button"
+        android:layout_toRightOf="@+id/left_button"
         android:elevation="6dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.AppBarOverlay"
-        android:layout_below="@+id/tool_bar"
-        android:layout_toRightOf="@+id/left_button"
-        android:layout_toEndOf="@+id/left_button" />
+        app:tabBackground="@color/colorBlack"
+        app:tabIndicatorColor="@color/colorRed" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"

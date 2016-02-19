@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioTrack;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -21,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
@@ -222,11 +224,17 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
         getMenuInflater().inflate(R.menu.menu_search, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         // 検索ボタン配置
         MenuItem searchItem = menu.findItem(R.id.searchView);
+
+        // 検索ボタン画像差し替え
         _searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        int searchImgId = android.support.v7.appcompat.R.id.search_button;
+        ImageView v = (ImageView)_searchView.findViewById(searchImgId);
+        v.setImageResource(R.drawable.ic_menu_search_g);
+
         _searchView.setQueryHint("キーワードを入力してください");
         _searchView.setIconifiedByDefault(true);
         _searchView.setOnQueryTextListener(this);

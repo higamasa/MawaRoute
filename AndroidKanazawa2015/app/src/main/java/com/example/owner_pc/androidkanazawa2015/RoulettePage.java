@@ -27,6 +27,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
@@ -355,6 +356,11 @@ public class RoulettePage extends Fragment{
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
                 View popupView = layoutInflater.inflate(R.layout.popup_layout, null);
+
+                TextView popupText;
+
+                popupText = (TextView)popupView.findViewById(R.id.popupText);
+                popupText.setText(shopList.get(hitNum).getShopName());
 
                 // 閉じるボタンを押したとき
                 popupView.findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
