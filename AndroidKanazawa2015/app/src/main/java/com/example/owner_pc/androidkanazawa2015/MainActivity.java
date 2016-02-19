@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioTrack;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -33,10 +34,7 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
-
-
 import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener{
 
@@ -48,15 +46,14 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     private ViewPager viewPager;
     private GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
     private LocationManager locationManager;
-    private double latitude  = 36.594682;
-    private double longitude = 136.625573;
+    private double latitude  = 36.5299563;
+    private double longitude = 136.6260366;
     private static final int SETTING_ACTIVITY = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(_toolBar);
@@ -87,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         });
         //位置情報の読み込み
         getLocation();
+        //Position position = new Position(latitude, longitude);
+        //gnaviCtrl.execute(position);
     }
 
     //ぐるナビ読み込み完了
@@ -105,9 +104,9 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.getTabAt(0).setIcon(R.drawable.list_tab);
         tabLayout.getTabAt(1).setIcon(R.drawable.map_tab);
         tabLayout.getTabAt(2).setIcon(R.drawable.cir_gray);
-        tabLayout.getTabAt(0).setText("List");
-        tabLayout.getTabAt(1).setText("Map");
-        tabLayout.getTabAt(2).setText("Roulette");
+//        tabLayout.getTabAt(0).setText("List");
+//        tabLayout.getTabAt(1).setText("Map");
+//        tabLayout.getTabAt(2).setText("Roulette");
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //スプラッシュロゴ削除
@@ -144,10 +143,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     //位置情報の取得
     public void getLocation() {
-
         //位置情報がオンになっているかの確認
         checkGpsSettings();
-
         // LocationManagerを取得
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // Criteriaオブジェクトを生成
@@ -158,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         //ロケーションプロバイダの取得
         String provider = locationManager.getBestProvider(criteria, true);
-
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
             ActivityCompat.requestPermissions(this, permissions, 0);
@@ -195,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         Log.d("check", String.valueOf(location.getLongitude()));
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
+        onDestroyLocation();
         //位置情報取得を破棄
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -300,8 +297,18 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     public void onProviderDisabled(String s) {
     }
 
+    private void onDestroyLocation(){
+        //位置情報取得を破棄
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.removeUpdates(this);
+    }
+
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
+        onDestroyLocation();
     }
 }
