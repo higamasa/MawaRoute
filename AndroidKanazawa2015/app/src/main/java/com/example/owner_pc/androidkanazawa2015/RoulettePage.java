@@ -71,6 +71,7 @@ public class RoulettePage extends Fragment{
     FrameLayout.LayoutParams[] params = new FrameLayout.LayoutParams[CIR_NUM + 1];
 
     //円の上に乗るアイコン
+    private int[] categoryId = new int[CIR_NUM];
     private ImageView[] icon = new ImageView[CIR_NUM];
     private BitmapDrawable[] Icon = new BitmapDrawable[CIR_NUM];
     private String[] categoryStr  = new String[CIR_NUM];
@@ -170,8 +171,48 @@ public class RoulettePage extends Fragment{
         sign = new ImageView(getActivity());
         sign.setImageResource(R.drawable.yazirushi2);
         signLayout.addView(sign, signParam);
+
         //5つの家紋表示
-        setCircleImage();
+        //画像ID（家紋、カテゴリ）
+        int[] circleId = new int[CIR_NUM + 1];
+        int[] categoryId = new int[CIR_NUM];
+        //ID名
+        String[] circleStr = {"cir_r", "cir_b", "cir_y", "cir_p", "cir_g", "cir_gray"};
+        //カテゴリ画像をShopListから選択
+        setCategoryID();
+
+        //家紋の位置、向きを調整しFrameLayoutに追加する
+        for(int i=0; i < CIR_NUM; ++i){
+            circle[i] = new ImageView(getActivity());
+            icon[i]   = new ImageView(getActivity());
+            //ID設定
+            circleId[i] = getResources().getIdentifier(circleStr[i], "drawable", getActivity().getPackageName());
+            categoryId[i] = getResources().getIdentifier(categoryStr[i], "drawable", getActivity().getPackageName());
+            //BitmapDrawableにキャスト
+            Icon[i] = (BitmapDrawable)getResources().getDrawable(categoryId[i]);
+            //Bitmapファイルを取る
+            Bitmap bmp = Icon[i].getBitmap();
+
+            //回転(72度づつずらす）
+            Matrix matrix = new Matrix();
+            matrix.postRotate(72*i);
+            //Bitmap回転
+            Bitmap flippedBmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+            //加工後BitmapDrawableに戻す
+            Icon[i] = new BitmapDrawable(flippedBmp);
+
+            //frameLayoutに表示
+            icon[i].setImageDrawable(Icon[i]);
+            circle[i].setImageDrawable(getResources().getDrawable(circleId[i]));
+
+            kamonLayout.addView(circle[i], params[i]);
+            kamonLayout.addView(icon[i], iconParams[i]);
+
+            //解放
+            bmp = null;
+            flippedBmp = null;
+        }
+
         //真ん中の円を表示
         circle[5] = new ImageView(getActivity());
         circle[5].setImageResource(R.drawable.cir_gray);
@@ -498,23 +539,15 @@ public class RoulettePage extends Fragment{
 
     public void setCircleImage(){
 
-        //画像ID（家紋、カテゴリ）
-        int[] circleId = new int[CIR_NUM + 1];
-        int[] categoryId = new int[CIR_NUM];
-        //ID名
-        String[] circleStr = {"cir_r", "cir_b", "cir_y", "cir_p", "cir_g", "cir_gray"};
+        //画像ID（カテゴリ）
+//        int[] categoryId = new int[CIR_NUM];
         //カテゴリ画像をShopListから選択
         setCategoryID();
-//        //円とカテゴリマークを重ねる変数
-//        Drawable[][] drawables = new Drawable[CIR_NUM][2];
-//        LayerDrawable[] layerDrawable = new LayerDrawable[CIR_NUM];
 
         //家紋の位置、向きを調整しFrameLayoutに追加する
         for(int i=0; i < CIR_NUM; ++i){
-            circle[i] = new ImageView(getActivity());
             icon[i]   = new ImageView(getActivity());
             //ID設定
-            circleId[i] = getResources().getIdentifier(circleStr[i], "drawable", getActivity().getPackageName());
             categoryId[i] = getResources().getIdentifier(categoryStr[i], "drawable", getActivity().getPackageName());
             //BitmapDrawableにキャスト
             Icon[i] = (BitmapDrawable)getResources().getDrawable(categoryId[i]);
@@ -526,30 +559,16 @@ public class RoulettePage extends Fragment{
             matrix.postRotate(72*i);
             //Bitmap回転
             Bitmap flippedBmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-//            flippedBmp = Bitmap.createBitmap(flippedBmp, (int)(bmp.getWidth()*0.2), (int)(bmp.getHeight()*0.2), bmp.getWidth()-(int)(bmp.getWidth()*0.2), bmp.getHeight()-(int)(bmp.getHeight()*0.2));
-//            Bitmap flippedBmp = Bitmap.createScaledBitmap(bmp, (int)(cirSize*0.8), (int)(cirSize*0.8), true);
             //加工後BitmapDrawableに戻す
             Icon[i] = new BitmapDrawable(flippedBmp);
 
-            //円とアイコンを重ねる
-//            drawables[i][0] = getResources().getDrawable(circleId[i]);
-//            drawables[i][1] = Icon[i];
-
             //frameLayoutに表示
-//            layerDrawable[i] = new LayerDrawable(drawables[i]);
             icon[i].setImageDrawable(Icon[i]);
-            circle[i].setImageDrawable(getResources().getDrawable(circleId[i]));
-//            circle[i].setImageDrawable(layerDrawable[i]);
-
-            kamonLayout.addView(circle[i], params[i]);
             kamonLayout.addView(icon[i], iconParams[i]);
 
             //解放
             bmp = null;
             flippedBmp = null;
-//            drawables[i][0] = null;
-//            drawables[i][1] = null;
-//            layerDrawable[i] = null;
         }
 
     }
@@ -557,11 +576,14 @@ public class RoulettePage extends Fragment{
     //MainActivityから選択された店の情報を受け取り、追加判定をする
     public void setShopParameter(ShopParameter shop, boolean flag){
         editShopList(shop, flag);
+//        System.out.println(shopList.size());
+        for(int i = 0; i < shopList.size(); ++i){
+            System.out.println(shopList.get(i).getShopName());
+        }
         //家紋画像を開放し再セット
         for(int i = 0; i < CIR_NUM; ++i){
             icon[i].setImageDrawable(null);
             Icon[i] = null;
-            circle[i].setImageDrawable(null);
         }
         setCategoryID();
         setCircleImage();
