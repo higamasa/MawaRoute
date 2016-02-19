@@ -66,9 +66,9 @@ public class ShopParameter implements Serializable{
         return shopImage;
     }
     public double getLatitude(){
-        return position.latitude;
+        return position.latitude - 0.00010695*position.latitude  + 0.000017464*position.longitude + 0.0046017;
     }
     public double getLongitude(){
-        return position.longitude;
+        return position.longitude - 0.000046038*position.latitude - 0.000083043*position.longitude + 0.010040;
     }
 }

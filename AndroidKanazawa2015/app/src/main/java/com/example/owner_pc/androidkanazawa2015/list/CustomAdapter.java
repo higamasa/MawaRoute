@@ -29,7 +29,6 @@ public class CustomAdapter extends ArrayAdapter<CustomData>{
         layoutInflater_ = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         display.getSize(size);
     }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // 特定の行(position)のデータを得る
@@ -56,12 +55,9 @@ public class CustomAdapter extends ArrayAdapter<CustomData>{
         SparseBooleanArray checkedItemPositions = listView.getCheckedItemPositions();
         if (checkedItemPositions.get(position) == true && item.getImageData() != null) {
             convertView.setBackgroundColor(resources.getColor(R.color.colorGold));
-//            convertView.setBackgroundColor(Color.rgb(176, 224, 230));
         } else {
-//            convertView.setBackgroundColor(Color.rgb(255, 255, 255));
             convertView.setBackgroundColor(resources.getColor(R.color.colorYellow));
         }
         return convertView;
     }
-
 }

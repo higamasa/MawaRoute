@@ -13,14 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.example.owner_pc.androidkanazawa2015.R;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
-
 import java.util.ArrayList;
 /**
  * Created by atsusuke on 2016/02/01.
  */
-public class List extends Fragment{
+public class List extends Fragment {
     View view;
     Bitmap image;
     Activity activity;
@@ -33,7 +33,7 @@ public class List extends Fragment{
     private ListView listView;
 
     public interface FragmentTopCallback {
-        void listCallback(ShopParameter shopParameter , boolean bool);
+        void listCallback(ShopParameter shopParameter, boolean bool);
     }
 
     @Override
@@ -71,6 +71,7 @@ public class List extends Fragment{
         /* データの作成 */
         objects = new ArrayList<CustomData>();
         size = shopList.size();
+        // todo 適切な画像を配置する
         image = BitmapFactory.decodeResource(getResources(), R.drawable.cir_g);
         for (int i = 0; i < size; i++){
             item = new CustomData();
@@ -95,10 +96,20 @@ public class List extends Fragment{
                     customAdapter.notifyDataSetChanged();
                     ListView listView = (ListView) parent;
                     SparseBooleanArray checkedItemPositions = listView.getCheckedItemPositions();
-                    String msg = String.format("position:%d check:%b", position, checkedItemPositions.get(position));
-                    Log.d("position", String.valueOf(size));
-                    Log.d("position", msg);
-                    mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
+                    //String msg = String.format("position:%d check:%b", position, checkedItemPositions.get(position));
+                    //Log.d("position", String.valueOf(size));
+                    //Log.d("position", msg);
+                    if (checkedItemPositions.size() <=5) {
+                        if (checkedItemPositions.get(position) == true) {
+                            mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
+                        } else {
+                            mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
+                            checkedItemPositions.delete(position);
+                        }
+                    }else {
+                        checkedItemPositions.delete(position);
+                        Toast.makeText(getActivity(), "5個以上選ぶのは贅沢だよ", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

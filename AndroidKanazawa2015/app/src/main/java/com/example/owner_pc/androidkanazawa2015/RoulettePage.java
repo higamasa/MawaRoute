@@ -245,7 +245,7 @@ public class RoulettePage extends Fragment{
                             if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
                                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                                 System.out.println("左から右");
-                            } //ルーレットの右下フッリクしたら回転
+                            } //ルーレットの右下フリックしたら回転
                             else if(e1.getY() < e2.getY()
                                     && e1.getY() > center.y
                                     && e1.getY() < center.y + cirSize*2
