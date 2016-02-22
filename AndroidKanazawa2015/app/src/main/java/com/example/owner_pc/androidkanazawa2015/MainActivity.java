@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,8 +21,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ImageView;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
@@ -38,6 +51,11 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener, SearchView.OnQueryTextListener {
 
 
+    private boolean popupDismissFlag = false;
+    private PopupWindow splashPopup;
+    private ImageView kamon;
+    private ImageView tudumi;
+    private ImageView sign;
     private Toolbar _toolBar;
     private SearchView _searchView;
     private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
@@ -62,13 +80,172 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(_toolBar);
 
+        //タイトルロゴ表示
+        showSplashWindow();
+
         //位置情報の読み込み
         getLocation();
         //Position position = new Position(latitude, longitude);
         //gnaviCtrl.execute(position);
     }
 
-    //ぐるナビ読み込み完了
+    private void showSplashWindow(){
+        //スプラッシュロゴ表示
+        splashPopup = new PopupWindow(MainActivity.this);
+        final View splashView = getLayoutInflater().inflate(R.layout.splash_popup, null);
+        splashPopup.setContentView(splashView);
+
+        //スマホ画面の大きさからロゴのサイズを計算
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        final int kamonSize = size.x/2;
+
+        // 背景設定
+        splashPopup.setBackgroundDrawable(getResources().getDrawable(R.drawable.splash_background));
+
+        // タップ時に他のViewでキャッチされないための設定
+        splashPopup.setOutsideTouchable(true);
+        splashPopup.setFocusable(true);
+
+        // 表示サイズの設定
+        splashPopup.setWindowLayoutMode(WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.FILL_PARENT);
+        splashPopup.setWidth(WindowManager.LayoutParams.FILL_PARENT);
+        splashPopup.setHeight(WindowManager.LayoutParams.FILL_PARENT);
+
+        // 画面中央に表示
+        splashView.post(new Runnable() {
+            @Override
+            public void run() {
+                splashPopup.showAtLocation(splashView, Gravity.CENTER, 0, 0);
+
+                FrameLayout.LayoutParams kamonParam   = new FrameLayout.LayoutParams(kamonSize, kamonSize, Gravity.CENTER);
+
+                FrameLayout frameLayout = (FrameLayout)splashView.findViewById(R.id.kamon_icon);
+                kamon  = new ImageView(getApplicationContext());
+                tudumi = new ImageView(getApplicationContext());
+                sign   = new ImageView(getApplicationContext());
+                kamon.setAlpha(0.0f);
+                tudumi.setAlpha(0.0f);
+                sign.setAlpha(0.0f);
+
+                kamon.setImageResource(R.drawable.kamon_kamon);
+                tudumi.setImageResource(R.drawable.kamon_tudumi);
+                sign.setImageResource(R.drawable.kamon_yazirushi);
+
+                frameLayout.addView(tudumi, kamonParam);
+                frameLayout.addView(kamon, kamonParam);
+                frameLayout.addView(sign, kamonParam);
+
+                //ロゴアニメーション開始
+                tudumiAnimation();
+            }
+        });
+    }
+
+    //鼓門フェードイン
+    private void tudumiAnimation() {
+        AlphaAnimation alpha = new AlphaAnimation(0, 1);
+        alpha.setDuration(2000);
+        alpha.setFillAfter(true);
+        tudumi.setAlpha(1.0f);
+        tudumi.startAnimation(alpha);
+        alpha.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            //家紋フェードインへ
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                kamonAlphaAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+    }
+
+    //家紋フェードイン
+    private void kamonAlphaAnimation() {
+        AlphaAnimation alpha = new AlphaAnimation(0, 1);
+        alpha.setDuration(2000);
+        alpha.setFillAfter(true);
+        kamon.setAlpha(1.0f);
+        kamon.startAnimation(alpha);
+        alpha.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            //矢印フェードインへ
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                signAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+    }
+
+    //家紋回転
+    private void kamonRotateAnimation() {
+        RotateAnimation rotate = new RotateAnimation(0, 360, kamon.getWidth()/2 + 3, kamon.getHeight()/2 + 13);
+        rotate.setDuration(750);
+        rotate.setFillAfter(false);
+        kamon.startAnimation(rotate);
+        rotate.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //ロードが終わっていたらポップアップを消す
+                if(popupDismissFlag){
+                    splashPopup.dismiss();
+                }
+                //ロードが終わっていなければポップアップ消去フラグをONにする。
+                else{
+                    popupDismissFlag = true;
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+    }
+
+    //矢印フェードイン
+    private void signAnimation() {
+        AlphaAnimation alpha = new AlphaAnimation(0, 1);
+        alpha.setDuration(500);
+        alpha.setFillAfter(true);
+        sign.setAlpha(1.0f);
+        sign.startAnimation(alpha);
+        alpha.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            //家紋回転へ
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                kamonRotateAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+    }
+
+            //ぐるナビ読み込み完了
     @Override
     public void onTaskFinished(){
 
@@ -89,9 +266,19 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 //        tabLayout.getTabAt(2).setText("Roulette");
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        //現在位置をルーレットページにセット
         RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
         roulettePage.setPosition(position);
         roulettePage = null;
+
+        //ロゴアニメーションが終わっていたらポップアップを消す
+        if(popupDismissFlag){
+            splashPopup.dismiss();
+        }
+        //アニメーションが終わっていなければポップアップ消去フラグをONにする。
+        else{
+            popupDismissFlag = true;
+        }
 
     }
 
@@ -162,7 +349,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //rouletteFragmentを取得し、店情報セット
         RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
         roulettePage.setShopParameter(shop, flag);
-        //todo マップでも同様な処理をする(マップクラスでsetShopParameterと同義なメソッド作って)
         Map map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
         map.setShopParameter(shop, flag);
         roulettePage = null;
@@ -201,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // GPS機能か無線ネットワークがONになっているかを確認
         if (gps.indexOf("gps", 0) < 0 && gps.indexOf("network", 0) < 0) {
             // GPSサービスがOFFになっている場合、ダイアログを表示
-            new AlertDialog.Builder(getApplicationContext())
+            new AlertDialog.Builder(this)
                     .setTitle("位置情報の設定")
             .setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -213,8 +399,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
                             startActivity(intent);
                 }
             })
-                    .create()
-                    .show();
+                    .create().show();
             return false;
         } else {
             return true;
@@ -282,12 +467,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     @Override
     public void onProviderEnabled(String s) {
-
     }
 
     @Override
     public void onProviderDisabled(String s) {
-
     }
 
     private void onDestroyLocation(){

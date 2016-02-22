@@ -115,7 +115,6 @@ public class Map extends Fragment implements View.OnClickListener {
         // 回転ジェスチャーの有効化
         mMap.getUiSettings().setRotateGesturesEnabled(flag);
     }
-
     private void editShopList(ShopParameter shop, boolean flag){
         if(flag){
             //リストに同じ店がないので追加する

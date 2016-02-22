@@ -128,7 +128,4 @@ public class List extends Fragment {
         objects.clear();
     }
 
-    public void setShopList(ArrayList<ShopParameter> shopList){
-        this.shopList = shopList;
-    }
 }
