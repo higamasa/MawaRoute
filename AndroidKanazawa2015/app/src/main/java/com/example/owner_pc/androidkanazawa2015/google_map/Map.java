@@ -85,7 +85,7 @@ public class Map extends Fragment implements View.OnClickListener {
             MapUiSettings();
         }
     }
-    private void MakerSetting(LatLng lat, ShopParameter shop) {
+    private void MakerSetting(LatLng lat) {
         // 緯度・経度
         options.position(lat);
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
@@ -95,12 +95,12 @@ public class Map extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (flag == true){
-            MapUiSettings();
-            this.flag = false;
-        }else{
-            MapUiSettings();
+        if (flag == false){
             this.flag = true;
+            MapUiSettings();
+        }else{
+            this.flag = false;
+            MapUiSettings();
         }
     }
     private void MapUiSettings(){
@@ -137,14 +137,14 @@ public class Map extends Fragment implements View.OnClickListener {
         editShopList(shop, shopflag);
         if (shopflag == true) {
             options.title(shop.getShopName());
-            MakerSetting(new LatLng(shop.getLatitude(), shop.getLongitude()), shop);
+            MakerSetting(new LatLng(shop.getLatitude(), shop.getLongitude()));
             Log.d("latitude", String.valueOf(shop.getLatitude()));
             Log.d("latitude", String.valueOf(shop.getLongitude()));
         } else {
             MarkerDelete();
             for (int i = 0; i < shopList.size(); i++) {
                 options.title(shopList.get(i).getShopName());
-                MakerSetting(new LatLng(shopList.get(i).getLatitude(), shopList.get(i).getLongitude()), shop);
+                MakerSetting(new LatLng(shopList.get(i).getLatitude(), shopList.get(i).getLongitude()));
             }
         }
     }
