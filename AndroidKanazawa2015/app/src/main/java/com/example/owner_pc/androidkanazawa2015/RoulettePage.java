@@ -1,17 +1,17 @@
 package com.example.owner_pc.androidkanazawa2015;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.support.v4.app.Fragment;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -22,16 +22,18 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
+import com.example.owner_pc.androidkanazawa2015.google_map.RouteShop;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -43,13 +45,15 @@ import java.util.Random;
 public class RoulettePage extends Fragment{
 
     private View view;
-
+    private RouteShop routeShop;
     PopupWindow mPopupWindow;
 
     TranslateAnimation translate;
 
     //家紋ごとの店の情報リスト
     private LinkedList<ShopParameter> shopList = new LinkedList<ShopParameter>();
+
+    private Position start = new Position();
 
     //回転後の店番号
     private int hitNum;
@@ -104,7 +108,7 @@ public class RoulettePage extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        activity = getActivity();
+        routeShop = new RouteShop(getActivity());
     }
 
     @Override
@@ -361,6 +365,11 @@ public class RoulettePage extends Fragment{
 
                 View popupView = layoutInflater.inflate(R.layout.popup_layout, null);
 
+                TextView popupText;
+
+                popupText = (TextView)popupView.findViewById(R.id.popupText);
+                popupText.setText(shopList.get(hitNum).getShopName());
+
                 // 閉じるボタンを押したとき
                 popupView.findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -368,10 +377,6 @@ public class RoulettePage extends Fragment{
                         // ポップアップが表示されている場合
                         if (mPopupWindow.isShowing()) {
                             // ポップアップ破棄
-                            // todo ここに処理
-                            //todo hitNumで回転後の店情報にアクセスする
-//                    shopList.get(hitNum).getShopName();
-
                             //弓矢戻す
                             backTranslate();
                             //家紋をもとの位置に
@@ -386,10 +391,10 @@ public class RoulettePage extends Fragment{
                     @Override
                     public void onClick(View v) {
                         // ポップアップが表示されている場合
+                        //
                         if (mPopupWindow.isShowing()) {
-                            // ポップアップ破棄
-                            // todo ここに処理
-
+                            Position goal = new Position(shopList.get(hitNum).getLatitude(), shopList.get(hitNum).getLongitude());
+                            routeShop.Route(start, goal);
                             //弓矢戻す
                             backTranslate();
                             //家紋をもとの位置に
@@ -405,9 +410,8 @@ public class RoulettePage extends Fragment{
                     public void onClick(View v) {
                         // ポップアップが表示されている場合
                         if (mPopupWindow.isShowing()) {
-                            // ポップアップ破棄
-                            // todo ここに処理
-
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(shopList.get(hitNum).getShopUrl()));
+                            startActivity(intent);
                             //弓矢戻す
                             backTranslate();
                             //家紋をもとの位置に
@@ -422,14 +426,14 @@ public class RoulettePage extends Fragment{
                 // 背景設定
                 mPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
 
-                // タップ時に他のViewでキャッチされないための設定
+                // タップ時に他のViewでもキャッチするための設定
                 mPopupWindow.setOutsideTouchable(false);
                 mPopupWindow.setFocusable(false);
 
-                // 表示サイズの設定 今回は仮に幅300dp
-                float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
-                mPopupWindow.setWindowLayoutMode((int) width, WindowManager.LayoutParams.WRAP_CONTENT);
-                mPopupWindow.setWidth((int) width);
+                // 表示サイズの設定
+                //float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
+                mPopupWindow.setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                mPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 mPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 
                 // 画面表示
@@ -604,5 +608,11 @@ public class RoulettePage extends Fragment{
         setCircleImage();
         System.gc();
     }
+
+    public void setPosition(Position position){
+        this.start = position;
+    }
+
+
 
 }

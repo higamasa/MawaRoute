@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioTrack;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -34,18 +35,21 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ImageView;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
+import com.example.owner_pc.androidkanazawa2015.gnavi.SettingParameter;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
-
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener{
+
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener, SearchView.OnQueryTextListener {
+
 
     private boolean popupDismissFlag = false;
     private PopupWindow splashPopup;
@@ -54,13 +58,18 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     private ImageView sign;
     private Toolbar _toolBar;
     private SearchView _searchView;
+    private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
     private Menu menu = null;
     private MainFragmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
     private LocationManager locationManager;
-    private double latitude  = 36.5299563;
-    private double longitude = 136.6260366;
+    private ShopCtrl _shopCtrl = new ShopCtrl();
+    private SettingParameter _settingParam = new SettingParameter();
+    private String searchWord;
+    private double latitude  = 36.594682;
+    private double longitude = 136.625573;
+    private Position position = new Position();
     private static final int SETTING_ACTIVITY = 1000;
 
     @Override
@@ -186,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     //家紋回転
     private void kamonRotateAnimation() {
         RotateAnimation rotate = new RotateAnimation(0, 360, kamon.getWidth()/2 + 3, kamon.getHeight()/2 + 13);
-        rotate.setDuration(1000);
+        rotate.setDuration(750);
         rotate.setFillAfter(false);
         kamon.startAnimation(rotate);
         rotate.setAnimationListener(new Animation.AnimationListener() {
@@ -257,6 +266,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 //        tabLayout.getTabAt(2).setText("Roulette");
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        //現在位置をルーレットページにセット
+        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        roulettePage.setPosition(position);
+        roulettePage = null;
+
         //ロゴアニメーションが終わっていたらポップアップを消す
         if(popupDismissFlag){
             splashPopup.dismiss();
@@ -265,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         else{
             popupDismissFlag = true;
         }
+
     }
 
     //ぐるナビ読み込み失敗
@@ -323,6 +338,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         pagerAdapter.notifyDataSetChanged();
         viewPager.setCurrentItem(0);
         viewPager.setAdapter(pagerAdapter);
+
+        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        roulettePage.setPosition(position);
+        roulettePage = null;
     }
 
     @Override
@@ -348,7 +367,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             return;
         }
         locationManager.removeUpdates(this);
-        Position position = new Position(latitude, longitude);
+        position.latitude  =latitude;
+        position.longitude = longitude;
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
     }
@@ -389,12 +409,20 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
         getMenuInflater().inflate(R.menu.menu_search, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         // 検索ボタン配置
         MenuItem searchItem = menu.findItem(R.id.searchView);
-        _searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
+        // 検索ボタン画像差し替え
+        _searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        int searchImgId = android.support.v7.appcompat.R.id.search_button;
+        ImageView v = (ImageView)_searchView.findViewById(searchImgId);
+        v.setImageResource(R.drawable.ic_menu_search_g);
+
+        _searchView.setQueryHint("キーワードを入力してください");
+        _searchView.setIconifiedByDefault(true);
+        _searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -409,8 +437,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             startActivityForResult(intent, SETTING_ACTIVITY);
             return true;
         }
-        // SearchButtonが押されたとき
-        search();
 
         return super.onOptionsItemSelected(item);
     }
@@ -425,19 +451,18 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         }
     }
 
-    // 検索バーの選択時
-    public void search(){
-        _searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+    @Override
+    public boolean onQueryTextSubmit(String searchWord ){
+        _settingParam.setKeyword(searchWord);
+        _shopCtrl.categoryDividing();
+        updateListFragment(_shopCtrl.getShopList());
+        _searchView.clearFocus();
+        return true;
+    }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
+    @Override
+    public boolean onQueryTextChange(String searchWord){
+        return true;
     }
 
     @Override
