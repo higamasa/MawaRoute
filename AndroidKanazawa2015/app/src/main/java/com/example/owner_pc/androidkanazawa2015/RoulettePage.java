@@ -138,16 +138,19 @@ public class RoulettePage extends Fragment{
         for(int i = 0; i < CIR_NUM; ++i){
             params[i] = new FrameLayout.LayoutParams(cirSize, cirSize, Gravity.CENTER);
         }
+        //カテゴリアイコンのサイズ調整
         iconParams[0] = new FrameLayout.LayoutParams((int)(cirSize*0.75), (int)(cirSize*75), Gravity.CENTER);
         iconParams[1] = new FrameLayout.LayoutParams((int)(cirSize*0.95), (int)(cirSize*95), Gravity.CENTER);
         iconParams[2] = new FrameLayout.LayoutParams((int)(cirSize), (int)(cirSize), Gravity.CENTER);
         iconParams[3] = new FrameLayout.LayoutParams((int)(cirSize), (int)(cirSize), Gravity.CENTER);
         iconParams[4] = new FrameLayout.LayoutParams((int)(cirSize*0.95), (int)(cirSize*95), Gravity.CENTER);
         cirSize = cirSize - (cirSize/8);
+
         //弓矢の位置設定
         bowParam.setMargins(0, 0, 0, 2 * cirSize);
         arrowParam.setMargins(0, 0, 0, 2 * cirSize);
-        //五角形の位置設定
+
+        //家紋の五角形の位置設定
         iconParams[0].setMargins(0, 0, 0, 1 * cirSize);
         iconParams[1].setMargins((int) (0.95 * cirSize), 0, 0, (int) (0.31 * cirSize));
         iconParams[2].setMargins((int) (0.59 * cirSize), (int) (0.81 * cirSize), 0, 0);
