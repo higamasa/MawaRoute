@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Display;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by atsusuke on 2016/02/01.
  */
-public class List extends Fragment {
+public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     View view;
     Bitmap image;
     Activity activity;
@@ -31,6 +32,7 @@ public class List extends Fragment {
     private FragmentTopCallback mCallback;
     private CustomData item;
     private ListView listView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public interface FragmentTopCallback {
         void listCallback(ShopParameter shopParameter, boolean bool);
@@ -63,6 +65,8 @@ public class List extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //リストの更新を定義
+        createSwipeRefreshLayout();
         Display display = activity.getWindowManager().getDefaultDisplay();
         Bundle bundle = getArguments();
         shopList = (ArrayList<ShopParameter>)bundle.getSerializable("ShopList");
@@ -113,6 +117,26 @@ public class List extends Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * 引っ張って更新するSwipeRefreshLayoutを作成
+     */
+    public void createSwipeRefreshLayout(){
+        mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.swipe_refresh_layout);
+        //// TODO:適切な色を指定
+        mSwipeRefreshLayout.setColorSchemeColors(R.color.colorRed,R.color.colorPrimaryDark,R.color.colorAccent);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+    }
+
+    /**
+     * 引っ張った時の処理
+     */
+    @Override
+    public void onRefresh() {
+        // TODO:再度位置情報を取得しリストを更新する。
+        //解除
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
