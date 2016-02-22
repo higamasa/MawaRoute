@@ -63,7 +63,7 @@ public class Map extends Fragment implements View.OnClickListener {
             // 緯度・経度
             options.position(lat);
             // タイトル・スニペット
-            options.title("ワイはここにおるで！");
+            options.title("現在地");
             //options.snippet(lat.toString());
             // アイコン(マップ上に表示されるデフォルトピン)
             options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));

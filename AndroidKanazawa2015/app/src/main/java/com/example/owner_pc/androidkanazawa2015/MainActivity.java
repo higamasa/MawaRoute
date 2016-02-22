@@ -9,7 +9,6 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.AudioTrack;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -24,9 +23,7 @@ import android.view.MenuItem;
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
 import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
-import com.example.owner_pc.androidkanazawa2015.gnavi.SettingParameter;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
-import com.example.owner_pc.androidkanazawa2015.gnavi.ShopList;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
@@ -51,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         setContentView(R.layout.activity_main);
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
+        _toolBar.setTitle("リスト");
         setSupportActionBar(_toolBar);
         //search();
         //位置情報の読み込み
@@ -66,6 +64,29 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //TabとSwipeの読み込み
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0:
+                        _toolBar.setTitle("リスト");
+                        break;
+                    case 1:
+                        _toolBar.setTitle("マップ");
+                        break;
+                    case 2:
+                        _toolBar.setTitle("ルーレット");
+                        break;
+                }
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
         pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(),
                 getApplicationContext(), latitude, longitude, new ShopCtrl().getShopList());
         viewPager.setAdapter(pagerAdapter);
@@ -75,9 +96,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.getTabAt(0).setIcon(R.drawable.list_tab);
         tabLayout.getTabAt(1).setIcon(R.drawable.map_tab);
         tabLayout.getTabAt(2).setIcon(R.drawable.cir_gray);
-//        tabLayout.getTabAt(0).setText("List");
-//        tabLayout.getTabAt(1).setText("Map");
-//        tabLayout.getTabAt(2).setText("Roulette");
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
     }
 
@@ -151,7 +169,15 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             ActivityCompat.requestPermissions(this, permissions, 0);
             return;
         }
-        locationManager.requestLocationUpdates(provider, 0, 0, this);
+        if (locationManager.getLastKnownLocation(provider) != null){
+            Location location = locationManager.getLastKnownLocation(provider);
+            this.latitude = location.getLatitude();
+            this.longitude = location.getLongitude();
+            Position position = new Position(latitude, longitude);
+            gnaviCtrl.execute(position);
+        }else {
+            locationManager.requestLocationUpdates(provider, 0, 0, this);
+        }
     }
 
     //ListFragmentを再生成して絞り込み条件を反映する

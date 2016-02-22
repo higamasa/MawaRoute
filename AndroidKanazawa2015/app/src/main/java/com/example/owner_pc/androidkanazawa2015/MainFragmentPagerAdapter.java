@@ -7,10 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.ViewGroup;
-import android.support.v7.widget.Toolbar;
-
-import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
@@ -25,7 +23,6 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
     private Context context;
     private double latitude;
     private double longitude;
-    private int position;
     private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
 
     public MainFragmentPagerAdapter(FragmentManager fm, Context context , double latitude , double longitude ,
@@ -45,7 +42,6 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
-        this.position = position;
         switch(position){
             //リスト
             case 0:
