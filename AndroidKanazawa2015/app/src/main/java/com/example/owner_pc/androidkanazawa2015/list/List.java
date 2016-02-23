@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -15,13 +13,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.owner_pc.androidkanazawa2015.CustomToast;
 import com.example.owner_pc.androidkanazawa2015.R;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import java.util.ArrayList;
 /**
  * Created by atsusuke on 2016/02/01.
  */
-public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class List extends Fragment {
     View view;
     Bitmap image;
     Activity activity;
@@ -32,7 +32,6 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
     private FragmentTopCallback mCallback;
     private CustomData item;
     private ListView listView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public interface FragmentTopCallback {
         void listCallback(ShopParameter shopParameter, boolean bool);
@@ -65,8 +64,6 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //リストの更新を定義
-        createSwipeRefreshLayout();
         Display display = activity.getWindowManager().getDefaultDisplay();
         Bundle bundle = getArguments();
         shopList = (ArrayList<ShopParameter>)bundle.getSerializable("ShopList");
@@ -81,7 +78,6 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
             item = new CustomData();
             item.setImagaData(image);
             item.setTextData(shopList.get(i).getShopName());
-//            shopParameter = shopList.get(i);
             objects.add(item);
             customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects,display);
             listView.setAdapter(customAdapter);
@@ -105,8 +101,10 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
                     //Log.d("position", msg);
                     if (checkedItemPositions.size() <=5) {
                         if (checkedItemPositions.get(position) == true) {
+                            CustomToast.makeText(getContext(), (checkedItemPositions.size()) + "/5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                         } else {
+                            CustomToast.makeText(getContext(), (checkedItemPositions.size() - 1) + "/5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                             checkedItemPositions.delete(position);
                         }
@@ -117,26 +115,6 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
                 }
             }
         });
-    }
-
-    /**
-     * 引っ張って更新するSwipeRefreshLayoutを作成
-     */
-    public void createSwipeRefreshLayout(){
-        mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.swipe_refresh_layout);
-        //// TODO:適切な色を指定
-        mSwipeRefreshLayout.setColorSchemeColors(R.color.colorRed,R.color.colorPrimaryDark,R.color.colorAccent);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-    }
-
-    /**
-     * 引っ張った時の処理
-     */
-    @Override
-    public void onRefresh() {
-        // TODO:再度位置情報を取得しリストを更新する。
-        //解除
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

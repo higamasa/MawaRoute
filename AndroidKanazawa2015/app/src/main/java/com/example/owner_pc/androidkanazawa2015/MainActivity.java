@@ -41,7 +41,6 @@ import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
 import java.util.ArrayList;
 
-
 public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener, SearchView.OnQueryTextListener {
 
     private boolean popupDismissFlag = false;
@@ -454,7 +453,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     public void onStatusChanged(String s, int i, Bundle bundle) {
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
@@ -473,7 +471,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         _searchView.setOnQueryTextListener(this);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
