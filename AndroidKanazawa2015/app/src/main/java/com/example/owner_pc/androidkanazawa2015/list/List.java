@@ -152,7 +152,4 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
         objects.clear();
     }
 
-    public void setShopList(ArrayList<ShopParameter> shopList){
-        this.shopList = shopList;
-    }
 }

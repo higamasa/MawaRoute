@@ -1,16 +1,17 @@
 package com.example.owner_pc.androidkanazawa2015;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.print.PrintAttributes;
 import android.support.v4.app.Fragment;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -21,18 +22,21 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
+import com.example.owner_pc.androidkanazawa2015.google_map.RouteShop;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 /**
@@ -41,15 +45,15 @@ import java.util.Random;
 public class RoulettePage extends Fragment{
 
     private View view;
-
+    private RouteShop routeShop;
     PopupWindow mPopupWindow;
 
     TranslateAnimation translate;
 
-//    private Activity activity;
-
     //家紋ごとの店の情報リスト
-    private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
+    private LinkedList<ShopParameter> shopList = new LinkedList<ShopParameter>();
+
+    private Position start = new Position();
 
     //回転後の店番号
     private int hitNum;
@@ -69,9 +73,14 @@ public class RoulettePage extends Fragment{
 
     //家紋の円
     private ImageView[] circle = new ImageView[CIR_NUM + 1];
+    FrameLayout.LayoutParams[] params = new FrameLayout.LayoutParams[CIR_NUM + 1];
 
     //円の上に乗るアイコン
+    private int[] categoryId = new int[CIR_NUM];
+    private ImageView[] icon = new ImageView[CIR_NUM];
     private BitmapDrawable[] Icon = new BitmapDrawable[CIR_NUM];
+    private String[] categoryStr  = new String[CIR_NUM];
+    FrameLayout.LayoutParams[] iconParams = new FrameLayout.LayoutParams[CIR_NUM ];
 
     //家紋中の円の数、円のサイズ
     private static final int CIR_NUM = 5;
@@ -99,7 +108,7 @@ public class RoulettePage extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        activity = getActivity();
+        routeShop = new RouteShop(getActivity());
     }
 
     @Override
@@ -130,15 +139,27 @@ public class RoulettePage extends Fragment{
         FrameLayout.LayoutParams arrowParam = new FrameLayout.LayoutParams(cirSize, cirSize, Gravity.CENTER);
 
         //円のグラビティを中心に設定
-        FrameLayout.LayoutParams[] params = new FrameLayout.LayoutParams[CIR_NUM + 1];
         for(int i = 0; i < CIR_NUM; ++i){
             params[i] = new FrameLayout.LayoutParams(cirSize, cirSize, Gravity.CENTER);
         }
+        //カテゴリアイコンのサイズ調整
+        iconParams[0] = new FrameLayout.LayoutParams((int)(cirSize*0.75), (int)(cirSize*75), Gravity.CENTER);
+        iconParams[1] = new FrameLayout.LayoutParams((int)(cirSize*0.95), (int)(cirSize*95), Gravity.CENTER);
+        iconParams[2] = new FrameLayout.LayoutParams((int)(cirSize), (int)(cirSize), Gravity.CENTER);
+        iconParams[3] = new FrameLayout.LayoutParams((int)(cirSize), (int)(cirSize), Gravity.CENTER);
+        iconParams[4] = new FrameLayout.LayoutParams((int)(cirSize*0.95), (int)(cirSize*95), Gravity.CENTER);
         cirSize = cirSize - (cirSize/8);
+
         //弓矢の位置設定
         bowParam.setMargins(0, 0, 0, 2 * cirSize);
         arrowParam.setMargins(0, 0, 0, 2 * cirSize);
-        //五角形の位置設定
+
+        //家紋の五角形の位置設定
+        iconParams[0].setMargins(0, 0, 0, 1 * cirSize);
+        iconParams[1].setMargins((int) (0.95 * cirSize), 0, 0, (int) (0.31 * cirSize));
+        iconParams[2].setMargins((int) (0.59 * cirSize), (int) (0.81 * cirSize), 0, 0);
+        iconParams[3].setMargins(0, (int) (0.81 * cirSize), (int) (0.59 * cirSize), 0);
+        iconParams[4].setMargins(0, 0, (int) (0.95 * cirSize), (int) (0.31 * cirSize));
         params[0].setMargins(0, 0, 0, 1 * cirSize);
         params[1].setMargins((int) (0.95 * cirSize), 0, 0, (int) (0.31 * cirSize));
         params[2].setMargins((int) (0.59 * cirSize), (int) (0.81 * cirSize), 0, 0);
@@ -159,21 +180,20 @@ public class RoulettePage extends Fragment{
         sign.setImageResource(R.drawable.yazirushi2);
         signLayout.addView(sign, signParam);
 
+        //5つの家紋表示
         //画像ID（家紋、カテゴリ）
         int[] circleId = new int[CIR_NUM + 1];
-        int[] categoryId = new int[CIR_NUM];
         //ID名
         String[] circleStr = {"cir_r", "cir_b", "cir_y", "cir_p", "cir_g", "cir_gray"};
-        //todo カテゴリを店情報から決める
-        String[] categoryStr = {"category1", "category2", "category2", "category2", "category2"};
-//        String[] categoryStr = setCategoryID();
-        //円とカテゴリマークを重ねる変数
-        Drawable[][] drawables = new Drawable[5][2];
-        LayerDrawable[] layerDrawable = new LayerDrawable[5];
+        //カテゴリ画像をShopListから選択
+        setCategoryID();
+
+        //カテゴリ用設定変数
 
         //家紋の位置、向きを調整しFrameLayoutに追加する
         for(int i=0; i < CIR_NUM; ++i){
             circle[i] = new ImageView(getActivity());
+            icon[i]   = new ImageView(getActivity());
             //ID設定
             circleId[i] = getResources().getIdentifier(circleStr[i], "drawable", getActivity().getPackageName());
             categoryId[i] = getResources().getIdentifier(categoryStr[i], "drawable", getActivity().getPackageName());
@@ -181,27 +201,25 @@ public class RoulettePage extends Fragment{
             Icon[i] = (BitmapDrawable)getResources().getDrawable(categoryId[i]);
             //Bitmapファイルを取る
             Bitmap bmp = Icon[i].getBitmap();
+
             //回転(72度づつずらす）
             Matrix matrix = new Matrix();
             matrix.postRotate(72*i);
             //Bitmap回転
-            Bitmap flippedBmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, false);
+            Bitmap flippedBmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
             //加工後BitmapDrawableに戻す
             Icon[i] = new BitmapDrawable(flippedBmp);
-            //円とアイコンを重ねる
-            drawables[i][0] = getResources().getDrawable(circleId[i]);
-            drawables[i][1] = Icon[i];
+
             //frameLayoutに表示
-            layerDrawable[i] = new LayerDrawable(drawables[i]);
-            circle[i].setImageDrawable(layerDrawable[i]);
+            icon[i].setImageDrawable(Icon[i]);
+            circle[i].setImageDrawable(getResources().getDrawable(circleId[i]));
+
             kamonLayout.addView(circle[i], params[i]);
+            kamonLayout.addView(icon[i], iconParams[i]);
 
             //解放
             bmp = null;
             flippedBmp = null;
-            drawables[i][0] = null;
-            drawables[i][1] = null;
-            layerDrawable[i] = null;
         }
 
         //真ん中の円を表示
@@ -251,7 +269,6 @@ public class RoulettePage extends Fragment{
                                     && e1.getY() < center.y + cirSize*2
                                     && e1.getX() > center.x - cirSize/2) {
                                 System.out.println("右から左");
-                                //todo toast表示
                                 if(shopList.size() != 0) {
                                     setRotate((int) (Math.abs(velocityX) / 1000));
                                     startRotate();
@@ -277,20 +294,15 @@ public class RoulettePage extends Fragment{
         return view;
     }
 
-    private String[] setCategoryID(){
-        //カテゴリ画像のID
-        String[] categoryID = new String[5];
+    private void setCategoryID(){
         //ショップがあるならカテゴリ画像を、無いならナシ画像を入れる
-        for(int i = 0; i < 5; ++i){
-            if(shopList.get(i) != null){
-                categoryID[i] = shopList.get(i).getShopCategoryType();
-            }else{
-                //todo noItem画像追加
-                categoryID[i] = "noItem";
-            }
-        }
+        for(int i = 0; i < shopList.size(); ++i) categoryStr[i] = shopList.get(i).getShopCategoryType();
+        for(int i = shopList.size(); i < CIR_NUM; ++i) categoryStr[i] = "noitem";
 
-        return categoryID;
+//        for(int i = 0; i < CIR_NUM; ++i){
+//            System.out.println(categoryStr[i]);
+//        }
+
     }
 
     private int Hit(){
@@ -353,6 +365,11 @@ public class RoulettePage extends Fragment{
 
                 View popupView = layoutInflater.inflate(R.layout.popup_layout, null);
 
+                TextView popupText;
+
+                popupText = (TextView)popupView.findViewById(R.id.popupText);
+                popupText.setText(shopList.get(hitNum).getShopName());
+
                 // 閉じるボタンを押したとき
                 popupView.findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -360,12 +377,10 @@ public class RoulettePage extends Fragment{
                         // ポップアップが表示されている場合
                         if (mPopupWindow.isShowing()) {
                             // ポップアップ破棄
-                            // todo ここに処理
-                            //todo hitNumで回転後の店情報にアクセスする
-//                    shopList.get(hitNum).getShopName();
-
                             //弓矢戻す
                             backTranslate();
+                            //家紋をもとの位置に
+                            backRotate();
                             mPopupWindow.dismiss();
                         }
                     }
@@ -376,12 +391,14 @@ public class RoulettePage extends Fragment{
                     @Override
                     public void onClick(View v) {
                         // ポップアップが表示されている場合
+                        //
                         if (mPopupWindow.isShowing()) {
-                            // ポップアップ破棄
-                            // todo ここに処理
-
+                            Position goal = new Position(shopList.get(hitNum).getLatitude(), shopList.get(hitNum).getLongitude());
+                            routeShop.Route(start, goal);
                             //弓矢戻す
                             backTranslate();
+                            //家紋をもとの位置に
+                            backRotate();
                             mPopupWindow.dismiss();
                         }
                     }
@@ -393,11 +410,12 @@ public class RoulettePage extends Fragment{
                     public void onClick(View v) {
                         // ポップアップが表示されている場合
                         if (mPopupWindow.isShowing()) {
-                            // ポップアップ破棄
-                            // todo ここに処理
-
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(shopList.get(hitNum).getShopUrl()));
+                            startActivity(intent);
                             //弓矢戻す
                             backTranslate();
+                            //家紋をもとの位置に
+                            backRotate();
                             mPopupWindow.dismiss();
                         }
                     }
@@ -408,14 +426,14 @@ public class RoulettePage extends Fragment{
                 // 背景設定
                 mPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
 
-                // タップ時に他のViewでキャッチされないための設定
+                // タップ時に他のViewでもキャッチするための設定
                 mPopupWindow.setOutsideTouchable(false);
                 mPopupWindow.setFocusable(false);
 
-                // 表示サイズの設定 今回は仮に幅300dp
-                float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
-                mPopupWindow.setWindowLayoutMode((int) width, WindowManager.LayoutParams.WRAP_CONTENT);
-                mPopupWindow.setWidth((int) width);
+                // 表示サイズの設定
+                //float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
+                mPopupWindow.setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                mPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 mPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 
                 // 画面表示
@@ -433,7 +451,6 @@ public class RoulettePage extends Fragment{
     //回転アニメーション初期化
     private void setRotate(int rotateTime){
         Random r = new Random();
-        //todo 格納されている店の個数で回転角度を決める
         int shopNum = (CIR_NUM - shopList.size());
         hitAngle = r.nextInt(72*shopList.size()) + 72 * shopNum;
         //回転数制限
@@ -446,6 +463,17 @@ public class RoulettePage extends Fragment{
         endAngle = hitAngle + 360*rotateTime + 36;
     }
 
+    private void backRotate(){
+
+        //回転アニメーションクラス生成
+        RotateAnimation rotate = new RotateAnimation(0, 0, center.x, center.y);
+        //3000msかけて回転
+        rotate.setDuration(500);
+        //アニメーション後の状態保持（回った後そのまま）
+        rotate.setFillAfter(true);
+        kamonLayout.startAnimation(rotate);
+    }
+
     //回転アニメーション開始
     private void startRotate(){
         //回転アニメーションクラス生成
@@ -454,7 +482,6 @@ public class RoulettePage extends Fragment{
         rotate.setDuration(3000);
         //アニメーション後の状態保持（回った後そのまま）
         rotate.setFillAfter(true);
-        rotate.setFillEnabled(true);
         rotate.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -534,9 +561,58 @@ public class RoulettePage extends Fragment{
         }
     }
 
+    public void setCircleImage(){
+
+        //画像ID（カテゴリ）
+//        int[] categoryId = new int[CIR_NUM];
+        //カテゴリ画像をShopListから選択
+        setCategoryID();
+
+        //家紋の位置、向きを調整しFrameLayoutに追加する
+        for(int i=0; i < CIR_NUM; ++i){
+            //ID設定
+            categoryId[i] = getResources().getIdentifier(categoryStr[i], "drawable", getActivity().getPackageName());
+            //BitmapDrawableにキャスト
+            Icon[i] = (BitmapDrawable)getResources().getDrawable(categoryId[i]);
+            //Bitmapファイルを取る
+            Bitmap bmp = Icon[i].getBitmap();
+
+            //回転(72度づつずらす）
+            Matrix matrix = new Matrix();
+            matrix.postRotate(72*i);
+            //Bitmap回転
+            Bitmap flippedBmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+            //加工後BitmapDrawableに戻す
+            Icon[i] = new BitmapDrawable(flippedBmp);
+
+            //frameLayoutに表示
+            icon[i].setImageDrawable(Icon[i]);
+
+            //解放
+            matrix = null;
+            bmp = null;
+            flippedBmp = null;
+        }
+
+    }
+
     //MainActivityから選択された店の情報を受け取り、追加判定をする
     public void setShopParameter(ShopParameter shop, boolean flag){
         editShopList(shop, flag);
+        //家紋画像を開放し再セット
+        for(int i = 0; i < CIR_NUM; ++i){
+            icon[i].setImageDrawable(null);
+            Icon[i] = null;
+        }
+        setCategoryID();
+        setCircleImage();
+        System.gc();
     }
+
+    public void setPosition(Position position){
+        this.start = position;
+    }
+
+
 
 }

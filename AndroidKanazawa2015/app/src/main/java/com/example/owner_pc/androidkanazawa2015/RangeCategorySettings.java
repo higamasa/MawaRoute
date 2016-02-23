@@ -161,4 +161,5 @@ public class RangeCategorySettings extends AppCompatActivity implements RadioGro
         finish();
     }
 
+
 }
