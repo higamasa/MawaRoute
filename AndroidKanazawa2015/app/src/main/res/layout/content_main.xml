@@ -25,8 +25,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tool_bar"
-        android:layout_toEndOf="@+id/left_button"
-        android:layout_toRightOf="@+id/left_button"
         android:elevation="6dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -38,22 +36,4 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/tab_layout" />
-
-    <ImageButton
-        android:id="@+id/right_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:background="@null"
-        android:scaleType="fitXY" />
-
-    <ImageButton
-        android:id="@+id/left_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:background="@null"
-        android:scaleType="fitXY" />
 </RelativeLayout>

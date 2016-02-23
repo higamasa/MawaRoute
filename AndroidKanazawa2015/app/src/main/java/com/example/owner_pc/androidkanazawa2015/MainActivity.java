@@ -10,9 +10,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.AudioTrack;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -26,16 +24,13 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.ImageView;
 
 import com.example.owner_pc.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
 import com.example.owner_pc.androidkanazawa2015.gnavi.GnaviCtrl;
@@ -261,9 +256,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.getTabAt(0).setIcon(R.drawable.list_tab);
         tabLayout.getTabAt(1).setIcon(R.drawable.map_tab);
         tabLayout.getTabAt(2).setIcon(R.drawable.cir_gray);
-//        tabLayout.getTabAt(0).setText("List");
-//        tabLayout.getTabAt(1).setText("Map");
-//        tabLayout.getTabAt(2).setText("Roulette");
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //現在位置をルーレットページにセット

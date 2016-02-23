@@ -188,8 +188,6 @@ public class RoulettePage extends Fragment{
         //カテゴリ画像をShopListから選択
         setCategoryID();
 
-        //カテゴリ用設定変数
-
         //家紋の位置、向きを調整しFrameLayoutに追加する
         for(int i=0; i < CIR_NUM; ++i){
             circle[i] = new ImageView(getActivity());
@@ -298,11 +296,6 @@ public class RoulettePage extends Fragment{
         //ショップがあるならカテゴリ画像を、無いならナシ画像を入れる
         for(int i = 0; i < shopList.size(); ++i) categoryStr[i] = shopList.get(i).getShopCategoryType();
         for(int i = shopList.size(); i < CIR_NUM; ++i) categoryStr[i] = "noitem";
-
-//        for(int i = 0; i < CIR_NUM; ++i){
-//            System.out.println(categoryStr[i]);
-//        }
-
     }
 
     private int Hit(){
