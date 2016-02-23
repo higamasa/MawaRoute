@@ -188,8 +188,6 @@ public class RoulettePage extends Fragment{
         //カテゴリ画像をShopListから選択
         setCategoryID();
 
-        //カテゴリ用設定変数
-
         //家紋の位置、向きを調整しFrameLayoutに追加する
         for(int i=0; i < CIR_NUM; ++i){
             circle[i] = new ImageView(getActivity());
@@ -298,11 +296,6 @@ public class RoulettePage extends Fragment{
         //ショップがあるならカテゴリ画像を、無いならナシ画像を入れる
         for(int i = 0; i < shopList.size(); ++i) categoryStr[i] = shopList.get(i).getShopCategoryType();
         for(int i = shopList.size(); i < CIR_NUM; ++i) categoryStr[i] = "noitem";
-
-//        for(int i = 0; i < CIR_NUM; ++i){
-//            System.out.println(categoryStr[i]);
-//        }
-
     }
 
     private int Hit(){
@@ -330,14 +323,6 @@ public class RoulettePage extends Fragment{
             default:
                 return 0;
         }
-    }
-
-    //弓矢を戻す(上昇)
-    private void backTranslate(){
-        translate = new TranslateAnimation(0, 0, 0, 0);
-        translate.setDuration(500);
-        translate.setFillAfter(true);
-        arrow.startAnimation(translate);
     }
 
     //弓矢を放つ(下降)
@@ -378,9 +363,9 @@ public class RoulettePage extends Fragment{
                         if (mPopupWindow.isShowing()) {
                             // ポップアップ破棄
                             //弓矢戻す
-                            backTranslate();
+                            arrow.clearAnimation();
                             //家紋をもとの位置に
-                            backRotate();
+                            kamonLayout.clearAnimation();
                             mPopupWindow.dismiss();
                         }
                     }
@@ -391,14 +376,13 @@ public class RoulettePage extends Fragment{
                     @Override
                     public void onClick(View v) {
                         // ポップアップが表示されている場合
-                        //
                         if (mPopupWindow.isShowing()) {
                             Position goal = new Position(shopList.get(hitNum).getLatitude(), shopList.get(hitNum).getLongitude());
                             routeShop.Route(start, goal);
                             //弓矢戻す
-                            backTranslate();
+                            arrow.clearAnimation();
                             //家紋をもとの位置に
-                            backRotate();
+                            kamonLayout.clearAnimation();
                             mPopupWindow.dismiss();
                         }
                     }
@@ -413,9 +397,9 @@ public class RoulettePage extends Fragment{
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(shopList.get(hitNum).getShopUrl()));
                             startActivity(intent);
                             //弓矢戻す
-                            backTranslate();
+                            arrow.clearAnimation();
                             //家紋をもとの位置に
-                            backRotate();
+                            kamonLayout.clearAnimation();
                             mPopupWindow.dismiss();
                         }
                     }
@@ -461,17 +445,6 @@ public class RoulettePage extends Fragment{
         }
         //最終的な角度はフリックの強さ（回転数）+　36（0度始まりに調整）
         endAngle = hitAngle + 360*rotateTime + 36;
-    }
-
-    private void backRotate(){
-
-        //回転アニメーションクラス生成
-        RotateAnimation rotate = new RotateAnimation(0, 0, center.x, center.y);
-        //3000msかけて回転
-        rotate.setDuration(500);
-        //アニメーション後の状態保持（回った後そのまま）
-        rotate.setFillAfter(true);
-        kamonLayout.startAnimation(rotate);
     }
 
     //回転アニメーション開始
