@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         setContentView(R.layout.activity_main);
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
-        _toolBar.setTitle("リスト");
+        _toolBar.setTitle("お店一覧");
         setSupportActionBar(_toolBar);
         //search();
 
@@ -244,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             //ぐるナビ読み込み完了
     @Override
     public void onTaskFinished(){
-
         //TabとSwipeの読み込み
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(2);
@@ -257,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             public void onPageSelected(int position) {
                 switch (position){
                     case 0:
-                        _toolBar.setTitle("リスト");
+                        _toolBar.setTitle("お店一覧");
                         break;
                     case 1:
                         _toolBar.setTitle("マップ");
@@ -279,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.list_tab);
         tabLayout.getTabAt(1).setIcon(R.drawable.map_tab);
-        tabLayout.getTabAt(2).setIcon(R.drawable.cir_gray);
+        tabLayout.getTabAt(2).setIcon(R.drawable.rulette_tab);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //現在位置をルーレットページにセット

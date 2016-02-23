@@ -137,8 +137,6 @@ public class Map extends Fragment implements View.OnClickListener {
         if (shopflag == true) {
             options.title(shop.getShopName());
             MakerSetting(new LatLng(shop.getLatitude(), shop.getLongitude()));
-            Log.d("latitude", String.valueOf(shop.getLatitude()));
-            Log.d("latitude", String.valueOf(shop.getLongitude()));
         } else {
             MarkerDelete();
             for (int i = 0; i < shopList.size(); i++) {

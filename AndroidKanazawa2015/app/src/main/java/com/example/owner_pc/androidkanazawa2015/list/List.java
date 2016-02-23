@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by atsusuke on 2016/02/01.
  */
-public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class List extends Fragment {
     View view;
     Bitmap image;
     Activity activity;
@@ -32,7 +32,7 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
     private FragmentTopCallback mCallback;
     private CustomData item;
     private ListView listView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private int count;
 
     public interface FragmentTopCallback {
         void listCallback(ShopParameter shopParameter, boolean bool);
@@ -65,8 +65,6 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //リストの更新を定義
-        createSwipeRefreshLayout();
         Display display = activity.getWindowManager().getDefaultDisplay();
         Bundle bundle = getArguments();
         shopList = (ArrayList<ShopParameter>)bundle.getSerializable("ShopList");
@@ -75,9 +73,28 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
         /* データの作成 */
         objects = new ArrayList<CustomData>();
         size = shopList.size();
-        // todo 適切な画像を配置する
-        image = BitmapFactory.decodeResource(getResources(), R.drawable.cir_g);
         for (int i = 0; i < size; i++){
+            Log.d("check", shopList.get(i).getShopCategoryType());
+            switch (shopList.get(i).getShopCategoryType()){
+                case "category1":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category1);
+                    break;
+                case "category2":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category2);
+                    break;
+                case "category3":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category3);
+                    break;
+                case "category4":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category4);
+                    break;
+                case "category5":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category5);
+                    break;
+                case "category6":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category6);
+                    break;
+            }
             item = new CustomData();
             item.setImagaData(image);
             item.setTextData(shopList.get(i).getShopName());
@@ -103,7 +120,9 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
                     //String msg = String.format("position:%d check:%b", position, checkedItemPositions.get(position));
                     //Log.d("position", String.valueOf(size));
                     //Log.d("position", msg);
-                    if (checkedItemPositions.size() <=5) {
+                    count = checkedItemPositions.size();
+                    if (count <= 5) {
+                        Toast.makeText(getActivity(), count + " / 5", Toast.LENGTH_SHORT).show();
                         if (checkedItemPositions.get(position) == true) {
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                         } else {
@@ -112,31 +131,11 @@ public class List extends Fragment implements SwipeRefreshLayout.OnRefreshListen
                         }
                     }else {
                         checkedItemPositions.delete(position);
-                        Toast.makeText(getActivity(), "5個以上選ぶのは贅沢だよ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "5 / 5", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
-    }
-
-    /**
-     * 引っ張って更新するSwipeRefreshLayoutを作成
-     */
-    public void createSwipeRefreshLayout(){
-        mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.swipe_refresh_layout);
-        //// TODO:適切な色を指定
-        mSwipeRefreshLayout.setColorSchemeColors(R.color.colorRed,R.color.colorPrimaryDark,R.color.colorAccent);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-    }
-
-    /**
-     * 引っ張った時の処理
-     */
-    @Override
-    public void onRefresh() {
-        // TODO:再度位置情報を取得しリストを更新する。
-        //解除
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
