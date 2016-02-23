@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
+import android.text.Layout;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Display;
@@ -32,6 +34,7 @@ public class CustomAdapter extends ArrayAdapter<CustomData>{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // 特定の行(position)のデータを得る
+        final int pad = size.y/48;
         CustomData item = (CustomData)getItem(position);
         // convertViewは使い回しされている可能性があるのでnullの時だけ新しく作る
         if (null == convertView) {
@@ -40,20 +43,25 @@ public class CustomAdapter extends ArrayAdapter<CustomData>{
         // CustomDataのデータをViewの各Widgetにセットする
         ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
         TextView textView = (TextView)convertView.findViewById(R.id.text);
+        textView.setTypeface(Typeface.SERIF);
         Bitmap bitmap = item.getImageData();
         if (bitmap != null) {
-            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, size.x/5, size.x/5, false));
-            textView.setTextSize(1500/(size.y/32));
+            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, size.x / 7, size.x / 7, false));
+            textView.setTextSize(1500 / (size.y / 32));
+            imageView.setPadding(pad + 5,pad,pad,pad);
+            textView.setPadding(pad/3,pad,0,0);
         }else {
-            imageView.setImageBitmap(item.getImageData());
-            textView.setTextSize(800/(size.y/32));
+            imageView.setImageBitmap(bitmap);
+            textView.setTextSize(800 / (size.y / 32));
+            imageView.setPadding(0,0,0,0);
+            textView.setPadding(32,10,10,10);
         }
         textView.setText(item.getTextData());
         Context context = getContext();
         ListView listView = (ListView)parent;
         Resources resources = context.getResources();
         SparseBooleanArray checkedItemPositions = listView.getCheckedItemPositions();
-        if (checkedItemPositions.get(position) == true && item.getImageData() != null) {
+        if (checkedItemPositions.get(position) == true && bitmap != null) {
             convertView.setBackgroundColor(resources.getColor(R.color.colorGold));
         } else {
             convertView.setBackgroundColor(resources.getColor(R.color.colorYellow));
