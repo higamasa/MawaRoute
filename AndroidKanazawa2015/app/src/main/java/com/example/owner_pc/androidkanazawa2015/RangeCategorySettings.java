@@ -24,7 +24,7 @@ public class RangeCategorySettings extends AppCompatActivity implements RadioGro
     private ShopCtrl _shopCtrl = new ShopCtrl();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("絞り込み設定");
         setContentView(R.layout.range_category_settings);
@@ -32,11 +32,11 @@ public class RangeCategorySettings extends AppCompatActivity implements RadioGro
 
     }
 
-    private void initSetting(){
+    private void initSetting() {
         //ラジオボタンの初期状態設定
-        _radioGroup = (RadioGroup)findViewById(R.id.RadioGroup);
+        _radioGroup = (RadioGroup) findViewById(R.id.RadioGroup);
         _radioGroup.setOnCheckedChangeListener(this);
-        switch (_settingParam.getRangeType()){
+        switch (_settingParam.getRangeType()) {
             case 0:
                 //300m
                 _radioGroup.check(R.id.RadioButton1);
@@ -60,15 +60,15 @@ public class RangeCategorySettings extends AppCompatActivity implements RadioGro
         checkFlag[5] = _settingParam.isCafe();
 
         //checkBoxのID指定
-        checkBoxes[0] = (CheckBox)findViewById(R.id.high_cal);
-        checkBoxes[1] = (CheckBox)findViewById(R.id.fastfood);
-        checkBoxes[2] = (CheckBox)findViewById(R.id.other);
-        checkBoxes[3] = (CheckBox)findViewById(R.id.wine);
-        checkBoxes[4] = (CheckBox)findViewById(R.id.high_grade);
-        checkBoxes[5] = (CheckBox)findViewById(R.id.cafe);
+        checkBoxes[0] = (CheckBox) findViewById(R.id.high_cal);
+        checkBoxes[1] = (CheckBox) findViewById(R.id.fastfood);
+        checkBoxes[2] = (CheckBox) findViewById(R.id.other);
+        checkBoxes[3] = (CheckBox) findViewById(R.id.wine);
+        checkBoxes[4] = (CheckBox) findViewById(R.id.high_grade);
+        checkBoxes[5] = (CheckBox) findViewById(R.id.cafe);
 
         //チェックボックスの初期状態設定
-        for(int i = 0; i < CATEGORY_NUM ; ++i){
+        for (int i = 0; i < CATEGORY_NUM; ++i) {
             checkBoxes[i].setChecked(checkFlag[i]);
         }
     }
@@ -77,20 +77,22 @@ public class RangeCategorySettings extends AppCompatActivity implements RadioGro
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         //int CheckedId = _radioGroup.getCheckedRadioButtonId();
-        RadioButton radioButton = (RadioButton) findViewById(checkedId);
-        if(radioButton.isChecked()) {
-            if (checkedId == R.id.RadioButton1) {
+        //RadioButton radioButton = (RadioButton) findViewById(checkedId);
+        switch (checkedId) {
+            case R.id.RadioButton1:
                 _settingParam.setRangeType(0);
                 //Log.d("radioCheck1", "radio1 Checking Complete!");
-            } else if (checkedId == R.id.RadioButton2) {
+                break;
+            case R.id.RadioButton2:
                 _settingParam.setRangeType(1);
-                //Log.d("radioCheck2", "radio2 Checking Complete!");
-            } else if (checkedId == R.id.RadioButton3) {
+                //Log.d("radioCheck1", "radio2 Checking Complete!");
+                break;
+            case R.id.RadioButton3:
                 _settingParam.setRangeType(2);
-                //Log.d("radioCheck3", "radio3 Checking Complete!");
-            }
-        } else {
-            _settingParam.setRangeType(0);
+                //Log.d("radioCheck1", "radio3 Checking Complete!");
+                break;
+            default:
+                _settingParam.setRangeType(0);
         }
     }
 
@@ -99,55 +101,34 @@ public class RangeCategorySettings extends AppCompatActivity implements RadioGro
     public void onCheckBoxClick(View v) {
         final boolean checked = ((CheckBox) v).isChecked();
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.high_cal:
-                if(checked) {
-                    _settingParam.setHighCal(true);
+                _settingParam.setHighCal(checked);
+                if (checked) {
                     Log.d("Check CheckBox Click", "set Completed!");
                 } else {
-                    _settingParam.setHighCal(false);
                     Log.d("Check CheckBox Click", "unset Completed!");
                 }
                 break;
             case R.id.fastfood:
-                if(checked) {
-                    _settingParam.setFastFood(true);
-                } else {
-                    _settingParam.setFastFood(false);
-                }
+                _settingParam.setFastFood(checked);
                 break;
             case R.id.other:
-                if(checked) {
-                    _settingParam.setOther(true);
-                } else {
-                    _settingParam.setOther(false);
-                }
+                _settingParam.setOther(checked);
                 break;
             case R.id.wine:
-                if(checked) {
-                    _settingParam.setWine(true);
-                } else {
-                    _settingParam.setWine(false);
-                }
+                _settingParam.setWine(checked);
                 break;
             case R.id.high_grade:
-                if(checked) {
-                    _settingParam.setHighGrade(true);
-                } else {
-                    _settingParam.setHighGrade(false);
-                }
+                _settingParam.setHighGrade(checked);
                 break;
             case R.id.cafe:
-                if(checked) {
-                    _settingParam.setCafe(true);
-                } else {
-                    _settingParam.setCafe(false);
-                }
+                _settingParam.setCafe(checked);
                 break;
         }
     }
 
-    public void onClick_ok(View v){
+    public void onClick_ok(View v) {
         _shopCtrl.categoryDividing();
         Intent data = new Intent();
         data.putExtra("ShopList", _shopCtrl.getShopList());
@@ -157,7 +138,7 @@ public class RangeCategorySettings extends AppCompatActivity implements RadioGro
         //Toast.makeText(RangeCategorySettings.this, "設定を変更しました", Toast.LENGTH_SHORT).show();
     }
 
-    public void onClickCancel(View v){
+    public void onClickCancel(View v) {
         finish();
     }
 

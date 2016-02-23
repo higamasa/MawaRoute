@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.example.owner_pc.androidkanazawa2015.R;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.google.android.gms.maps.CameraUpdate;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
 
 /**
@@ -46,7 +48,7 @@ public class Map extends Fragment implements View.OnClickListener {
         //マップの初期化
         android.support.v4.app.FragmentManager fm = getChildFragmentManager();
         fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
-        mFab = (FloatingActionButton)view.findViewById(R.id.fab);
+        mFab = (FloatingActionButton) view.findViewById(R.id.fab);
         this.mFab.setOnClickListener(this);
     }
 
@@ -85,6 +87,7 @@ public class Map extends Fragment implements View.OnClickListener {
             MapUiSettings();
         }
     }
+
     private void MakerSetting(LatLng lat) {
         // 緯度・経度
         options.position(lat);
@@ -95,15 +98,11 @@ public class Map extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (flag == false){
-            this.flag = true;
-            MapUiSettings();
-        }else{
-            this.flag = false;
-            MapUiSettings();
-        }
+        this.flag = !flag;
+        MapUiSettings();
     }
-    private void MapUiSettings(){
+
+    private void MapUiSettings() {
         // コンパスの有効化
         mMap.getUiSettings().setCompassEnabled(false);
         // 拡大・縮小ボタンを表示
@@ -115,15 +114,16 @@ public class Map extends Fragment implements View.OnClickListener {
         // 回転ジェスチャーの有効化
         mMap.getUiSettings().setRotateGesturesEnabled(flag);
     }
-    private void editShopList(ShopParameter shop, boolean flag){
-        if(flag){
+
+    private void editShopList(ShopParameter shop, boolean flag) {
+        if (flag) {
             //リストに同じ店がないので追加する
             shopList.add(shop);
-        }else{
+        } else {
             //リストに同じ店があるので排除する
-            for(int i = 0; i < shopList.size(); ++i){
+            for (int i = 0; i < shopList.size(); ++i) {
                 String shopName = shopList.get(i).getShopName();
-                if(shopName.equals(shop.getShopName())){
+                if (shopName.equals(shop.getShopName())) {
                     shopList.remove(i);
                     return;
                 }
@@ -134,7 +134,7 @@ public class Map extends Fragment implements View.OnClickListener {
     //MainActivityから選択された店の情報を受け取り、追加判定をする
     public void setShopParameter(ShopParameter shop, boolean shopflag) {
         editShopList(shop, shopflag);
-        if (shopflag == true) {
+        if (shopflag) {
             options.title(shop.getShopName());
             MakerSetting(new LatLng(shop.getLatitude(), shop.getLongitude()));
             Log.d("latitude", String.valueOf(shop.getLatitude()));
@@ -148,7 +148,7 @@ public class Map extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void MarkerDelete(){
+    private void MarkerDelete() {
         for (int i = 0; i < setMarker.size(); i++) {
             setMarker.get(i).remove();
         }
@@ -156,7 +156,7 @@ public class Map extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         MarkerDelete();
         options.icon(null);

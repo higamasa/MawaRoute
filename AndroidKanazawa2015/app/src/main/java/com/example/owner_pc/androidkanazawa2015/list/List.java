@@ -17,7 +17,9 @@ import android.widget.Toast;
 import com.example.owner_pc.androidkanazawa2015.CustomToast;
 import com.example.owner_pc.androidkanazawa2015.R;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
+
 import java.util.ArrayList;
+
 /**
  * Created by atsusuke on 2016/02/01.
  */
@@ -41,7 +43,7 @@ public class List extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         // Activityがコールバックを実装しているかチェック
-        if (activity instanceof FragmentTopCallback == false) {
+        if (!(activity instanceof FragmentTopCallback)) {
             throw new ClassCastException("activity が FragmentTopCallback を実装していません.");
         }
         //
@@ -49,7 +51,7 @@ public class List extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
     }
@@ -66,27 +68,27 @@ public class List extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Display display = activity.getWindowManager().getDefaultDisplay();
         Bundle bundle = getArguments();
-        shopList = (ArrayList<ShopParameter>)bundle.getSerializable("ShopList");
+        shopList = (ArrayList<ShopParameter>) bundle.getSerializable("ShopList");
         //Log.d("check", String.valueOf(shopCtrl.getShopList().get(away).shop.size()));
-        listView = (ListView)view.findViewById(R.id.list);
+        listView = (ListView) view.findViewById(R.id.list);
         /* データの作成 */
         objects = new ArrayList<CustomData>();
         size = shopList.size();
         // todo 適切な画像を配置する
         image = BitmapFactory.decodeResource(getResources(), R.drawable.cir_g);
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             item = new CustomData();
             item.setImagaData(image);
             item.setTextData(shopList.get(i).getShopName());
             objects.add(item);
-            customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects,display);
+            customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects, display);
             listView.setAdapter(customAdapter);
         }
         item = new CustomData();
         item.setImagaData(null);
         item.setTextData("Powered by ぐるなび");
         objects.add(item);
-        customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects,display);
+        customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects, display);
         listView.setAdapter(customAdapter);
 
         //リスト項目が選択された時のイベントを追加
@@ -99,8 +101,8 @@ public class List extends Fragment {
                     //String msg = String.format("position:%d check:%b", position, checkedItemPositions.get(position));
                     //Log.d("position", String.valueOf(size));
                     //Log.d("position", msg);
-                    if (checkedItemPositions.size() <=5) {
-                        if (checkedItemPositions.get(position) == true) {
+                    if (checkedItemPositions.size() <= 5) {
+                        if (checkedItemPositions.get(position)) {
                             CustomToast.makeText(getContext(), (checkedItemPositions.size()) + "/5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                         } else {
@@ -108,7 +110,7 @@ public class List extends Fragment {
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                             checkedItemPositions.delete(position);
                         }
-                    }else {
+                    } else {
                         checkedItemPositions.delete(position);
                         Toast.makeText(getActivity(), "5個以上選ぶのは贅沢だよ", Toast.LENGTH_SHORT).show();
                     }
@@ -118,7 +120,7 @@ public class List extends Fragment {
     }
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         view = null;
         listView.setAdapter(null);

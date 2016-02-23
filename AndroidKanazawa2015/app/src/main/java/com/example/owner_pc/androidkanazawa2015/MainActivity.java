@@ -364,8 +364,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     //位置情報の取得
     public void getLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false &&
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == false){
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
             //位置情報がオンになっているかの確認
             checkGpsSettings();
         }
@@ -439,7 +439,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         this.longitude = location.getLongitude();
         onDestroyLocation();
         //位置情報取得を破棄
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         locationManager.removeUpdates(this);

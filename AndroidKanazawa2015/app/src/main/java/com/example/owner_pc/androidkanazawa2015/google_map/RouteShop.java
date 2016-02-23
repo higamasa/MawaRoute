@@ -12,7 +12,7 @@ import com.example.owner_pc.androidkanazawa2015.gnavi.Position;
 public class RouteShop {
     private Activity activity;
 
-    public RouteShop(Activity activity){
+    public RouteShop(Activity activity) {
         this.activity = activity;
     }
 
@@ -22,7 +22,7 @@ public class RouteShop {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-        intent.setData(Uri.parse("http://maps.google.com/maps?saddr=" + start.latitude + "," + start.longitude + "&daddr=" + goal.latitude + "," + goal.longitude ));
+        intent.setData(Uri.parse("http://maps.google.com/maps?saddr=" + start.latitude + "," + start.longitude + "&daddr=" + goal.latitude + "," + goal.longitude));
         activity.startActivity(intent);
     }
 }
