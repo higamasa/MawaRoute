@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.text.Layout;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -42,6 +43,7 @@ public class CustomAdapter extends ArrayAdapter<CustomData>{
         // CustomDataのデータをViewの各Widgetにセットする
         ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
         TextView textView = (TextView)convertView.findViewById(R.id.text);
+        textView.setTypeface(Typeface.SERIF);
         Bitmap bitmap = item.getImageData();
         if (bitmap != null) {
             imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, size.x / 7, size.x / 7, false));

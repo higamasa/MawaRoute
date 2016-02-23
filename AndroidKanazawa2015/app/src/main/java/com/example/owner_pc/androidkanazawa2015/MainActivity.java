@@ -41,9 +41,7 @@ import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
 import java.util.ArrayList;
 
-
 public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener, SearchView.OnQueryTextListener {
-
 
     private boolean popupDismissFlag = false;
     private PopupWindow splashPopup;
@@ -61,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     private ShopCtrl _shopCtrl = new ShopCtrl();
     private SettingParameter _settingParam = new SettingParameter();
     private String searchWord;
+    private String rangeNum;
     private double latitude  = 36.594682;
     private double longitude = 136.625573;
     private Position position = new Position();
@@ -69,20 +68,19 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        // ツールバー配置
-        _toolBar = (Toolbar)findViewById(R.id.tool_bar);
-        _toolBar.setTitle("お店一覧");
-        setSupportActionBar(_toolBar);
-        //search();
 
         //タイトルロゴ表示
         showSplashWindow();
 
+        setContentView(R.layout.activity_main);
+
+        // ツールバー配置
+        _toolBar = (Toolbar)findViewById(R.id.tool_bar);
+        _toolBar.setTitle("お店一覧");
+        setSupportActionBar(_toolBar);
+
         //位置情報の読み込み
         getLocation();
-        //Position position = new Position(latitude, longitude);
-        //gnaviCtrl.execute(position);
     }
 
     private void showSplashWindow(){
@@ -136,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
                 //ロゴアニメーション開始
                 tudumiAnimation();
+
             }
         });
     }
@@ -241,9 +240,22 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         });
     }
 
-            //ぐるナビ読み込み完了
+    //ぐるナビ読み込み完了
     @Override
     public void onTaskFinished(){
+        //ツールバータイトル設定
+        switch (_settingParam.getRangeType()){
+            case 0:
+                rangeNum = "300m";
+                break;
+            case 1:
+                rangeNum = "500m";
+                break;
+            case 2:
+                rangeNum = "1000m";
+                break;
+        }
+        _toolBar.setTitle(rangeNum + "圏内のお店");
         //TabとSwipeの読み込み
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(2);
@@ -254,9 +266,9 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
             @Override
             public void onPageSelected(int position) {
-                switch (position){
+                switch (position) {
                     case 0:
-                        _toolBar.setTitle("お店一覧");
+                        _toolBar.setTitle(rangeNum + "圏内のお店一覧");
                         break;
                     case 1:
                         _toolBar.setTitle("マップ");
@@ -266,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
                         break;
                 }
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
             }
@@ -388,6 +401,20 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         viewPager.setCurrentItem(0);
         viewPager.setAdapter(pagerAdapter);
 
+        //ツールバータイトル設定
+        switch (_settingParam.getRangeType()){
+            case 0:
+                rangeNum = "300m";
+                break;
+            case 1:
+                rangeNum = "500m";
+                break;
+            case 2:
+                rangeNum = "1000m";
+                break;
+        }
+        _toolBar.setTitle(rangeNum + "圏内のお店");
+
         RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
         roulettePage.setPosition(position);
         roulettePage = null;
@@ -424,7 +451,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     public void onStatusChanged(String s, int i, Bundle bundle) {
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
@@ -443,7 +469,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         _searchView.setOnQueryTextListener(this);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

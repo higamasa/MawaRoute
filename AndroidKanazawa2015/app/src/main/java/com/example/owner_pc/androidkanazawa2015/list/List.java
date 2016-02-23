@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -15,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.owner_pc.androidkanazawa2015.CustomToast;
 import com.example.owner_pc.androidkanazawa2015.R;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import java.util.ArrayList;
@@ -74,7 +74,6 @@ public class List extends Fragment {
         objects = new ArrayList<CustomData>();
         size = shopList.size();
         for (int i = 0; i < size; i++){
-            Log.d("check", shopList.get(i).getShopCategoryType());
             switch (shopList.get(i).getShopCategoryType()){
                 case "category1":
                     image = BitmapFactory.decodeResource(getResources(), R.drawable.category1);
@@ -98,7 +97,6 @@ public class List extends Fragment {
             item = new CustomData();
             item.setImagaData(image);
             item.setTextData(shopList.get(i).getShopName());
-//            shopParameter = shopList.get(i);
             objects.add(item);
             customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects,display);
             listView.setAdapter(customAdapter);
@@ -124,8 +122,10 @@ public class List extends Fragment {
                     if (count <= 5) {
                         Toast.makeText(getActivity(), count + " / 5", Toast.LENGTH_SHORT).show();
                         if (checkedItemPositions.get(position) == true) {
+                            CustomToast.makeText(getContext(), (checkedItemPositions.size()) + "/5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                         } else {
+                            CustomToast.makeText(getContext(), (checkedItemPositions.size() - 1) + "/5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                             checkedItemPositions.delete(position);
                         }
