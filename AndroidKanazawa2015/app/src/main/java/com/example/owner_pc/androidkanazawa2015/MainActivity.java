@@ -228,7 +228,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // 検索ボタン配置
         MenuItem searchItem = menu.findItem(R.id.searchView);
         _searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-
         return true;
     }
 
