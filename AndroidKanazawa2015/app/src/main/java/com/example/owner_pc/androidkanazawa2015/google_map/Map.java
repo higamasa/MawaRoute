@@ -48,11 +48,6 @@ public class Map extends Fragment implements View.OnClickListener {
         fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
         mFab = (FloatingActionButton)view.findViewById(R.id.fab);
         this.mFab.setOnClickListener(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         Bundle bundle = getArguments();
         double latitude = bundle.getDouble("latitude");
         double longitude = bundle.getDouble("longitude");
@@ -66,7 +61,7 @@ public class Map extends Fragment implements View.OnClickListener {
             options.title("現在地");
             //options.snippet(lat.toString());
             // アイコン(マップ上に表示されるデフォルトピン)
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
             // マーカーを貼り付け
             mMap.addMarker(options);
             // 地図の表示位置を指定する。
@@ -85,10 +80,11 @@ public class Map extends Fragment implements View.OnClickListener {
             MapUiSettings();
         }
     }
+
     private void MakerSetting(LatLng lat) {
         // 緯度・経度
         options.position(lat);
-        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         // マーカーを貼り付け
         setMarker.add(mMap.addMarker(options));
     }

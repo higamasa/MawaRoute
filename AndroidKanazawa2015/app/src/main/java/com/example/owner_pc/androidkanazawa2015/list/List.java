@@ -3,7 +3,9 @@ package com.example.owner_pc.androidkanazawa2015.list;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.SparseBooleanArray;
 import android.view.Display;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner_pc.androidkanazawa2015.CustomToast;
@@ -68,7 +71,6 @@ public class List extends Fragment {
         Display display = activity.getWindowManager().getDefaultDisplay();
         Bundle bundle = getArguments();
         shopList = (ArrayList<ShopParameter>)bundle.getSerializable("ShopList");
-        //Log.d("check", String.valueOf(shopCtrl.getShopList().get(away).shop.size()));
         listView = (ListView)view.findViewById(R.id.list);
         /* データの作成 */
         objects = new ArrayList<CustomData>();
@@ -115,23 +117,22 @@ public class List extends Fragment {
                     customAdapter.notifyDataSetChanged();
                     ListView listView = (ListView) parent;
                     SparseBooleanArray checkedItemPositions = listView.getCheckedItemPositions();
-                    //String msg = String.format("position:%d check:%b", position, checkedItemPositions.get(position));
-                    //Log.d("position", String.valueOf(size));
-                    //Log.d("position", msg);
                     count = checkedItemPositions.size();
                     if (count <= 5) {
-                        Toast.makeText(getActivity(), count + " / 5", Toast.LENGTH_SHORT).show();
                         if (checkedItemPositions.get(position) == true) {
-                            CustomToast.makeText(getContext(), (checkedItemPositions.size()) + "/5", 500).show();
+                            //CustomToast.makeText(getContext(), (count) + " / 5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                         } else {
-                            CustomToast.makeText(getContext(), (checkedItemPositions.size() - 1) + "/5", 500).show();
+                            //CustomToast.makeText(getContext(), (count - 1) + " / 5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                             checkedItemPositions.delete(position);
                         }
                     }else {
                         checkedItemPositions.delete(position);
-                        Toast.makeText(getActivity(), "5 / 5", Toast.LENGTH_SHORT).show();
+                        //CustomToast.makeText(getContext(), "5 / 5", 500).show();
+                        final Snackbar snackbar = Snackbar.make(view, "5個以上選択できません", Snackbar.LENGTH_SHORT);
+                        snackbar.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                        snackbar.show();
                     }
                 }
             }

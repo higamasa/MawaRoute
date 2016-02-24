@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Criteria;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     private MainFragmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private GnaviCtrl gnaviCtrl = new GnaviCtrl(this, this);
-    private LocationManager locationManager;
+    private LocationManager locationManager = null;
     private ShopCtrl _shopCtrl = new ShopCtrl();
     private SettingParameter _settingParam = new SettingParameter();
     private String searchWord;
@@ -68,17 +69,18 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //タイトルロゴ表示
         showSplashWindow();
-
         setContentView(R.layout.activity_main);
-
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         _toolBar.setTitle("お店一覧");
         setSupportActionBar(_toolBar);
+    }
 
+    @Override
+    public void onResume(){
+        super.onResume();
         //位置情報の読み込み
         getLocation();
     }
@@ -114,12 +116,12 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             public void run() {
                 splashPopup.showAtLocation(splashView, Gravity.CENTER, 0, 0);
 
-                FrameLayout.LayoutParams kamonParam   = new FrameLayout.LayoutParams(kamonSize, kamonSize, Gravity.CENTER);
+                FrameLayout.LayoutParams kamonParam = new FrameLayout.LayoutParams(kamonSize, kamonSize, Gravity.CENTER);
 
-                FrameLayout frameLayout = (FrameLayout)splashView.findViewById(R.id.kamon_icon);
-                kamon  = new ImageView(getApplicationContext());
+                FrameLayout frameLayout = (FrameLayout) splashView.findViewById(R.id.kamon_icon);
+                kamon = new ImageView(getApplicationContext());
                 tudumi = new ImageView(getApplicationContext());
-                sign   = new ImageView(getApplicationContext());
+                sign = new ImageView(getApplicationContext());
                 kamon.setAlpha(0.0f);
                 tudumi.setAlpha(0.0f);
                 sign.setAlpha(0.0f);
@@ -268,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        _toolBar.setTitle(rangeNum + "圏内のお店一覧");
+                        _toolBar.setTitle(rangeNum + "圏内のお店");
                         break;
                     case 1:
                         _toolBar.setTitle("マップ");
@@ -336,61 +338,70 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         }
     }
 
-    private void checkGpsSettings(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
-                .setCancelable(false)
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent callGPSSettingIntent = new Intent(
-                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivity(callGPSSettingIntent);
-                            }
-                        });
-        alertDialogBuilder.setNegativeButton("CANCEL",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        finish();
-                    }
-                });
-        AlertDialog alert = alertDialogBuilder.create();
-        alert.show();
+    private boolean checkGpsSettings() {
+        // 位置情報の設定の取得
+        String gps = android.provider.Settings.Secure.getString(
+                getContentResolver(),
+                android.provider.Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        // GPS機能か無線ネットワークがONになっているかを確認
+        if (gps.indexOf("gps", 0) < 0 && gps.indexOf("network", 0) < 0) {
+            // GPSサービスがOFFになっている場合、ダイアログを表示
+            new AlertDialog.Builder(this)
+                    .setTitle("位置情報の設定")
+                    .setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // 位置情報設定画面へ移動する
+                    Intent intent = new Intent(
+                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    startActivity(intent);
+                }
+            })
+                    .create()
+                    .show();
+            return false;
+        } else {
+            return true;
+        }
     }
 
     //位置情報の取得
     public void getLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false &&
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == false){
-            //位置情報がオンになっているかの確認
-            checkGpsSettings();
-        }
+        //位置情報がオンになっているかの確認
+        checkGpsSettings();
+        Log.d("check" , "通った");
         // Criteriaオブジェクトを生成
         Criteria criteria = new Criteria();
+        criteria.setBearingRequired(false);	// 方位不要
+        criteria.setSpeedRequired(false);	// 速度不要
+        criteria.setAltitudeRequired(false);	// 高度不要
         //位置情報の精度
         criteria.setAccuracy(Criteria.NO_REQUIREMENT);
         //消費電力
         criteria.setPowerRequirement(Criteria.POWER_LOW);
         //ロケーションプロバイダの取得
         String provider = locationManager.getBestProvider(criteria, true);
+        Log.d("check" , provider);
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             final String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION};
             ActivityCompat.requestPermissions(this, permissions, 0);
             return;
         }
-        if (locationManager.getLastKnownLocation(provider) != null){
-            Location location = locationManager.getLastKnownLocation(provider);
-            this.latitude = location.getLatitude();
-            this.longitude = location.getLongitude();
-            position.latitude = latitude;
-            position.longitude = longitude;
-            gnaviCtrl.execute(position);
-        }else {
+//        Log.d("check" , String.valueOf(locationManager.getLastKnownLocation(provider)));
+//        if (locationManager.getLastKnownLocation(provider) != null){
+//            Location location = locationManager.getLastKnownLocation(provider);
+//            this.latitude = location.getLatitude();
+//            this.longitude = location.getLongitude();
+//            position.latitude = latitude;
+//            position.longitude = longitude;
+//            gnaviCtrl.execute(position);
+//        }else {
             locationManager.requestLocationUpdates(provider, 0, 0, this);
+            onDestroyLocation();
         }
-    }
+//    }
 
     //ListFragmentを再生成して絞り込み条件を反映する
     private void updateListFragment(ArrayList<ShopParameter> shopList){
@@ -435,16 +446,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     public void onLocationChanged(Location location) {
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
-        onDestroyLocation();
-        //位置情報取得を破棄
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        locationManager.removeUpdates(this);
         position.latitude  =latitude;
         position.longitude = longitude;
         //ぐるナビの読み込み
         gnaviCtrl.execute(position);
+        onDestroyLocation();
     }
 
     @Override
