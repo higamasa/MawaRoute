@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
         _toolBar.setTitle("お店一覧");
         setSupportActionBar(_toolBar);
+        //// TODO: 後で消す
+        //onGnaviSetting(latitude,longitude);
     }
 
     @Override

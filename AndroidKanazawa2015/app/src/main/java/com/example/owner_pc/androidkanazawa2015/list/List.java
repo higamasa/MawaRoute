@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.owner_pc.androidkanazawa2015.CustomToast;
 import com.example.owner_pc.androidkanazawa2015.R;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
@@ -98,14 +98,16 @@ public class List extends Fragment {
             }
             item = new CustomData();
             item.setImagaData(image);
-            item.setTextData(shopList.get(i).getShopName());
+            item.setShopNameData(shopList.get(i).getShopName());
+            item.setShopCategoryData(shopList.get(i).getShopCategory());
             objects.add(item);
             customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects,display);
             listView.setAdapter(customAdapter);
         }
         item = new CustomData();
         item.setImagaData(null);
-        item.setTextData("Powered by ぐるなび");
+        item.setShopNameData("Powered by ぐるなび");
+        item.setShopCategoryData(null);
         objects.add(item);
         customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects,display);
         listView.setAdapter(customAdapter);
@@ -148,7 +150,7 @@ public class List extends Fragment {
         customAdapter = null;
         image = null;
         item.setImagaData(null);
-        item.setTextData(null);
+        item.setShopNameData(null);
         objects.clear();
     }
 

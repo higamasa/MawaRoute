@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
-import android.text.Layout;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Display;
@@ -41,22 +40,36 @@ public class CustomAdapter extends ArrayAdapter<CustomData>{
             convertView = layoutInflater_.inflate(R.layout.image_item, parent, false);
         }
         // CustomDataのデータをViewの各Widgetにセットする
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
-        TextView textView = (TextView)convertView.findViewById(R.id.text);
-        textView.setTypeface(Typeface.SERIF);
+        final ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
+        final TextView shopname_text = (TextView)convertView.findViewById(R.id.shopname_text);
+        final TextView shopcategory_text = (TextView)convertView.findViewById(R.id.shopcategory_text);
+        shopname_text.setTypeface(Typeface.SERIF);
+        shopcategory_text.setTypeface(Typeface.SERIF);
         Bitmap bitmap = item.getImageData();
         if (bitmap != null) {
-            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, size.x / 7, size.x / 7, false));
-            textView.setTextSize(1500 / (size.y / 32));
-            imageView.setPadding(pad + 5,pad,pad,pad);
-            textView.setPadding(pad/3,pad,0,0);
+            //画像
+            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, size.x / 6, size.x / 6, false));
+            imageView.setPadding((pad + 20), pad, pad, pad);
+            //店の名前
+            if (item.getShopNameData().length() <= 7) {
+                shopname_text.setTextSize(1000/pad);
+            }else {
+                shopname_text.setTextSize(800/pad);
+            }
+            shopname_text.setPadding((pad/3), pad, 0, 0);
+            //カテゴリ
+            shopcategory_text.setTextSize(600 / pad);
+            shopcategory_text.setPadding((pad/3), 0, 0, (pad*4/5));
+            shopcategory_text.setText("CATEGORY : " + item.getShopCategoryData());
+
         }else {
             imageView.setImageBitmap(bitmap);
-            textView.setTextSize(800 / (size.y / 32));
+            shopname_text.setTextSize(600/(size.y/32));
             imageView.setPadding(0,0,0,0);
-            textView.setPadding(32,10,10,10);
+            shopname_text.setPadding(32, 10, 10, 10);
+            shopcategory_text.setText(item.getShopCategoryData());
         }
-        textView.setText(item.getTextData());
+        shopname_text.setText(item.getShopNameData());
         Context context = getContext();
         ListView listView = (ListView)parent;
         Resources resources = context.getResources();
