@@ -381,7 +381,6 @@ public class RoulettePage extends Fragment{
                             arrow.clearAnimation();
                             //家紋をもとの位置に
                             kamonLayout.clearAnimation();
-                            //mPopupWindow.dismiss();
                         }
                     }
                 });
@@ -398,7 +397,6 @@ public class RoulettePage extends Fragment{
                             arrow.clearAnimation();
                             //家紋をもとの位置に
                             kamonLayout.clearAnimation();
-                            //mPopupWindow.dismiss();
                         }
                     }
                 });
@@ -413,7 +411,6 @@ public class RoulettePage extends Fragment{
                 mPopupWindow.setFocusable(false);
 
                 // 表示サイズの設定
-                //float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
                 mPopupWindow.setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
                 mPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 mPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);

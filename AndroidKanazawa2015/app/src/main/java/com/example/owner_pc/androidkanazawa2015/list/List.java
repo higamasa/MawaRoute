@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -65,13 +64,13 @@ public class List extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Display display = activity.getWindowManager().getDefaultDisplay();
         Bundle bundle = getArguments();
-        shopList = (ArrayList<ShopParameter>)bundle.getSerializable("ShopList");
-        listView = (ListView)view.findViewById(R.id.list);
+        shopList = (ArrayList<ShopParameter>) bundle.getSerializable("ShopList");
+        listView = (ListView) view.findViewById(R.id.list);
         /* データの作成 */
         objects = new ArrayList<CustomData>();
         size = shopList.size();
-        for (int i = 0; i < size; i++){
-            switch (shopList.get(i).getShopCategoryType()){
+        for (int i = 0; i < size; i++) {
+            switch (shopList.get(i).getShopCategoryType()) {
                 case "category1":
                     image = BitmapFactory.decodeResource(getResources(), R.drawable.category1);
                     break;
@@ -96,7 +95,7 @@ public class List extends Fragment {
             item.setShopNameData(shopList.get(i).getShopName());
             item.setShopCategoryData(shopList.get(i).getShopCategory());
             objects.add(item);
-            customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects,display);
+            customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects, display);
             listView.setAdapter(customAdapter);
         }
         item = new CustomData();
@@ -104,7 +103,7 @@ public class List extends Fragment {
         item.setShopNameData("Powered by ぐるなび");
         item.setShopCategoryData(null);
         objects.add(item);
-        customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects,display);
+        customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects, display);
         listView.setAdapter(customAdapter);
 
         //リスト項目が選択された時のイベントを追加
@@ -117,31 +116,18 @@ public class List extends Fragment {
                     count = checkedItemPositions.size();
                     if (count <= 5) {
                         if (checkedItemPositions.get(position) == true) {
-                            //CustomToast.makeText(getContext(), (count) + " / 5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                         } else {
-                            //CustomToast.makeText(getContext(), (count - 1) + " / 5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                             checkedItemPositions.delete(position);
                         }
-                    }else {
+                    } else {
                         checkedItemPositions.delete(position);
-                        //CustomToast.makeText(getContext(), "5 / 5", 500).show();
                         final Snackbar snackbar = Snackbar.make(view, "5個以上選択できません", Snackbar.LENGTH_SHORT);
                         snackbar.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
                         snackbar.show();
                     }
                 }
-            }
-        });
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            //リストの項目が長押しされた場合の処理
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // ここに処理を記述します。
-                Log.d("check" , String.valueOf(position));
-                return false;
             }
         });
     }

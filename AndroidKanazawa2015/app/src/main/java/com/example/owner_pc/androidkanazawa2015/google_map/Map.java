@@ -141,13 +141,11 @@ public class Map extends Fragment implements View.OnClickListener {
         editShopList(shop, shopflag);
         if (shopflag == true) {
             options.title(shop.getShopName());
-            //options.snippet(shop.getShopCategory());
             MakerSetting(new LatLng(shop.getLatitude(), shop.getLongitude()));
         } else {
             MarkerDelete();
             for (int i = 0; i < shopList.size(); i++) {
                 options.title(shopList.get(i).getShopName());
-                //options.snippet(shop.getShopCategory());
                 MakerSetting(new LatLng(shopList.get(i).getLatitude(), shopList.get(i).getLongitude()));
             }
         }
