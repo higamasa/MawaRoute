@@ -3,7 +3,6 @@ package com.example.owner_pc.androidkanazawa2015.list;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -20,6 +19,8 @@ import com.example.owner_pc.androidkanazawa2015.R;
 
 /**
  * Created by atsusuke on 2016/02/02.
+ * ネクサス x1200 y1824
+ * アローズ x1440 y2368
  */
 public class CustomAdapter extends ArrayAdapter<CustomData>{
     private LayoutInflater layoutInflater_;
@@ -32,8 +33,8 @@ public class CustomAdapter extends ArrayAdapter<CustomData>{
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // 特定の行(position)のデータを得る
         final int pad = size.y/48;
+        // 特定の行(position)のデータを得る
         CustomData item = (CustomData)getItem(position);
         // convertViewは使い回しされている可能性があるのでnullの時だけ新しく作る
         if (null == convertView) {
@@ -47,21 +48,17 @@ public class CustomAdapter extends ArrayAdapter<CustomData>{
         shopcategory_text.setTypeface(Typeface.SERIF);
         Bitmap bitmap = item.getImageData();
         if (bitmap != null) {
-            //画像
             imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, size.x / 6, size.x / 6, false));
             imageView.setPadding((pad + 20), pad, pad, pad);
-            //店の名前
             if (item.getShopNameData().length() <= 7) {
                 shopname_text.setTextSize(1000/pad);
             }else {
                 shopname_text.setTextSize(800/pad);
             }
             shopname_text.setPadding((pad/3), pad, 0, 0);
-            //カテゴリ
             shopcategory_text.setTextSize(600 / pad);
             shopcategory_text.setPadding((pad/3), 0, 0, (pad*4/5));
             shopcategory_text.setText("CATEGORY : " + item.getShopCategoryData());
-
         }else {
             imageView.setImageBitmap(bitmap);
             shopname_text.setTextSize(600/(size.y/32));

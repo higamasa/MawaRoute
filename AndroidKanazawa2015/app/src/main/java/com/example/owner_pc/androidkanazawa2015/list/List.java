@@ -3,7 +3,6 @@ package com.example.owner_pc.androidkanazawa2015.list;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -15,9 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import com.example.owner_pc.androidkanazawa2015.CustomToast;
 import com.example.owner_pc.androidkanazawa2015.R;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import java.util.ArrayList;
@@ -48,7 +44,6 @@ public class List extends Fragment {
         if (activity instanceof FragmentTopCallback == false) {
             throw new ClassCastException("activity が FragmentTopCallback を実装していません.");
         }
-        //
         mCallback = (FragmentTopCallback) activity;
     }
 
@@ -137,6 +132,16 @@ public class List extends Fragment {
                         snackbar.show();
                     }
                 }
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            //リストの項目が長押しされた場合の処理
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // ここに処理を記述します。
+                Log.d("check" , String.valueOf(position));
+                return false;
             }
         });
     }

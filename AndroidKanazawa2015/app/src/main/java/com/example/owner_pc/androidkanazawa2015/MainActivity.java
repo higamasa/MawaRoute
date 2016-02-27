@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
@@ -24,11 +25,11 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewDebug;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -75,10 +76,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         setContentView(R.layout.activity_main);
         // ツールバー配置
         _toolBar = (Toolbar)findViewById(R.id.tool_bar);
-        _toolBar.setTitle("お店一覧");
+        //_toolBar.setTitle("お店一覧");
         setSupportActionBar(_toolBar);
-        //// TODO: 後で消す
-        //onGnaviSetting(latitude,longitude);
     }
 
     @Override
@@ -467,7 +466,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         getMenuInflater().inflate(R.menu.menu_main, menu);
         // 検索ボタン配置
         MenuItem searchItem = menu.findItem(R.id.searchView);
-
         // 検索ボタン画像差し替え
         _searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         int searchImgId = android.support.v7.appcompat.R.id.search_button;
@@ -475,6 +473,10 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         v.setImageResource(R.drawable.ic_menu_search_g);
 
         _searchView.setQueryHint("キーワードを入力してください");
+        ((EditText)_searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
+                .setHintTextColor(getResources().getColor(R.color.common_signin_btn_light_text_default));
+        ((EditText)_searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
+                .setTextColor(getResources().getColor(R.color.colorGold));
         _searchView.setIconifiedByDefault(true);
         _searchView.setOnQueryTextListener(this);
         return true;

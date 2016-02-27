@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
 import com.example.owner_pc.androidkanazawa2015.gnavi.SettingParameter;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopCtrl;
 
