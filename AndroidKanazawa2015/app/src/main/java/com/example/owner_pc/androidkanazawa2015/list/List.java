@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.SparseBooleanArray;
 import android.view.Display;
@@ -12,9 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import com.example.owner_pc.androidkanazawa2015.CustomToast;
 import com.example.owner_pc.androidkanazawa2015.R;
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import java.util.ArrayList;
@@ -32,6 +30,7 @@ public class List extends Fragment {
     private FragmentTopCallback mCallback;
     private CustomData item;
     private ListView listView;
+    private int count;
 
     public interface FragmentTopCallback {
         void listCallback(ShopParameter shopParameter, boolean bool);
@@ -44,7 +43,6 @@ public class List extends Fragment {
         if (activity instanceof FragmentTopCallback == false) {
             throw new ClassCastException("activity が FragmentTopCallback を実装していません.");
         }
-        //
         mCallback = (FragmentTopCallback) activity;
     }
 
@@ -66,27 +64,46 @@ public class List extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Display display = activity.getWindowManager().getDefaultDisplay();
         Bundle bundle = getArguments();
-        shopList = (ArrayList<ShopParameter>)bundle.getSerializable("ShopList");
-        //Log.d("check", String.valueOf(shopCtrl.getShopList().get(away).shop.size()));
-        listView = (ListView)view.findViewById(R.id.list);
+        shopList = (ArrayList<ShopParameter>) bundle.getSerializable("ShopList");
+        listView = (ListView) view.findViewById(R.id.list);
         /* データの作成 */
         objects = new ArrayList<CustomData>();
         size = shopList.size();
-        // todo 適切な画像を配置する
-        image = BitmapFactory.decodeResource(getResources(), R.drawable.cir_g);
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
+            switch (shopList.get(i).getShopCategoryType()) {
+                case "category1":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category1);
+                    break;
+                case "category2":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category2);
+                    break;
+                case "category3":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category3);
+                    break;
+                case "category4":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category4);
+                    break;
+                case "category5":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category5);
+                    break;
+                case "category6":
+                    image = BitmapFactory.decodeResource(getResources(), R.drawable.category6);
+                    break;
+            }
             item = new CustomData();
             item.setImagaData(image);
-            item.setTextData(shopList.get(i).getShopName());
+            item.setShopNameData(shopList.get(i).getShopName());
+            item.setShopCategoryData(shopList.get(i).getShopCategory());
             objects.add(item);
-            customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects,display);
+            customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects, display);
             listView.setAdapter(customAdapter);
         }
         item = new CustomData();
         item.setImagaData(null);
-        item.setTextData("Powered by ぐるなび");
+        item.setShopNameData("Powered by ぐるなび");
+        item.setShopCategoryData(null);
         objects.add(item);
-        customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects,display);
+        customAdapter = new CustomAdapter(activity, android.R.layout.simple_list_item_multiple_choice, objects, display);
         listView.setAdapter(customAdapter);
 
         //リスト項目が選択された時のイベントを追加
@@ -96,21 +113,19 @@ public class List extends Fragment {
                     customAdapter.notifyDataSetChanged();
                     ListView listView = (ListView) parent;
                     SparseBooleanArray checkedItemPositions = listView.getCheckedItemPositions();
-                    //String msg = String.format("position:%d check:%b", position, checkedItemPositions.get(position));
-                    //Log.d("position", String.valueOf(size));
-                    //Log.d("position", msg);
-                    if (checkedItemPositions.size() <=5) {
+                    count = checkedItemPositions.size();
+                    if (count <= 5) {
                         if (checkedItemPositions.get(position) == true) {
-                            CustomToast.makeText(getContext(), (checkedItemPositions.size()) + "/5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                         } else {
-                            CustomToast.makeText(getContext(), (checkedItemPositions.size() - 1) + "/5", 500).show();
                             mCallback.listCallback(shopList.get(position), checkedItemPositions.get(position));
                             checkedItemPositions.delete(position);
                         }
-                    }else {
+                    } else {
                         checkedItemPositions.delete(position);
-                        Toast.makeText(getActivity(), "5個以上選ぶのは贅沢だよ", Toast.LENGTH_SHORT).show();
+                        final Snackbar snackbar = Snackbar.make(view, "5個以上選択できません", Snackbar.LENGTH_SHORT);
+                        snackbar.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                        snackbar.show();
                     }
                 }
             }
@@ -126,7 +141,7 @@ public class List extends Fragment {
         customAdapter = null;
         image = null;
         item.setImagaData(null);
-        item.setTextData(null);
+        item.setShopNameData(null);
         objects.clear();
     }
 

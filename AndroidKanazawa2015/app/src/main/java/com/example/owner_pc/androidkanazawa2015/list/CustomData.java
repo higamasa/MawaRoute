@@ -7,18 +7,24 @@ import android.graphics.Bitmap;
  */
 public class CustomData {
     private Bitmap imageData_;
-    private String textData_;
-    private int count;
+    private String shopName;
+    private String shopCategory;
     public void setImagaData(Bitmap image) {
         imageData_ = image;
     }
     public Bitmap getImageData() {
         return imageData_;
     }
-    public void setTextData(String text) {
-        textData_ = text;
+    public void setShopNameData(String shopName) {
+        this.shopName = shopName;
     }
-    public String getTextData() {
-        return textData_;
+    public String getShopNameData() {
+        return shopName;
+    }
+    public void setShopCategoryData(String shopCategory) {
+        this.shopCategory = shopCategory;
+    }
+    public String getShopCategoryData() {
+        return shopCategory;
     }
 }
