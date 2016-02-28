@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Xml;
+
 import org.xmlpull.v1.XmlPullParser;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by owner-PC on 2016/01/15.
  */
-public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
+public class GnaviCtrl extends AsyncTask<Position, Void, String[]> {
 
     //コールバックインターフェース
     private AsyncTaskCallbacks callback = null;
@@ -32,10 +34,10 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
     //3種類の距離(300m, 500m, 1000m)
     private static final int RANGE = 3;
 
-    public GnaviCtrl(Activity activity, AsyncTaskCallbacks callback){
+    public GnaviCtrl(Activity activity, AsyncTaskCallbacks callback) {
         this.activity = activity;
         this.callback = callback;
-        for(int i=0;i<RANGE;i++) {
+        for (int i = 0; i < RANGE; i++) {
             shopList.add(new ShopList());
         }
     }
@@ -52,27 +54,25 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
 
         // プログレスダイアログの表示
         this.progressDialog.show();
-
-        return;
     }
 
     //XMLデータ取得
     @Override
     protected String[] doInBackground(Position... positions) {
 
-        URL urls[]        = new URL[RANGE];
-        String[] result   = new String[RANGE];
+        URL urls[] = new URL[RANGE];
+        String[] result = new String[RANGE];
         Position position = positions[0];
         HttpURLConnection urlConnection = null;
 
-        for(int i=0;i<RANGE;i++){
+        for (int i = 0; i < RANGE; i++) {
             try {
-                urls[i] = new URL("http://api.gnavi.co.jp/RestSearchAPI/20150630/?format=xml&keyid=6ba07fbbdb9a380e560240a84d2da924&latitude=" + position.latitude + "&longitude=" + position.longitude + "&range="+(i+1)+"&hit_per_page="+500);
+                urls[i] = new URL("http://api.gnavi.co.jp/RestSearchAPI/20150630/?format=xml&keyid=6ba07fbbdb9a380e560240a84d2da924&latitude=" + position.latitude + "&longitude=" + position.longitude + "&range=" + (i + 1) + "&hit_per_page=" + 500);
                 urlConnection = (HttpURLConnection) urls[i].openConnection();
                 result[i] = InputStreamToString(urlConnection.getInputStream());
-            }catch (Exception e){
+            } catch (Exception e) {
                 Log.d("XmlPullParserSampleUrl", "Error");
-            }finally {
+            } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
@@ -111,7 +111,7 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
     }
 
     @Override
-    protected void onCancelled(){
+    protected void onCancelled() {
         Log.v("AsyncTask", "onCancelled");
         callback.onTaskCancelled();
     }
@@ -172,28 +172,28 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
     }
 
     //カテゴリ別に分け直す
-    private ArrayList<RangeList> shopListDividing(){
+    private ArrayList<RangeList> shopListDividing() {
 
         //カテゴリファイル読み込み
-        String fastFood  = readTxtFile("fast_food.txt");
-        String cafe      = readTxtFile("break.txt");
-        String highCal   = readTxtFile("high_cal.txt");
+        String fastFood = readTxtFile("fast_food.txt");
+        String cafe = readTxtFile("break.txt");
+        String highCal = readTxtFile("high_cal.txt");
         String highGrade = readTxtFile("high_grade.txt");
-        String wine      = readTxtFile("wine.txt");
-        String other     = readTxtFile("other.txt");
+        String wine = readTxtFile("wine.txt");
+        String other = readTxtFile("other.txt");
 
         String category = new String();
         ShopParameter shop = new ShopParameter();
         ArrayList<RangeList> rangeList = new ArrayList<RangeList>();
 
-        for(int i = 0; i < RANGE; ++i){
+        for (int i = 0; i < RANGE; ++i) {
             //範囲距離分(3個)追加
             rangeList.add(new RangeList());
             //ぐるなびからとってきた店数分解析
             int size = shopList.get(i).shop.size();
-            for(int j = 0; j < size; ++j){
+            for (int j = 0; j < size; ++j) {
                 //店情報とカテゴリ取得
-                shop     = shopList.get(i).shop.get(j);
+                shop = shopList.get(i).shop.get(j);
                 category = shop.getShopCategory();
 
                 //カテゴリごとに分ける
@@ -201,22 +201,22 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
                 if (fastFood.contains(category)) {
                     shop.setShopCategoryType("category1");
                     rangeList.get(i).fastFood.add(shop);
-                }else if (cafe.contains(category)) {
+                } else if (cafe.contains(category)) {
                     shop.setShopCategoryType("category2");
                     rangeList.get(i).cafe.add(shop);
-                }else if (highCal.contains(category)) {
+                } else if (highCal.contains(category)) {
                     shop.setShopCategoryType("category3");
                     rangeList.get(i).highCal.add(shop);
-                }else if (highGrade.contains(category)) {
+                } else if (highGrade.contains(category)) {
                     shop.setShopCategoryType("category4");
                     rangeList.get(i).highGrade.add(shop);
-                }else if (wine.contains(category)) {
+                } else if (wine.contains(category)) {
                     shop.setShopCategoryType("category5");
                     rangeList.get(i).wine.add(shop);
-                }else if (other.contains(category)) {
+                } else if (other.contains(category)) {
                     shop.setShopCategoryType("category6");
                     rangeList.get(i).other.add(shop);
-                }else {
+                } else {
                     shop.setShopCategoryType("category6");
                     rangeList.get(i).other.add(shop);
                 }
@@ -227,25 +227,25 @@ public class GnaviCtrl extends AsyncTask<Position,Void,String[]> {
     }
 
     //txtファイル読み込み
-    private String readTxtFile(String fileName){
+    private String readTxtFile(String fileName) {
         String text = new String();
-        try{
+        try {
             InputStream is = activity.getAssets().open(fileName);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             String str;
-            while((str = br.readLine()) != null){
+            while ((str = br.readLine()) != null) {
                 System.out.println(str);
                 text += str;
             }
 
             is.close();
             br.close();
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             Log.d("readFile", "file is not found");
-        }catch (IOException e){
+        } catch (IOException e) {
             Log.d("BufferReader", "buffer is not road");
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("InputStream", "error");
         }
 

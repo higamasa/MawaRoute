@@ -8,9 +8,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
+
 import com.example.owner_pc.androidkanazawa2015.gnavi.ShopParameter;
 import com.example.owner_pc.androidkanazawa2015.google_map.Map;
 import com.example.owner_pc.androidkanazawa2015.list.List;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -24,8 +26,12 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
     private double longitude;
     private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
 
-    public MainFragmentPagerAdapter(FragmentManager fm, Context context , double latitude , double longitude ,
-                                    ArrayList<ShopParameter> shopList) {
+    public MainFragmentPagerAdapter(
+            FragmentManager fm,
+            Context context,
+            double latitude,
+            double longitude,
+            ArrayList<ShopParameter> shopList) {
         super(fm);
         this.context = context;
         this.latitude = latitude;
@@ -41,7 +47,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
-        switch(position){
+        switch (position) {
             //リスト
             case 0:
                 bundle.putSerializable("ShopList", shopList);
@@ -51,16 +57,15 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
             //マップ
             case 1:
                 //todo ショップリスト渡す
-                bundle.putDouble("latitude" , latitude);
-                bundle.putDouble("longitude" , longitude);
+                bundle.putDouble("latitude", latitude);
+                bundle.putDouble("longitude", longitude);
                 bundle.putSerializable("ShopList", shopList);
                 Map map = new Map();
                 map.setArguments(bundle);
                 return map;
             //ルーレット
             case 2:
-                RoulettePage roulettePage = new RoulettePage();
-                return roulettePage;
+                return new RoulettePage();
         }
         return null;
     }
@@ -104,7 +109,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
         }
     }
 
-    public void setShopList(ArrayList<ShopParameter> shopList){
+    public void setShopList(ArrayList<ShopParameter> shopList) {
         this.shopList = shopList;
     }
 
@@ -116,6 +121,5 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter implements Se
     public Fragment findFragmentByPosition(ViewPager viewPager, int position) {
         return (Fragment) instantiateItem(viewPager, position);
     }
-
 }
 

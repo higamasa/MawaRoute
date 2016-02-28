@@ -16,7 +16,7 @@ public class SettingParameter {
 
     private static String keyword;     //検索ワード
 
-    public void initSetting(){
+    public void initSetting() {
         fastFood  = true;
         cafe      = true;
         highCal   = true;
@@ -30,52 +30,64 @@ public class SettingParameter {
     public void setKeyword(String keyword){
         this.keyword = keyword;
     }
-    public String getKeyword(){
+
+    public String getKeyword() {
         return keyword;
     }
 
     public void setRangeType(int rangeType) {
         this.rangeType = rangeType;
     }
+
     public int getRangeType() {
         return rangeType;
     }
 
-    public void setFastFood(boolean flag){
+    public void setFastFood(boolean flag) {
         fastFood = flag;
     }
-    public void setCafe(boolean flag){
+
+    public void setCafe(boolean flag) {
         cafe = flag;
     }
-    public void setHighCal(boolean flag){
+
+    public void setHighCal(boolean flag) {
         highCal = flag;
     }
-    public void setHighGrade(boolean flag){
+
+    public void setHighGrade(boolean flag) {
         highGrade = flag;
     }
-    public void setWine(boolean flag){
+
+    public void setWine(boolean flag) {
         wine = flag;
     }
-    public void setOther(boolean flag){
+
+    public void setOther(boolean flag) {
         other = flag;
     }
 
-    public boolean isFastFood(){
+    public boolean isFastFood() {
         return fastFood;
     }
-    public boolean isCafe(){
+
+    public boolean isCafe() {
         return cafe;
     }
-    public boolean isHighCal(){
+
+    public boolean isHighCal() {
         return highCal;
     }
-    public boolean isHighGrade(){
+
+    public boolean isHighGrade() {
         return highGrade;
     }
+
     public boolean isWine() {
         return wine;
     }
-    public boolean isOther(){
+
+    public boolean isOther() {
         return other;
     }
 
