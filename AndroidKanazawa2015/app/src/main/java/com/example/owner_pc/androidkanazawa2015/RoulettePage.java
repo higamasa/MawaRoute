@@ -11,6 +11,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.print.PrintAttributes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -271,7 +272,10 @@ public class RoulettePage extends Fragment{
                                     setRotate((int) (Math.abs(velocityX) / 1000));
                                     startRotate();
                                 }else{
-                                    Toast.makeText(getActivity(), "店を一個以上選択してください", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getActivity(), "お店を一個以上選択してください", Toast.LENGTH_SHORT).show();
+                                    final Snackbar snackbar = Snackbar.make(view, "お店を一個以上選択してください", Snackbar.LENGTH_SHORT);
+                                    snackbar.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                                    snackbar.show();
                                 }
                             }
                         } catch (Exception e) {
@@ -345,16 +349,10 @@ public class RoulettePage extends Fragment{
                         null,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
                 View popupView = layoutInflater.inflate(R.layout.popup_layout, null);
-
-                TextView popupText;
-
-                popupText = (TextView)popupView.findViewById(R.id.popupText);
+                TextView popupText = (TextView)popupView.findViewById(R.id.popupText);
                 popupText.setText(shopList.get(hitNum).getShopName());
-
                 // 閉じるボタンを押したとき
                 popupView.findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -383,7 +381,6 @@ public class RoulettePage extends Fragment{
                             arrow.clearAnimation();
                             //家紋をもとの位置に
                             kamonLayout.clearAnimation();
-                            mPopupWindow.dismiss();
                         }
                     }
                 });
@@ -400,7 +397,6 @@ public class RoulettePage extends Fragment{
                             arrow.clearAnimation();
                             //家紋をもとの位置に
                             kamonLayout.clearAnimation();
-                            mPopupWindow.dismiss();
                         }
                     }
                 });
@@ -415,7 +411,6 @@ public class RoulettePage extends Fragment{
                 mPopupWindow.setFocusable(false);
 
                 // 表示サイズの設定
-                //float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
                 mPopupWindow.setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
                 mPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 mPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);

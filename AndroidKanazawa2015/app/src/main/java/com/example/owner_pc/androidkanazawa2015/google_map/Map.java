@@ -1,5 +1,9 @@
 package com.example.owner_pc.androidkanazawa2015.google_map;
 
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -43,16 +47,15 @@ public class Map extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //Fabボタンセット
+        mFab = (FloatingActionButton)view.findViewById(R.id.fab);
+        mFab.setRippleColor(getResources().getColor(R.color.colorWhite));
+        mFab.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(83,53,99)));
+        fabSettings(flag);
+        this.mFab.setOnClickListener(this);
         //マップの初期化
         android.support.v4.app.FragmentManager fm = getChildFragmentManager();
         fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
-        mFab = (FloatingActionButton)view.findViewById(R.id.fab);
-        this.mFab.setOnClickListener(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         Bundle bundle = getArguments();
         double latitude = bundle.getDouble("latitude");
         double longitude = bundle.getDouble("longitude");
@@ -64,16 +67,16 @@ public class Map extends Fragment implements View.OnClickListener {
             options.position(lat);
             // タイトル・スニペット
             options.title("現在地");
-            //options.snippet(lat.toString());
+            final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.here);
             // アイコン(マップ上に表示されるデフォルトピン)
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            options.icon(BitmapDescriptorFactory.fromBitmap(bitmap.createScaledBitmap(bitmap,150,150,true)));
             // マーカーを貼り付け
             mMap.addMarker(options);
             // 地図の表示位置を指定する。
             CameraUpdate camera = CameraUpdateFactory
                     .newCameraPosition(new CameraPosition.Builder()
                             .target(lat)
-                            .zoom(14).build());
+                            .zoom(15).build());
             mMap.moveCamera(camera);
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
@@ -85,10 +88,11 @@ public class Map extends Fragment implements View.OnClickListener {
             MapUiSettings();
         }
     }
+
     private void MakerSetting(LatLng lat) {
         // 緯度・経度
         options.position(lat);
-        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         // マーカーを貼り付け
         setMarker.add(mMap.addMarker(options));
     }
@@ -102,6 +106,7 @@ public class Map extends Fragment implements View.OnClickListener {
             this.flag = false;
             MapUiSettings();
         }
+        fabSettings(flag);
     }
     private void MapUiSettings(){
         // コンパスの有効化
@@ -137,8 +142,6 @@ public class Map extends Fragment implements View.OnClickListener {
         if (shopflag == true) {
             options.title(shop.getShopName());
             MakerSetting(new LatLng(shop.getLatitude(), shop.getLongitude()));
-            Log.d("latitude", String.valueOf(shop.getLatitude()));
-            Log.d("latitude", String.valueOf(shop.getLongitude()));
         } else {
             MarkerDelete();
             for (int i = 0; i < shopList.size(); i++) {
@@ -164,6 +167,17 @@ public class Map extends Fragment implements View.OnClickListener {
         view     = null;
         options  = null;
         fragment = null;
+    }
+
+    private void fabSettings(boolean flag){
+        Log.d("check" , String.valueOf(flag));
+        if (flag == false){
+            final Bitmap bitmap = (BitmapFactory.decodeResource(getResources(), R.drawable.osipin_pined_r));
+            mFab.setImageBitmap((bitmap.createScaledBitmap(bitmap, 100, 100, true)));
+        }else{
+            final Bitmap bitmap = (BitmapFactory.decodeResource(getResources(), R.drawable.osipin_unpin_r_r));
+            mFab.setImageBitmap((bitmap.createScaledBitmap(bitmap, 100, 100, true)));
+        }
     }
 }
 
