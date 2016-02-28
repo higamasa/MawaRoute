@@ -278,6 +278,7 @@ public class RoulettePage extends Fragment{
                                 if(shopList.size() != 0) {
                                     setRotate((int) (Math.abs(velocityX) / 1000));
                                     startRotate();
+//                                    kamonStart.run();
                                 }else{
                                     //Toast.makeText(getActivity(), "お店を一個以上選択してください", Toast.LENGTH_SHORT).show();
                                     final Snackbar snackbar = Snackbar.make(view, "お店を一個以上選択してください", Snackbar.LENGTH_SHORT);
@@ -346,7 +347,7 @@ public class RoulettePage extends Fragment{
     //弓矢を放つ(下降)
     private void startTranslate(){
         translate = new TranslateAnimation(0, 0, 0, cirSize);
-        translate.setDuration(500);
+        translate.setDuration(300);
         translate.setFillAfter(true);
         arrow.startAnimation(translate);
         translate.setAnimationListener(new Animation.AnimationListener() {
@@ -358,6 +359,13 @@ public class RoulettePage extends Fragment{
             //弓矢で刺した家紋のお店情報をポップアップで表示
             @Override
             public void onAnimationEnd(Animation animation) {
+
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e){
+
+                }
+
                 // ポップアップ作成
                 final PopupWindow mPopupWindow = new PopupWindow(
                         null,
@@ -447,10 +455,10 @@ public class RoulettePage extends Fragment{
         int shopNum = (CIR_NUM - shopList.size());
         hitAngle = r.nextInt(72*shopList.size()) + 72 * shopNum;
         //回転数制限
-        if(rotateTime >= 8){
-            rotateTime = 8;
-        }else if(rotateTime <=4){
-            rotateTime = 4;
+        if(rotateTime >= 5){
+            rotateTime = 5;
+        }else if(rotateTime <=3){
+            rotateTime = 3;
         }
         //最終的な角度はフリックの強さ（回転数）+　36（0度始まりに調整）
         endAngle = hitAngle + 360*rotateTime + 36;
@@ -460,7 +468,7 @@ public class RoulettePage extends Fragment{
     private void startRotate(){
         //回転アニメーションクラス生成
         RotateAnimation rotate = new RotateAnimation(0, endAngle, center.x, center.y);
-        //3000msかけて回転
+        //2000msかけて回転
         rotate.setDuration(2000);
         //アニメーション後の状態保持（回った後そのまま）
         rotate.setFillAfter(true);
@@ -471,7 +479,7 @@ public class RoulettePage extends Fragment{
         rotate.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                handler.postDelayed(arrowStart, 1500);
+                handler.postDelayed(arrowStart, 1700);
             }
 
             //回転後弓矢を放つ
@@ -591,7 +599,7 @@ public class RoulettePage extends Fragment{
         }
         setCategoryID();
         setCircleImage();
-        System.gc();
+//        System.gc();
     }
 
     public void setPosition(Position position){
