@@ -365,7 +365,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         //位置情報がオンになっているかの確認
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false &&
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == false) {
-            //位置情報がオンになっているかの確認
             checkGpsSettings();
         } else {
             // Criteriaオブジェクトを生成
