@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="詳細を表示する"
+            android:text="詳細"
              />
 
         <Button
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="確定(ルート表示する)" />
+            android:text="確定" />
 
     </LinearLayout>
 
