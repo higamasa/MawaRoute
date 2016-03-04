@@ -8,7 +8,6 @@
         <item name="colorPrimaryDark">@color/colorDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionMenuTextColor">@color/colorGold</item>
-        <item name="android:textColorHint">@color/colorWhite</item>
     </style>
 
     <style name="Animation">

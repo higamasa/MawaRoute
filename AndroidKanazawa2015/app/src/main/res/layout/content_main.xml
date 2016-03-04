@@ -14,8 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorBlack"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/AppTheme"
-        app:theme="@style/AppTheme"
+        app:theme="@style/searchItem"
         app:titleTextColor="@color/colorGold">
 
     </android.support.v7.widget.Toolbar>
