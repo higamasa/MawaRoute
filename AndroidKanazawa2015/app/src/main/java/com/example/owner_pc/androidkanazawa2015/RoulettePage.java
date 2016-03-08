@@ -437,8 +437,12 @@ public class RoulettePage extends Fragment{
                 mPopupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
                 mPopupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 
+                // アニメーションスタイル配置
+                mPopupWindow.setAnimationStyle(R.style.Animation);
+
                 // 画面表示
                 mPopupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
 
             }
 
