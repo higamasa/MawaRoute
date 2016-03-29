@@ -16,7 +16,6 @@
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/searchItem"
         app:titleTextColor="@color/colorGold">
-
     </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.TabLayout

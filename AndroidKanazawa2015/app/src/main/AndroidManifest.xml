@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.owner_pc.androidkanazawa2015">
+    package="com.owner.kies.androidkanazawa2015">
     <application
         android:allowBackup="true"
         android:icon="@drawable/kamon"
