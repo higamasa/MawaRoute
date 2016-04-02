@@ -1,4 +1,4 @@
-package com.owner.kies.androidkanazawa2015;
+package com.owner.kit.kies.androidkanazawa2015;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,9 +9,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
-import com.owner.kies.androidkanazawa2015.gnavi.ShopParameter;
-import com.owner.kies.androidkanazawa2015.google_map.Map;
-import com.owner.kies.androidkanazawa2015.list.List;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopParameter;
+import com.owner.kit.kies.androidkanazawa2015.google_map.Map;
+import com.owner.kit.kies.androidkanazawa2015.list.List;
 
 import java.io.Serializable;
 import java.util.ArrayList;

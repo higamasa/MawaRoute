@@ -1,4 +1,4 @@
-package com.owner.kies.androidkanazawa2015.google_map;
+package com.owner.kit.kies.androidkanazawa2015.google_map;
 
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -11,8 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.owner.kies.androidkanazawa2015.R;
-import com.owner.kies.androidkanazawa2015.gnavi.ShopParameter;
+import com.owner.kit.kies.androidkanazawa2015.R;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopParameter;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

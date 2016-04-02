@@ -1,4 +1,4 @@
-package com.owner.kies.androidkanazawa2015.list;
+package com.owner.kit.kies.androidkanazawa2015.list;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.owner.kies.androidkanazawa2015.R;
-import com.owner.kies.androidkanazawa2015.gnavi.ShopParameter;
+import com.owner.kit.kies.androidkanazawa2015.R;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopParameter;
 import java.util.ArrayList;
 /**
  * Created by atsusuke on 2016/02/01.

@@ -1,4 +1,4 @@
-package com.owner.kies.androidkanazawa2015;
+package com.owner.kit.kies.androidkanazawa2015;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,9 +34,9 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.owner.kies.androidkanazawa2015.gnavi.Position;
-import com.owner.kies.androidkanazawa2015.gnavi.ShopParameter;
-import com.owner.kies.androidkanazawa2015.google_map.RouteShop;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.Position;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopParameter;
+import com.owner.kit.kies.androidkanazawa2015.google_map.RouteShop;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

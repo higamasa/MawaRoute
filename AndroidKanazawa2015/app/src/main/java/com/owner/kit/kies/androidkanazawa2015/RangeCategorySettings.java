@@ -1,4 +1,4 @@
-package com.owner.kies.androidkanazawa2015;
+package com.owner.kit.kies.androidkanazawa2015;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import com.owner.kies.androidkanazawa2015.gnavi.SettingParameter;
-import com.owner.kies.androidkanazawa2015.gnavi.ShopCtrl;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.SettingParameter;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopCtrl;
 
 /**
  * Created by nns on 2016/02/09.

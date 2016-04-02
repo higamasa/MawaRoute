@@ -1,4 +1,4 @@
-package com.owner.kies.androidkanazawa2015;
+package com.owner.kit.kies.androidkanazawa2015;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -32,15 +32,15 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import com.owner.kies.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
-import com.owner.kies.androidkanazawa2015.gnavi.GnaviCtrl;
-import com.owner.kies.androidkanazawa2015.gnavi.Position;
-import com.owner.kies.androidkanazawa2015.gnavi.SettingParameter;
-import com.owner.kies.androidkanazawa2015.gnavi.ShopCtrl;
-import com.owner.kies.androidkanazawa2015.gnavi.ShopParameter;
-import com.owner.kies.androidkanazawa2015.google_map.Map;
-import com.owner.kies.androidkanazawa2015.list.List;
-import com.owner.kies.androidkanazawa2015.R;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.GnaviCtrl;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.Position;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.SettingParameter;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopCtrl;
+import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopParameter;
+import com.owner.kit.kies.androidkanazawa2015.google_map.Map;
+import com.owner.kit.kies.androidkanazawa2015.list.List;
+import com.owner.kit.kies.androidkanazawa2015.R;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.owner.kies.androidkanazawa2015.list;
+package com.owner.kit.kies.androidkanazawa2015.list;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,7 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.owner.kies.androidkanazawa2015.R;
+import com.owner.kit.kies.androidkanazawa2015.R;
 
 /**
  * Created by atsusuke on 2016/02/02.

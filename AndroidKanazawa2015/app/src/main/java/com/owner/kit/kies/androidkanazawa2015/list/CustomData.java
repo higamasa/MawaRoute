@@ -1,4 +1,4 @@
-package com.owner.kies.androidkanazawa2015.list;
+package com.owner.kit.kies.androidkanazawa2015.list;
 
 import android.graphics.Bitmap;
 

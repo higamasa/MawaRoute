@@ -1,4 +1,4 @@
-package com.owner.kies.androidkanazawa2015.gnavi;
+package com.owner.kit.kies.androidkanazawa2015.gnavi;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
