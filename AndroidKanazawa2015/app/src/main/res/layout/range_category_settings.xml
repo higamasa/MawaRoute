@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <!-- 距離タイトル -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:gravity="center"
+        android:text="検索範囲(m)"
+        android:textSize="30dp" />
+
+    <!-- 距離 -->
+    <RadioGroup
+        android:id="@+id/RadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp">
+
+        <RadioButton
+            android:id="@+id/RadioButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="300"
+            android:textSize="30dp">
+
+        </RadioButton>
+
+        <RadioButton
+            android:id="@+id/RadioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="500"
+            android:textSize="30dp">
+
+        </RadioButton>
+
+        <RadioButton
+            android:id="@+id/RadioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="1000"
+            android:textSize="30dp">
+
+        </RadioButton>
+    </RadioGroup>
+
+    <!-- ジャンル -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:gravity="center"
+        android:text="ジャンル"
+        android:textSize="30dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/high_cal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkMark="@android:drawable/checkbox_off_background"
+                android:checked="true"
+                android:onClick="onCheckBoxClick"
+                android:padding="20dp"
+                android:text="ガッツリ系"
+                android:textSize="20dp" />
+
+            <CheckBox
+                android:id="@+id/fastfood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkMark="@android:drawable/checkbox_off_background"
+                android:checked="true"
+                android:onClick="onCheckBoxClick"
+                android:padding="20dp"
+                android:text="軽食"
+                android:textSize="20dp" />
+
+            <CheckBox
+                android:id="@+id/wine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkMark="@android:drawable/checkbox_off_background"
+                android:checked="true"
+                android:onClick="onCheckBoxClick"
+                android:padding="20dp"
+                android:text="居酒屋"
+                android:textSize="20dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkMark="@android:drawable/checkbox_off_background"
+                android:checked="true"
+                android:onClick="onCheckBoxClick"
+                android:padding="20dp"
+                android:text="その他"
+                android:textSize="20dp" />
+
+
+            <CheckBox
+                android:id="@+id/high_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkMark="@android:drawable/checkbox_off_background"
+                android:checked="true"
+                android:onClick="onCheckBoxClick"
+                android:padding="20dp"
+                android:text="高級料理屋"
+                android:textSize="20dp" />
+
+            <CheckBox
+                android:id="@+id/cafe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkMark="@android:drawable/checkbox_off_background"
+                android:checked="true"
+                android:onClick="onCheckBoxClick"
+                android:padding="20dp"
+                android:text="喫茶店"
+                android:textSize="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClickCancel"
+            android:text="終了" />
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClick_ok"
+            android:text="この条件で検索" />
+
+    </LinearLayout>
+
+</LinearLayout>
