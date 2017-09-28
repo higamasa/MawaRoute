@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.owner.kit.kies.androidkanazawa2015.R;
 import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopParameter;
 import com.google.android.gms.maps.CameraUpdate;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
  * Created by atsusuke on 2016/01/29
  * 村田篤亮.
  */
-public class Map extends Fragment implements View.OnClickListener {
+public class Map extends Fragment implements View.OnClickListener, OnMapReadyCallback {
     private SupportMapFragment fragment;
     private GoogleMap mMap;
     private boolean flag = false;
@@ -56,37 +58,6 @@ public class Map extends Fragment implements View.OnClickListener {
         //マップの初期化
         android.support.v4.app.FragmentManager fm = getChildFragmentManager();
         fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
-        Bundle bundle = getArguments();
-        double latitude = bundle.getDouble("latitude");
-        double longitude = bundle.getDouble("longitude");
-        LatLng lat = new LatLng(latitude, longitude);
-        if (mMap == null) {
-            mMap = fragment.getMap();
-            options = new MarkerOptions();
-            // 緯度・経度
-            options.position(lat);
-            // タイトル・スニペット
-            options.title("現在地");
-            final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.here);
-            // アイコン(マップ上に表示されるデフォルトピン)
-            options.icon(BitmapDescriptorFactory.fromBitmap(bitmap.createScaledBitmap(bitmap,150,150,true)));
-            // マーカーを貼り付け
-            mMap.addMarker(options);
-            // 地図の表示位置を指定する。
-            CameraUpdate camera = CameraUpdateFactory
-                    .newCameraPosition(new CameraPosition.Builder()
-                            .target(lat)
-                            .zoom(15).build());
-            mMap.moveCamera(camera);
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    marker.showInfoWindow();
-                    return true;
-                }
-            });
-            MapUiSettings();
-        }
     }
 
     private void MakerSetting(LatLng lat) {
@@ -95,6 +66,38 @@ public class Map extends Fragment implements View.OnClickListener {
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         // マーカーを貼り付け
         setMarker.add(mMap.addMarker(options));
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Bundle bundle = getArguments();
+        double latitude = bundle.getDouble("latitude");
+        double longitude = bundle.getDouble("longitude");
+        LatLng lat = new LatLng(latitude, longitude);
+        options = new MarkerOptions();
+        // 緯度・経度
+        options.position(lat);
+        // タイトル・スニペット
+        options.title("現在地");
+        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.here);
+        // アイコン(マップ上に表示されるデフォルトピン)
+        options.icon(BitmapDescriptorFactory.fromBitmap(bitmap.createScaledBitmap(bitmap, 150, 150, true)));
+        // マーカーを貼り付け
+        googleMap.addMarker(options);
+        // 地図の表示位置を指定する。
+        CameraUpdate camera = CameraUpdateFactory
+                .newCameraPosition(new CameraPosition.Builder()
+                        .target(lat)
+                        .zoom(15).build());
+        googleMap.moveCamera(camera);
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.showInfoWindow();
+                return true;
+            }
+        });
+        MapUiSettings();
     }
 
     @Override
