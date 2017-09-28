@@ -1,10 +1,10 @@
-package com.owner.kit.kies.androidkanazawa2015.google_map;
+package kies.mawaroute.google_map;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.owner.kit.kies.androidkanazawa2015.gnavi.Position;
+import kies.mawaroute.gnavi.Position;
 
 /**
  * Created by nns on 2016/01/15.

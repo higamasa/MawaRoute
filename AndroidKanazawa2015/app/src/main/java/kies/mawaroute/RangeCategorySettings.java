@@ -1,4 +1,4 @@
-package com.owner.kit.kies.androidkanazawa2015;
+package kies.mawaroute;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,10 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import com.owner.kit.kies.androidkanazawa2015.gnavi.SettingParameter;
-import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopCtrl;
+
+import com.owner.kit.kies.androidkanazawa2015.R;
+
+import kies.mawaroute.gnavi.SettingParameter;
+import kies.mawaroute.gnavi.ShopCtrl;
 
 /**
  * Created by nns on 2016/02/09.

@@ -1,4 +1,4 @@
-package com.owner.kit.kies.androidkanazawa2015.list;
+package kies.mawaroute.list;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -13,9 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.owner.kit.kies.androidkanazawa2015.R;
-import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopParameter;
+
 import java.util.ArrayList;
+
+import kies.mawaroute.gnavi.ShopParameter;
+
 /**
  * Created by atsusuke on 2016/02/01.
  */
@@ -32,10 +36,6 @@ public class List extends Fragment {
     private ListView listView;
     private int count;
 
-    public interface FragmentTopCallback {
-        void listCallback(ShopParameter shopParameter, boolean bool);
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -47,7 +47,7 @@ public class List extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
     }
@@ -133,7 +133,7 @@ public class List extends Fragment {
     }
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         view = null;
         listView.setAdapter(null);
@@ -143,6 +143,10 @@ public class List extends Fragment {
         item.setImagaData(null);
         item.setShopNameData(null);
         objects.clear();
+    }
+
+    public interface FragmentTopCallback {
+        void listCallback(ShopParameter shopParameter, boolean bool);
     }
 
 }

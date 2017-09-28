@@ -1,11 +1,13 @@
-package com.owner.kit.kies.androidkanazawa2015.gnavi;
+package kies.mawaroute.gnavi;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Xml;
+
 import org.xmlpull.v1.XmlPullParser;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,16 +23,15 @@ import java.util.ArrayList;
  */
 public class GnaviCtrl extends AsyncTask<Position, Void, String[]> {
 
-    //コールバックインターフェース
-    private AsyncTaskCallbacks callback = null;
-
-    //プログレスダイアログ表示に必要
-    private Activity activity = null;
-    public ProgressDialog progressDialog;
-    //距離ごとのリスト（5種類）、それぞれの中に店のリスト（複数）がある
-    private ArrayList<ShopList> shopList = new ArrayList<ShopList>();
     //3種類の距離(300m, 500m, 1000m)
     private static final int RANGE = 3;
+    public ProgressDialog progressDialog;
+    //コールバックインターフェース
+    private AsyncTaskCallbacks callback = null;
+    //プログレスダイアログ表示に必要
+    private Activity activity = null;
+    //距離ごとのリスト（5種類）、それぞれの中に店のリスト（複数）がある
+    private ArrayList<ShopList> shopList = new ArrayList<ShopList>();
 
     public GnaviCtrl(Activity activity, AsyncTaskCallbacks callback) {
         this.activity = activity;

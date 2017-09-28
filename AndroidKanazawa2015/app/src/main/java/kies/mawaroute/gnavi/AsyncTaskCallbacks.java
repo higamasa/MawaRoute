@@ -1,4 +1,4 @@
-package com.owner.kit.kies.androidkanazawa2015.gnavi;
+package kies.mawaroute.gnavi;
 
 /**
  * Created by owner-PC on 2016/02/03.

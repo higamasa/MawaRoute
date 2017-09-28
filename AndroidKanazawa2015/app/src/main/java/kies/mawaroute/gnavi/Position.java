@@ -1,4 +1,4 @@
-package com.owner.kit.kies.androidkanazawa2015.gnavi;
+package kies.mawaroute.gnavi;
 
 import java.io.Serializable;
 

@@ -1,8 +1,5 @@
-package com.owner.kit.kies.androidkanazawa2015.gnavi;
+package kies.mawaroute.gnavi;
 
-import android.support.v7.app.AppCompatActivity;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -20,12 +17,12 @@ public class ShopCtrl {
         shopList.clear();
         //範囲距離、カテゴリ分け
         int range = setting.getRangeType();
-        if (setting.isFastFood())  shopList.addAll(rangeList.get(range).fastFood);
-        if (setting.isCafe())      shopList.addAll(rangeList.get(range).cafe);
-        if (setting.isHighCal())   shopList.addAll(rangeList.get(range).highCal);
+        if (setting.isFastFood()) shopList.addAll(rangeList.get(range).fastFood);
+        if (setting.isCafe()) shopList.addAll(rangeList.get(range).cafe);
+        if (setting.isHighCal()) shopList.addAll(rangeList.get(range).highCal);
         if (setting.isHighGrade()) shopList.addAll(rangeList.get(range).highGrade);
-        if (setting.isWine())      shopList.addAll(rangeList.get(range).wine);
-        if (setting.isOther())     shopList.addAll(rangeList.get(range).other);
+        if (setting.isWine()) shopList.addAll(rangeList.get(range).wine);
+        if (setting.isOther()) shopList.addAll(rangeList.get(range).other);
         //nullの店を削除
         shopList.removeAll(Collections.singleton(null));
         //キーワード検索
