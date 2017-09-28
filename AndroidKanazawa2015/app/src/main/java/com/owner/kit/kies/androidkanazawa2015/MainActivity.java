@@ -471,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
         _searchView.setQueryHint("キーワードを入力してください");
         ((EditText)_searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
-                .setHintTextColor(getResources().getColor(R.color.common_signin_btn_light_text_default));
+                .setHintTextColor(getResources().getColor(R.color.colorWhite));
         ((EditText)_searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
                 .setTextColor(getResources().getColor(R.color.colorGold));
         _searchView.setIconifiedByDefault(true);
