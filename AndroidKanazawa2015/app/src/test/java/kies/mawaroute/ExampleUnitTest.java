@@ -1,4 +1,4 @@
-package com.example.owner_pc.androidkanazawa2015;
+package kies.mawaroute;
 
 import org.junit.Test;
 

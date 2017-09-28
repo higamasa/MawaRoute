@@ -1,4 +1,4 @@
-package com.owner.kit.kies.androidkanazawa2015.google_map;
+package kies.mawaroute.google_map;
 
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -12,30 +12,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.owner.kit.kies.androidkanazawa2015.R;
-import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopParameter;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.owner.kit.kies.androidkanazawa2015.R;
+
 import java.util.ArrayList;
+
+import kies.mawaroute.gnavi.ShopParameter;
 
 /**
  * Created by atsusuke on 2016/01/29
  * 村田篤亮.
  */
 public class Map extends Fragment implements View.OnClickListener, OnMapReadyCallback {
+    View view;
     private SupportMapFragment fragment;
     private GoogleMap mMap;
     private boolean flag = false;
     private FloatingActionButton mFab;
-    View view;
     private ArrayList<ShopParameter> shopList = new ArrayList<ShopParameter>();
     private ArrayList<Marker> setMarker = new ArrayList<Marker>();
     private MarkerOptions options = new MarkerOptions();
@@ -50,9 +52,9 @@ public class Map extends Fragment implements View.OnClickListener, OnMapReadyCal
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //Fabボタンセット
-        mFab = (FloatingActionButton)view.findViewById(R.id.fab);
+        mFab = (FloatingActionButton) view.findViewById(R.id.fab);
         mFab.setRippleColor(getResources().getColor(R.color.colorWhite));
-        mFab.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(83,53,99)));
+        mFab.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(83, 53, 99)));
         fabSettings(flag);
         this.mFab.setOnClickListener(this);
         //マップの初期化
@@ -102,16 +104,17 @@ public class Map extends Fragment implements View.OnClickListener, OnMapReadyCal
 
     @Override
     public void onClick(View v) {
-        if (flag == false){
+        if (flag == false) {
             this.flag = true;
             MapUiSettings();
-        }else{
+        } else {
             this.flag = false;
             MapUiSettings();
         }
         fabSettings(flag);
     }
-    private void MapUiSettings(){
+
+    private void MapUiSettings() {
         // コンパスの有効化
         mMap.getUiSettings().setCompassEnabled(false);
         // 拡大・縮小ボタンを表示
@@ -123,15 +126,16 @@ public class Map extends Fragment implements View.OnClickListener, OnMapReadyCal
         // 回転ジェスチャーの有効化
         mMap.getUiSettings().setRotateGesturesEnabled(flag);
     }
-    private void editShopList(ShopParameter shop, boolean flag){
-        if(flag){
+
+    private void editShopList(ShopParameter shop, boolean flag) {
+        if (flag) {
             //リストに同じ店がないので追加する
             shopList.add(shop);
-        }else{
+        } else {
             //リストに同じ店があるので排除する
-            for(int i = 0; i < shopList.size(); ++i){
+            for (int i = 0; i < shopList.size(); ++i) {
                 String shopName = shopList.get(i).getShopName();
-                if(shopName.equals(shop.getShopName())){
+                if (shopName.equals(shop.getShopName())) {
                     shopList.remove(i);
                     return;
                 }
@@ -154,7 +158,7 @@ public class Map extends Fragment implements View.OnClickListener, OnMapReadyCal
         }
     }
 
-    private void MarkerDelete(){
+    private void MarkerDelete() {
         for (int i = 0; i < setMarker.size(); i++) {
             setMarker.get(i).remove();
         }
@@ -162,22 +166,22 @@ public class Map extends Fragment implements View.OnClickListener, OnMapReadyCal
     }
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         MarkerDelete();
         options.icon(null);
-        mMap     = null;
-        view     = null;
-        options  = null;
+        mMap = null;
+        view = null;
+        options = null;
         fragment = null;
     }
 
-    private void fabSettings(boolean flag){
-        Log.d("check" , String.valueOf(flag));
-        if (flag == false){
+    private void fabSettings(boolean flag) {
+        Log.d("check", String.valueOf(flag));
+        if (flag == false) {
             final Bitmap bitmap = (BitmapFactory.decodeResource(getResources(), R.drawable.osipin_pined_r));
             mFab.setImageBitmap((bitmap.createScaledBitmap(bitmap, 100, 100, true)));
-        }else{
+        } else {
             final Bitmap bitmap = (BitmapFactory.decodeResource(getResources(), R.drawable.osipin_unpin_r_r));
             mFab.setImageBitmap((bitmap.createScaledBitmap(bitmap, 100, 100, true)));
         }

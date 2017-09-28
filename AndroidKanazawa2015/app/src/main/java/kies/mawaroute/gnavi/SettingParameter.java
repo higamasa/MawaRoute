@@ -1,4 +1,4 @@
-package com.owner.kit.kies.androidkanazawa2015.gnavi;
+package kies.mawaroute.gnavi;
 
 /**
  * Created by owner-PC on 2016/02/10.
@@ -17,78 +17,78 @@ public class SettingParameter {
     private static String keyword;     //検索ワード
 
     public void initSetting() {
-        fastFood  = true;
-        cafe      = true;
-        highCal   = true;
+        fastFood = true;
+        cafe = true;
+        highCal = true;
         highGrade = true;
-        wine      = true;
-        other     = true;
+        wine = true;
+        other = true;
         rangeType = 0;
-        keyword   = null;
-    }
-
-    public void setKeyword(String keyword){
-        this.keyword = keyword;
+        keyword = null;
     }
 
     public String getKeyword() {
         return keyword;
     }
 
-    public void setRangeType(int rangeType) {
-        this.rangeType = rangeType;
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
     public int getRangeType() {
         return rangeType;
     }
 
-    public void setFastFood(boolean flag) {
-        fastFood = flag;
-    }
-
-    public void setCafe(boolean flag) {
-        cafe = flag;
-    }
-
-    public void setHighCal(boolean flag) {
-        highCal = flag;
-    }
-
-    public void setHighGrade(boolean flag) {
-        highGrade = flag;
-    }
-
-    public void setWine(boolean flag) {
-        wine = flag;
-    }
-
-    public void setOther(boolean flag) {
-        other = flag;
+    public void setRangeType(int rangeType) {
+        this.rangeType = rangeType;
     }
 
     public boolean isFastFood() {
         return fastFood;
     }
 
+    public void setFastFood(boolean flag) {
+        fastFood = flag;
+    }
+
     public boolean isCafe() {
         return cafe;
+    }
+
+    public void setCafe(boolean flag) {
+        cafe = flag;
     }
 
     public boolean isHighCal() {
         return highCal;
     }
 
+    public void setHighCal(boolean flag) {
+        highCal = flag;
+    }
+
     public boolean isHighGrade() {
         return highGrade;
+    }
+
+    public void setHighGrade(boolean flag) {
+        highGrade = flag;
     }
 
     public boolean isWine() {
         return wine;
     }
 
+    public void setWine(boolean flag) {
+        wine = flag;
+    }
+
     public boolean isOther() {
         return other;
+    }
+
+    public void setOther(boolean flag) {
+        other = flag;
     }
 
 }

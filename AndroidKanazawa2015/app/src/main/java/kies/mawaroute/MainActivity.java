@@ -1,4 +1,4 @@
-package com.owner.kit.kies.androidkanazawa2015;
+package kies.mawaroute;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -32,19 +32,22 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import com.owner.kit.kies.androidkanazawa2015.gnavi.AsyncTaskCallbacks;
-import com.owner.kit.kies.androidkanazawa2015.gnavi.GnaviCtrl;
-import com.owner.kit.kies.androidkanazawa2015.gnavi.Position;
-import com.owner.kit.kies.androidkanazawa2015.gnavi.SettingParameter;
-import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopCtrl;
-import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopParameter;
-import com.owner.kit.kies.androidkanazawa2015.google_map.Map;
-import com.owner.kit.kies.androidkanazawa2015.list.List;
+
 import com.owner.kit.kies.androidkanazawa2015.R;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks,List.FragmentTopCallback,LocationListener, SearchView.OnQueryTextListener {
+import kies.mawaroute.gnavi.AsyncTaskCallbacks;
+import kies.mawaroute.gnavi.GnaviCtrl;
+import kies.mawaroute.gnavi.Position;
+import kies.mawaroute.gnavi.SettingParameter;
+import kies.mawaroute.gnavi.ShopCtrl;
+import kies.mawaroute.gnavi.ShopParameter;
+import kies.mawaroute.google_map.Map;
+import kies.mawaroute.list.List;
+
+public class MainActivity extends AppCompatActivity implements AsyncTaskCallbacks, List.FragmentTopCallback, LocationListener, SearchView.OnQueryTextListener {
+    private static final int SETTING_ACTIVITY = 1000;
     private boolean popupDismissFlag = false;
     private PopupWindow splashPopup;
     private ImageView kamon;
@@ -62,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     private double latitude;
     private double longitude;
     private Position position = new Position();
-    private static final int SETTING_ACTIVITY = 1000;
     private boolean flag = true;
 
     @Override
@@ -72,20 +74,20 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         showSplashWindow();
         setContentView(R.layout.activity_main);
         // ツールバー配置
-        _toolBar = (Toolbar)findViewById(R.id.tool_bar);
+        _toolBar = (Toolbar) findViewById(R.id.tool_bar);
         //_toolBar.setTitle("お店一覧");
         setSupportActionBar(_toolBar);
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         //位置情報の読み込み
         getLocation();
 
     }
 
-    private void showSplashWindow(){
+    private void showSplashWindow() {
         //スプラッシュロゴ表示
         splashPopup = new PopupWindow(MainActivity.this);
         final View splashView = getLayoutInflater().inflate(R.layout.splash_popup, null);
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         Point size = new Point();
         display.getSize(size);
 
-        final int kamonSize = size.x/2;
+        final int kamonSize = size.x / 2;
 
         // 背景設定
         splashPopup.setBackgroundDrawable(getResources().getDrawable(R.drawable.splash_background));
@@ -191,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     //家紋回転
     private void kamonRotateAnimation() {
-        RotateAnimation rotate = new RotateAnimation(0, 360, kamon.getWidth()/2 + 3, kamon.getHeight()/2 + 13);
+        RotateAnimation rotate = new RotateAnimation(0, 360, kamon.getWidth() / 2 + 3, kamon.getHeight() / 2 + 13);
         rotate.setDuration(750);
         rotate.setFillAfter(false);
         kamon.startAnimation(rotate);
@@ -203,11 +205,11 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
             @Override
             public void onAnimationEnd(Animation animation) {
                 //ロードが終わっていたらポップアップを消す
-                if(popupDismissFlag){
+                if (popupDismissFlag) {
                     splashPopup.dismiss();
                 }
                 //ロードが終わっていなければポップアップ消去フラグをONにする。
-                else{
+                else {
                     popupDismissFlag = true;
                 }
             }
@@ -244,9 +246,9 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
 
     //ぐるナビ読み込み完了
     @Override
-    public void onTaskFinished(){
+    public void onTaskFinished() {
         //ツールバータイトル設定
-        switch (_settingParam.getRangeType()){
+        switch (_settingParam.getRangeType()) {
             case 0:
                 rangeNum = "300m";
                 break;
@@ -297,16 +299,16 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //現在位置をルーレットページにセット
-        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        RoulettePage roulettePage = (RoulettePage) pagerAdapter.findFragmentByPosition(viewPager, 2);
         roulettePage.setPosition(position);
         roulettePage = null;
 
         //ロゴアニメーションが終わっていたらポップアップを消す
-        if(popupDismissFlag){
+        if (popupDismissFlag) {
             splashPopup.dismiss();
         }
         //アニメーションが終わっていなければポップアップ消去フラグをONにする。
-        else{
+        else {
             popupDismissFlag = true;
         }
 
@@ -338,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         }
     }
 
-    private void checkGpsSettings(){
+    private void checkGpsSettings() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("位置情報の設定がOFFになっている為、アプリの機能がご利用いただけません。位置情報の設定をONに変更して下さい。")
                 .setCancelable(false)
@@ -388,16 +390,16 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
                 ActivityCompat.requestPermissions(this, permissions, 0);
                 return;
             }
-            if (locationManager.getLastKnownLocation(provider) != null){
+            if (locationManager.getLastKnownLocation(provider) != null) {
                 Location location = locationManager.getLastKnownLocation(provider);
                 onGnaviSetting(location.getLatitude(), location.getLongitude());
-            }else {
+            } else {
                 locationManager.requestLocationUpdates(provider, 0, 0, this);
             }
         }
     }
 
-    private void onGnaviSetting(double latitude , double longitude){
+    private void onGnaviSetting(double latitude, double longitude) {
         if (flag == true) {
             this.latitude = latitude;
             this.longitude = longitude;
@@ -409,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     }
 
     //ListFragmentを再生成して絞り込み条件を反映する
-    private void updateListFragment(ArrayList<ShopParameter> shopList){
+    private void updateListFragment(ArrayList<ShopParameter> shopList) {
         viewPager.setOffscreenPageLimit(2);
         pagerAdapter.destroyAllItem(viewPager);
         pagerAdapter.setShopList(shopList);
@@ -418,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         viewPager.setAdapter(pagerAdapter);
 
         //ツールバータイトル設定
-        switch (_settingParam.getRangeType()){
+        switch (_settingParam.getRangeType()) {
             case 0:
                 rangeNum = "300m";
                 break;
@@ -431,7 +433,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         }
         _toolBar.setTitle(rangeNum + "圏内のお店");
 
-        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        RoulettePage roulettePage = (RoulettePage) pagerAdapter.findFragmentByPosition(viewPager, 2);
         roulettePage.setPosition(position);
         roulettePage = null;
     }
@@ -439,17 +441,17 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     @Override
     public void listCallback(ShopParameter shop, boolean flag) {
         //rouletteFragmentを取得し、店情報セット
-        RoulettePage roulettePage = (RoulettePage)pagerAdapter.findFragmentByPosition(viewPager, 2);
+        RoulettePage roulettePage = (RoulettePage) pagerAdapter.findFragmentByPosition(viewPager, 2);
         roulettePage.setShopParameter(shop, flag);
-        Map map = (Map)pagerAdapter.findFragmentByPosition(viewPager, 1);
+        Map map = (Map) pagerAdapter.findFragmentByPosition(viewPager, 1);
         map.setShopParameter(shop, flag);
         roulettePage = null;
-        map          = null;
+        map = null;
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        onGnaviSetting(location.getLatitude(),location.getLongitude());
+        onGnaviSetting(location.getLatitude(), location.getLongitude());
         onDestroyLocation();
     }
 
@@ -466,13 +468,13 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
         // 検索ボタン画像差し替え
         _searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         int searchImgId = android.support.v7.appcompat.R.id.search_button;
-        ImageView v = (ImageView)_searchView.findViewById(searchImgId);
+        ImageView v = (ImageView) _searchView.findViewById(searchImgId);
         v.setImageResource(R.drawable.ic_menu_search_g);
 
         _searchView.setQueryHint("キーワードを入力してください");
-        ((EditText)_searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
+        ((EditText) _searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
                 .setHintTextColor(getResources().getColor(R.color.colorWhite));
-        ((EditText)_searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
+        ((EditText) _searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
                 .setTextColor(getResources().getColor(R.color.colorGold));
         _searchView.setIconifiedByDefault(true);
         _searchView.setOnQueryTextListener(this);
@@ -494,17 +496,17 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     }
 
     @Override
-    protected void onActivityResult(int requestCode,int resultCode,Intent data){
-        if(requestCode == SETTING_ACTIVITY){
-            if(resultCode == RESULT_OK){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SETTING_ACTIVITY) {
+            if (resultCode == RESULT_OK) {
                 //Listを更新
-                updateListFragment((ArrayList<ShopParameter>)data.getSerializableExtra("ShopList"));
+                updateListFragment((ArrayList<ShopParameter>) data.getSerializableExtra("ShopList"));
             }
         }
     }
 
     @Override
-    public boolean onQueryTextSubmit(String searchWord ){
+    public boolean onQueryTextSubmit(String searchWord) {
         _settingParam.setKeyword(searchWord);
         _shopCtrl.categoryDividing();
         updateListFragment(_shopCtrl.getShopList());
@@ -513,7 +515,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     }
 
     @Override
-    public boolean onQueryTextChange(String searchWord){
+    public boolean onQueryTextChange(String searchWord) {
         return true;
     }
 
@@ -525,7 +527,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskCallback
     public void onProviderDisabled(String s) {
     }
 
-    private void onDestroyLocation(){
+    private void onDestroyLocation() {
         //位置情報取得を破棄
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

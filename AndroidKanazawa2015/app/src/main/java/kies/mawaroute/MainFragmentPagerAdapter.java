@@ -1,4 +1,4 @@
-package com.owner.kit.kies.androidkanazawa2015;
+package kies.mawaroute;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,15 +7,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.ViewGroup;
-
-import com.owner.kit.kies.androidkanazawa2015.gnavi.ShopParameter;
-import com.owner.kit.kies.androidkanazawa2015.google_map.Map;
-import com.owner.kit.kies.androidkanazawa2015.list.List;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import kies.mawaroute.gnavi.ShopParameter;
+import kies.mawaroute.google_map.Map;
+import kies.mawaroute.list.List;
 
 /**
  * Created by atsusuke on 2015/12/31.
