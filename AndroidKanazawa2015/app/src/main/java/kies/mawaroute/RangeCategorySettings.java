@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RadioGroup;
 
-import com.owner.kit.kies.androidkanazawa2015.R;
-
 import kies.mawaroute.gnavi.SettingParameter;
 import kies.mawaroute.gnavi.ShopCtrl;
 

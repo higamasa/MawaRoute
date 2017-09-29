@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.owner.kit.kies.androidkanazawa2015.R;
+import kies.mawaroute.R;
 
 /**
  * Created by atsusuke on 2016/02/02.

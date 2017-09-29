@@ -22,10 +22,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.owner.kit.kies.androidkanazawa2015.R;
 
 import java.util.ArrayList;
 
+import kies.mawaroute.R;
 import kies.mawaroute.gnavi.ShopParameter;
 
 /**
