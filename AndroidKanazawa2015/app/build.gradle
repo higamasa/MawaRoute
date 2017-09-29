@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
+def GNAVI_API_VERSION = "20150630"
+def GNAVI_API_KEY = "b2d8da2ca8b600c7757ae60b0f48e4e0"
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
@@ -12,6 +15,9 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.1"
+
+        buildConfigField "String", "GNAVI_API_VERSION", "\"${GNAVI_API_VERSION}\""
+        buildConfigField "String", "GNAVI_API_KEY", "\"${GNAVI_API_KEY}\""
     }
     buildTypes {
         release {
