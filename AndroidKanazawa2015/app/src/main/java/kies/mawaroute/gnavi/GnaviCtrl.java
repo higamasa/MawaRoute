@@ -66,7 +66,7 @@ public class GnaviCtrl extends AsyncTask<Position, Void, String[]> {
 
         for (int i = 0; i < RANGE; i++) {
             try {
-                urls[i] = new URL("http://api.gnavi.co.jp/RestSearchAPI/20150630/?format=xml&keyid=b2d8da2ca8b600c7757ae60b0f48e4e0&latitude=" + position.latitude + "&longitude=" + position.longitude + "&range=" + (i + 1) + "&hit_per_page=" + 500);
+                urls[i] = new URL("http://api.gnavi.co.jp/RestSearchAPI/20150630/?format=xml&keyid=b2d8da2ca8b600c7757ae60b0f48e4e0&latitude=" + position.latitude + "&longitude=" + position.longitude + "&range=" + (i + 1) + "&hit_per_page=" + 50);
                 urlConnection = (HttpURLConnection) urls[i].openConnection();
                 result[i] = InputStreamToString(urlConnection.getInputStream());
             } catch (Exception e) {
