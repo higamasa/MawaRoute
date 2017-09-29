@@ -33,8 +33,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
-import com.owner.kit.kies.androidkanazawa2015.R;
-
 import java.util.ArrayList;
 
 import kies.mawaroute.gnavi.AsyncTaskCallbacks;

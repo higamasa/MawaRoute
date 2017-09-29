@@ -30,8 +30,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.owner.kit.kies.androidkanazawa2015.R;
-
 import java.util.LinkedList;
 import java.util.Random;
 

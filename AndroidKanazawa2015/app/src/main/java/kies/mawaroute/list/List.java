@@ -14,10 +14,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.owner.kit.kies.androidkanazawa2015.R;
-
 import java.util.ArrayList;
 
+import kies.mawaroute.R;
 import kies.mawaroute.gnavi.ShopParameter;
 
 /**
