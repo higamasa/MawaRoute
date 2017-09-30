@@ -25,6 +25,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 ext.support_version = '26.1.0'
@@ -39,6 +42,8 @@ dependencies {
     compile "com.android.support:support-vector-drawable:${support_version}"
     compile "com.android.support:animated-vector-drawable:${support_version}"
     compile "com.android.support:support-v4:${support_version}"
+
+    kapt 'com.android.databinding:compiler:2.5.0-alpha-preview-02'
 
     // Google Map
     compile 'com.google.android.gms:play-services-location:11.4.0'
