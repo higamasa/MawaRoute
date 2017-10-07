@@ -7,7 +7,7 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 object GnaviClient {
 
-    val service = Retrofit.Builder()
+    val service: GnaviService = Retrofit.Builder()
             .baseUrl("https://api.gnavi.co.jp")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(SimpleXmlConverterFactory.create())
