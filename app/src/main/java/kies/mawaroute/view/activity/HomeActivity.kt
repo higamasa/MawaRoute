@@ -9,10 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.ViewGroup
-import io.reactivex.schedulers.Schedulers
 import kies.mawaroute.R
-import kies.mawaroute.api.GnaviClient
-import kies.mawaroute.api.GnaviQuery
 import kies.mawaroute.databinding.ActivityHomeBinding
 import kies.mawaroute.databinding.ItemShopBinding
 import kies.mawaroute.view.customview.BindingHolder
@@ -34,6 +31,11 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding.viewModel = viewModel
+        lifecycle.addObserver(viewModel)
+
+        viewModel.shopListVisibility.subscribe { value -> binding.shopList.visibility = value }
+        viewModel.errorVisibility.subscribe { value -> binding.errorView.visibility = value }
+
         setSupportActionBar(binding.toolbar)
 
         binding.shopList.apply {

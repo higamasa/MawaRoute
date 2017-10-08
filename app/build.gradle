@@ -16,6 +16,8 @@ android {
         versionCode 1
         versionName "1.1"
 
+        vectorDrawables.useSupportLibrary = true
+
         buildConfigField "String", "GNAVI_API_VERSION", "\"${GNAVI_API_VERSION}\""
         buildConfigField "String", "GNAVI_API_KEY", "\"${GNAVI_API_KEY}\""
     }
