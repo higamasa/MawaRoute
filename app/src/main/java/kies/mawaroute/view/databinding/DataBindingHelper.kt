@@ -21,7 +21,7 @@ object DataBindingHelper {
             this.scaleType = ImageView.ScaleType.FIT_XY
         } else {
             val bg = ContextCompat.getDrawable(this.context, R.drawable.shop_image_placeholder)
-            bg.setColorFilter(ContextCompat.getColor(this.context, R.color.blue), PorterDuff.Mode.OVERLAY)
+            bg.setColorFilter(ContextCompat.getColor(this.context, R.color.red), PorterDuff.Mode.OVERLAY)
             this.background = bg
             this.scaleType = ImageView.ScaleType.CENTER_INSIDE
             this.setImageResource(R.drawable.ic_rice_vector)
