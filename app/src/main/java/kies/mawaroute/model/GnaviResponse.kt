@@ -16,6 +16,6 @@ data class GnaviResponse(
         @field:Element(name = "page_offset")
         var pageOffset: Int = 0,
 
-        @field:ElementList(inline = true)
+        @field:ElementList(name = "rest", inline = true)
         var shops: List<Shop> = mutableListOf()
 )

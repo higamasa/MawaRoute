@@ -25,4 +25,6 @@
     <color name="powder_blue">#b8e0d2</color>
     <color name="gainsboro">#d6eadf</color>
     <color name="queen_pink">#eac4d5</color>
+
+    <color name="body_light_secondary">#46000000</color>
 </resources>
