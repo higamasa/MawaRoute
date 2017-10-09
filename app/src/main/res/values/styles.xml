@@ -1,8 +1,8 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/grey500</item>
+        <item name="colorPrimaryDark">@color/grey400</item>
         <item name="colorAccent">@color/orenge</item>
     </style>
 
