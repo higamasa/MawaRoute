@@ -9,7 +9,21 @@
     <color name="colorGold2">#FFDE13</color>
     <color name="colorGold">#FFAD13</color>
     <color name="colorYellow">#FFFD98</color>
-    <color name="green">#00ff00</color>
-    <color name="yellow">#ffff00</color>
     <color name="colorWhite">#FFFFFFFF</color>
+
+    <!-- new color -->
+    <!--<color name="blue">#61baf9</color>-->
+    <!--<color name="blue_dark">#5dadec</color>-->
+    <!--<color name="pink">#f49ac2</color>-->
+    <!--<color name="green">#77dd77</color>-->
+    <color name="orenge">#ffb347</color>
+
+    <color name="dark_pastel_blue">#809bce</color>
+    <color name="pastel_blue">#afc2d5</color>
+    <color name="dark_sky_blue">#95b8d1</color>
+    <color name="powder_blue">#b8e0d2</color>
+    <color name="gainsboro">#d6eadf</color>
+    <color name="queen_pink">#eac4d5</color>
+
+    <color name="body_light_secondary">#46000000</color>
 </resources>

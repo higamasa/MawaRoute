@@ -1,13 +1,20 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@color/colorYellow</item>
-        <item name="colorPrimary">@color/colorBlack</item>
-        <item name="colorPrimaryDark">@color/colorDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:actionMenuTextColor">@color/colorGold</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/grey400</item>
+        <item name="colorAccent">@color/orenge</item>
+    </style>
+
+    <style name="AppTheme.BaseToolbarTheme" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:theme">@style/AppTheme.ToolbarTheme</item>
+    </style>
+
+    <style name="AppTheme.ToolbarTheme" parent="AppTheme" />
+
+    <style name="searchItem">
+        <item name="android:textColorHint">@color/colorWhite</item>
+        <item name="android:editTextColor">@color/colorWhite</item>
     </style>
 
     <style name="Animation">

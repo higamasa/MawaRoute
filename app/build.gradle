@@ -16,6 +16,8 @@ android {
         versionCode 1
         versionName "1.1"
 
+        vectorDrawables.useSupportLibrary = true
+
         buildConfigField "String", "GNAVI_API_VERSION", "\"${GNAVI_API_VERSION}\""
         buildConfigField "String", "GNAVI_API_KEY", "\"${GNAVI_API_KEY}\""
     }
@@ -24,6 +26,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dataBinding {
+        enabled = true
     }
 }
 
@@ -39,6 +44,14 @@ dependencies {
     compile "com.android.support:support-vector-drawable:${support_version}"
     compile "com.android.support:animated-vector-drawable:${support_version}"
     compile "com.android.support:support-v4:${support_version}"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    kapt 'com.android.databinding:compiler:2.5.0-alpha-preview-02'
+
+    // Android Architecture Component
+    implementation "android.arch.lifecycle:runtime:1.0.0"
+    implementation "android.arch.lifecycle:extensions:1.0.0-alpha9-1"
+    kapt "android.arch.lifecycle:compiler:1.0.0-alpha9-1"
 
     // Google Map
     compile 'com.google.android.gms:play-services-location:11.4.0'
@@ -60,6 +73,9 @@ dependencies {
         exclude module: 'xpp3'
     }
     implementation 'org.simpleframework:simple-xml:2.7.1'
+
+    // UI
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
     // Test
     testCompile 'junit:junit:4.12'
