@@ -5,6 +5,7 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableList
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -38,10 +39,13 @@ class HomeActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
+        val divider = DividerItemDecoration(this, 1)
+        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider))
+
         binding.shopList.apply {
             adapter = ShopListAdapter(context, viewModel.shopViewModels)
             setHasFixedSize(true)
-            addItemDecoration(DividerItemDecoration(context, 1))
+            addItemDecoration(divider)
             layoutManager = LinearLayoutManager(context)
         }
     }

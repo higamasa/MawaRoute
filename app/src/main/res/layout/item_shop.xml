@@ -27,7 +27,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:shopImageSrc="@{viewModel.shop.imageUrl.shopImage1}" />
+            app:shopImageSrc="@{viewModel.shop.imageUrl.shopImage1}"
+            tools:src="@drawable/shop_image_placeholder" />
 
         <LinearLayout
             android:layout_width="0dp"
