@@ -1,10 +1,13 @@
 package kies.mawaroute.view.activity
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableList
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
@@ -17,7 +20,12 @@ import kies.mawaroute.view.customview.BindingHolder
 import kies.mawaroute.view.customview.ObservableListRecyclerAdapter
 import kies.mawaroute.viewmodel.HomeViewModel
 import kies.mawaroute.viewmodel.ShopItemViewModel
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnNeverAskAgain
+import permissions.dispatcher.OnPermissionDenied
+import permissions.dispatcher.RuntimePermissions
 
+@RuntimePermissions
 class HomeActivity : AppCompatActivity() {
 
     private val binding: ActivityHomeBinding by lazy {
@@ -34,6 +42,9 @@ class HomeActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         lifecycle.addObserver(viewModel)
 
+        // Permissionチェック
+        getLocationWithPermissionCheck()
+
         viewModel.shopListVisibility.subscribe { value -> binding.shopList.visibility = value }
         viewModel.errorVisibility.subscribe { value -> binding.errorView.visibility = value }
 
@@ -48,6 +59,27 @@ class HomeActivity : AppCompatActivity() {
             addItemDecoration(divider)
             layoutManager = LinearLayoutManager(context)
         }
+    }
+
+    @SuppressLint("NeedOnRequestPermissionsResult")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
+    }
+
+    @NeedsPermission(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+    fun getLocation() {
+        viewModel.isGpsPermissionValid.onNext(true)
+    }
+
+    @OnPermissionDenied(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+    fun showDeniedForLocation() {
+        Snackbar.make(binding.root, "位置情報が取得できませんでした", Snackbar.LENGTH_LONG).show()
+    }
+
+    @OnNeverAskAgain(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+    fun showNeverAskForLocation() {
+        Snackbar.make(binding.root, "位置情報が取得できませんでした", Snackbar.LENGTH_LONG).show()
     }
 
     inner class ShopListAdapter(context: Context, list: ObservableList<ShopItemViewModel>) :

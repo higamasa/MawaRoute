@@ -2,4 +2,7 @@
     <string name="app_name">まわルート</string>
     <string name="action_settings">絞り込み設定</string>
     <string name="unknown_error">お店のデータが取得できませんでした、しばらくしてからもう一度読み込んでみてください</string>
+
+    <string name="button_allow">許可</string>
+    <string name="button_deny">許可しない</string>
 </resources>
