@@ -5,4 +5,5 @@
 
     <string name="button_allow">許可</string>
     <string name="button_deny">許可しない</string>
+    <string name="failed_network_connect">読み込みに失敗しました。通信環境のよいところで再度お試しください</string>
 </resources>

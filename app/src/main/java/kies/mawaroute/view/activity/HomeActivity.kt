@@ -12,10 +12,12 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.ViewGroup
 import kies.mawaroute.R
 import kies.mawaroute.databinding.ActivityHomeBinding
 import kies.mawaroute.databinding.ItemShopBinding
+import kies.mawaroute.util.GpsUtil
 import kies.mawaroute.view.customview.BindingHolder
 import kies.mawaroute.view.customview.ObservableListRecyclerAdapter
 import kies.mawaroute.viewmodel.HomeViewModel
@@ -36,11 +38,13 @@ class HomeActivity : AppCompatActivity() {
         ViewModelProviders.of(this).get(HomeViewModel::class.java)
     }
 
+    private val gpsUtil by lazy { GpsUtil(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding.viewModel = viewModel
-        lifecycle.addObserver(viewModel)
+        viewModel.gpsUtil = gpsUtil
 
         // Permissionチェック
         getLocationWithPermissionCheck()
@@ -59,6 +63,16 @@ class HomeActivity : AppCompatActivity() {
             addItemDecoration(divider)
             layoutManager = LinearLayoutManager(context)
         }
+        // 位置情報の受取
+        gpsUtil.myCurrentLocation.subscribe(
+                viewModel::start,
+                { e -> Log.e("SSS", "Location:", e); }
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        gpsUtil.clean()
     }
 
     @SuppressLint("NeedOnRequestPermissionsResult")
@@ -70,16 +84,14 @@ class HomeActivity : AppCompatActivity() {
     @NeedsPermission(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
     fun getLocation() {
         viewModel.isGpsPermissionValid.onNext(true)
+        gpsUtil.accept()
     }
 
     @OnPermissionDenied(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+    @OnNeverAskAgain(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
     fun showDeniedForLocation() {
         Snackbar.make(binding.root, "位置情報が取得できませんでした", Snackbar.LENGTH_LONG).show()
-    }
-
-    @OnNeverAskAgain(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-    fun showNeverAskForLocation() {
-        Snackbar.make(binding.root, "位置情報が取得できませんでした", Snackbar.LENGTH_LONG).show()
+        gpsUtil.reject()
     }
 
     inner class ShopListAdapter(context: Context, list: ObservableList<ShopItemViewModel>) :
@@ -97,4 +109,3 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 }
-

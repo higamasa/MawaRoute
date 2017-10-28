@@ -1,10 +1,9 @@
 package kies.mawaroute.viewmodel
 
-import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableArrayList
+import android.location.Location
 import android.view.View
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -15,8 +14,12 @@ import io.reactivex.subjects.BehaviorSubject
 import kies.mawaroute.api.GnaviClient
 import kies.mawaroute.api.GnaviQuery
 import kies.mawaroute.model.Shop
+import kies.mawaroute.util.GpsUtil
+
 
 class HomeViewModel : ViewModel(), LifecycleObserver {
+
+    lateinit var gpsUtil: GpsUtil
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -34,13 +37,15 @@ class HomeViewModel : ViewModel(), LifecycleObserver {
         compositeDisposable.clear()
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun start() {
+    fun start(location: Location) {
         isGpsPermissionValid.subscribe { value ->
             shopListVisibility.onNext(if (value) View.VISIBLE else View.GONE)
             errorVisibility.onNext(if (value) View.GONE else View.VISIBLE)
             if (value) {
-                val query = GnaviQuery().name("らーめん").hitPerPage(100).build()
+                val query = GnaviQuery()
+                        .location(location.latitude, location.longitude)
+                        .hitPerPage(100)
+                        .build()
                 compositeDisposable.add(getNearbyShops(query))
             }
         }
