@@ -10,7 +10,6 @@
 * [ ] お店の検索・絞り込み機能
 
 ## Requirement
-* **Android Studio 3.0 Beta** (Android studio 2.x以前のバージョンではビルドできません)
 * Android Jelly Bean (API 16) or Later
 
 ## Installation
