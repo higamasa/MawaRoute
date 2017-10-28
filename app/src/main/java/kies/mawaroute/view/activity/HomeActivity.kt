@@ -40,7 +40,7 @@ class HomeActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         val divider = DividerItemDecoration(this, 1)
-        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider))
+        ContextCompat.getDrawable(this, R.drawable.divider)?.let { divider.setDrawable(it) }
 
         binding.shopList.apply {
             adapter = ShopListAdapter(context, viewModel.shopViewModels)
