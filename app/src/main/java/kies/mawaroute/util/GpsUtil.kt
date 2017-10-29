@@ -22,7 +22,6 @@ class GpsUtil(private val activity: Activity) {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
     val myCurrentLocation: PublishSubject<Location> = PublishSubject.create<Location>()
-    var isLocationSettingEnabled = false
 
     companion object {
         private val LOCATION_CODE = 100
@@ -78,8 +77,6 @@ class GpsUtil(private val activity: Activity) {
         pendingResult.addOnCompleteListener { task ->
             try {
                 task.getResult(ApiException::class.java)
-                isLocationSettingEnabled = true
-
                 // すべての位置情報設定が有効である
                 pendingResult
                         .addOnSuccessListener {
@@ -93,7 +90,6 @@ class GpsUtil(private val activity: Activity) {
                 when (exception.statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         // 位置情報設定が有効でないためユーザーに修正を求める
-                        isLocationSettingEnabled = false
                         showLocationDialog(activity, exception as ResolvableApiException)
                     }
                 }
