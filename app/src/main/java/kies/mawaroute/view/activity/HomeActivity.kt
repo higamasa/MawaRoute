@@ -98,7 +98,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GpsUtil.LOCATION_CODE && resultCode == Activity.RESULT_OK) {
-            gpsUtil.accept()
+            getLocationWithPermissionCheck()
         } else {
             gpsUtil.reject()
         }
