@@ -14,12 +14,9 @@ import io.reactivex.subjects.BehaviorSubject
 import kies.mawaroute.api.GnaviClient
 import kies.mawaroute.api.GnaviQuery
 import kies.mawaroute.model.Shop
-import kies.mawaroute.util.GpsUtil
 
 
 class HomeViewModel : ViewModel(), LifecycleObserver {
-
-    lateinit var gpsUtil: GpsUtil
 
     private val compositeDisposable = CompositeDisposable()
 

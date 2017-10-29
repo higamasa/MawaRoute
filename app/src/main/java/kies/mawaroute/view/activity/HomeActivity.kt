@@ -44,7 +44,6 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding.viewModel = viewModel
-        viewModel.gpsUtil = gpsUtil
 
         // Permissionチェック
         getLocationWithPermissionCheck()
