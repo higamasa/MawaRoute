@@ -2,6 +2,7 @@ package kies.mawaroute.view.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
@@ -96,7 +97,11 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        gpsUtil.accept()
+        if (requestCode == GpsUtil.LOCATION_CODE && resultCode == Activity.RESULT_OK) {
+            gpsUtil.accept()
+        } else {
+            gpsUtil.reject()
+        }
     }
 
     inner class ShopListAdapter(context: Context, list: ObservableList<ShopItemViewModel>) :

@@ -24,7 +24,7 @@ class GpsUtil(private val activity: Activity) {
     val myCurrentLocation: PublishSubject<Location> = PublishSubject.create<Location>()
 
     companion object {
-        private val LOCATION_CODE = 100
+        val LOCATION_CODE = 100
     }
 
     fun clean() {
