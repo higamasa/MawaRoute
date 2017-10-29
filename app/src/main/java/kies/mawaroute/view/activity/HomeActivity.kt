@@ -66,7 +66,7 @@ class HomeActivity : AppCompatActivity() {
         // 位置情報の受取
         gpsUtil.myCurrentLocation.subscribe(
                 viewModel::start,
-                { e -> Log.e("SSS", "Location:", e); }
+                { e -> Log.e("HomeActivity", "Location:", e); }
         )
     }
 
