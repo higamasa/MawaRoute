@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableList
 import android.os.Bundle
@@ -91,6 +92,11 @@ class HomeActivity : AppCompatActivity() {
     fun showDeniedForLocation() {
         Snackbar.make(binding.root, "位置情報が取得できませんでした", Snackbar.LENGTH_LONG).show()
         gpsUtil.reject()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        gpsUtil.accept()
     }
 
     inner class ShopListAdapter(context: Context, list: ObservableList<ShopItemViewModel>) :
