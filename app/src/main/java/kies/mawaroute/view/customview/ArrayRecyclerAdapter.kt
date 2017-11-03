@@ -1,4 +1,4 @@
-package kies.mawaroute.view.customview;
+package kies.mawaroute.view.customview
 
 import android.content.Context
 import android.support.annotation.UiThread
