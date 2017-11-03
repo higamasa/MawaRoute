@@ -7,11 +7,48 @@
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
-# Add any project specific keep options here:
+# ----------------------------------------
+# Support Library
+# ----------------------------------------
+-dontwarn android.databinding.**
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# ----------------------------------------
+# RxJava
+# ----------------------------------------
+-dontwarn io.reactivex.internal.util.unsafe.**
+-keep class io.reactivex.schedulers.Schedulers {
+    public static <methods>;
+}
+-keep class io.reactivex.schedulers.ImmediateScheduler {
+    public <methods>;
+}
+-keep class io.reactivex.schedulers.TestScheduler {
+    public <methods>;
+}
+-keep class io.reactivex.schedulers.Schedulers {
+    public static ** test();
+}
+
+# ----------------------------------------
+# Retrofit and OkHttp
+# ----------------------------------------
+-dontwarn okio.**
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
+-dontwarn retrofit2.**
+
+# ----------------------------------------
+# Picasso
+# ----------------------------------------
+-dontwarn com.squareup.okhttp.**
+
+
+# ----------------------------------------
+# Simple XML
+# ----------------------------------------
+-dontwarn com.bea.xml.stream.**
+-dontwarn org.simpleframework.xml.stream.**
+-keepclassmembers,allowobfuscation class * {
+    @org.simpleframework.xml.* <fields>;
+    @org.simpleframework.xml.* <init>(...);
+}
