@@ -3,7 +3,21 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 def GNAVI_API_VERSION = "20150630"
-def GNAVI_API_KEY = "b2d8da2ca8b600c7757ae60b0f48e4e0"
+def GNAVI_API_KEY
+
+def RELEASE_STORE_PASSWORD
+def RELEASE_KEY_ALIAS
+def RELEASE_KEY_PASSWORD
+
+def secretPropsFile = file("$rootDir/secret.properties")
+if (secretPropsFile.canRead()) {
+    Properties secretProps = new Properties()
+    secretProps.load(new FileInputStream(secretPropsFile))
+    RELEASE_STORE_PASSWORD = secretProps['RELEASE_STORE_PASSWORD']
+    RELEASE_KEY_ALIAS = secretProps['RELEASE_KEY_ALIAS']
+    RELEASE_KEY_PASSWORD = secretProps['RELEASE_KEY_PASSWORD']
+    GNAVI_API_KEY = secretProps['GNAVI_API_KEY']
+}
 
 android {
     compileSdkVersion 27
@@ -22,13 +36,34 @@ android {
         buildConfigField "String", "GNAVI_API_VERSION", "\"${GNAVI_API_VERSION}\""
         buildConfigField "String", "GNAVI_API_KEY", "\"${GNAVI_API_KEY}\""
     }
+    signingConfigs {
+        debug {
+            storeFile file("$rootDir/app_debug.jks")
+            storePassword 'android'
+            keyAlias 'debug'
+            keyPassword 'android'
+        }
+        release {
+            storeFile file("$rootDir/app_release.jks")
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+    }
     buildTypes {
+        debug {
+            debuggable true
+            applicationIdSuffix '.debug'
+            versionNameSuffix "-debug"
+            signingConfig signingConfigs.debug
+        }
         release {
             shrinkResources true
             debuggable false
             zipAlignEnabled true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     dataBinding {
@@ -39,7 +74,7 @@ android {
 ext.support_version = '27.0.0'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation "com.android.support:appcompat-v7:${support_version}"
     implementation "com.android.support:design:${support_version}"
@@ -53,8 +88,8 @@ dependencies {
     kapt 'com.android.databinding:compiler:3.0.0'
 
     // Android Architecture Component
-    implementation "android.arch.lifecycle:runtime:1.0.3"
-    implementation "android.arch.lifecycle:extensions:1.0.0-alpha9-1"
+    implementation 'android.arch.lifecycle:runtime:1.0.3'
+    implementation 'android.arch.lifecycle:extensions:1.0.0-alpha9-1'
     kapt "android.arch.lifecycle:compiler:1.0.0-alpha9-1"
 
     // Google Map
