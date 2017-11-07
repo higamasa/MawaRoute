@@ -1,12 +1,9 @@
 package kies.mawaroute.model
 
-import org.parceler.Parcel
-import org.parceler.Parcel.Serialization
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.ElementList
 import org.simpleframework.xml.Root
 
-@Parcel(Serialization.BEAN)
 @Root(strict = false)
 data class GnaviResponse(
 
