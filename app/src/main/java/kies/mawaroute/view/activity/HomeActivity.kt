@@ -18,12 +18,12 @@ import android.util.Log
 import android.view.ViewGroup
 import kies.mawaroute.R
 import kies.mawaroute.databinding.ActivityHomeBinding
-import kies.mawaroute.databinding.ItemShopBinding
+import kies.mawaroute.databinding.ViewRestaurantItemBinding
 import kies.mawaroute.util.GpsUtil
 import kies.mawaroute.view.customview.BindingHolder
 import kies.mawaroute.view.customview.ObservableListRecyclerAdapter
 import kies.mawaroute.viewmodel.HomeViewModel
-import kies.mawaroute.viewmodel.ShopItemViewModel
+import kies.mawaroute.viewmodel.RestaurantItemViewModel
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.OnNeverAskAgain
 import permissions.dispatcher.OnPermissionDenied
@@ -50,7 +50,7 @@ class HomeActivity : AppCompatActivity() {
         // Permissionチェック
         getLocationWithPermissionCheck()
 
-        viewModel.shopListVisibility.subscribe { value -> binding.shopList.visibility = value }
+        viewModel.restaurantListVisibility.subscribe { value -> binding.restaurantList.visibility = value }
         viewModel.errorVisibility.subscribe { value -> binding.errorView.visibility = value }
 
         setSupportActionBar(binding.toolbar)
@@ -58,8 +58,8 @@ class HomeActivity : AppCompatActivity() {
         val divider = DividerItemDecoration(this, 1)
         ContextCompat.getDrawable(this, R.drawable.divider)?.let { divider.setDrawable(it) }
 
-        binding.shopList.apply {
-            adapter = ShopListAdapter(context, viewModel.shopViewModels)
+        binding.restaurantList.apply {
+            adapter = ShopListAdapter(context, viewModel.restaurantViewModels)
             setHasFixedSize(true)
             addItemDecoration(divider)
             layoutManager = LinearLayoutManager(context)
@@ -104,18 +104,18 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    inner class ShopListAdapter(context: Context, list: ObservableList<ShopItemViewModel>) :
-            ObservableListRecyclerAdapter<ShopItemViewModel, BindingHolder<ItemShopBinding>>(context, list) {
+    inner class ShopListAdapter(context: Context, list: ObservableList<RestaurantItemViewModel>) :
+            ObservableListRecyclerAdapter<RestaurantItemViewModel, BindingHolder<ViewRestaurantItemBinding>>(context, list) {
 
-        override fun onBindViewHolder(holder: BindingHolder<ItemShopBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BindingHolder<ViewRestaurantItemBinding>, position: Int) {
             holder.binding.apply {
                 viewModel = getItem(position)
                 executePendingBindings()
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder<ItemShopBinding> {
-            return BindingHolder(context, parent, R.layout.item_shop)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder<ViewRestaurantItemBinding> {
+            return BindingHolder(context, parent, R.layout.view_restaurant_item)
         }
     }
 }

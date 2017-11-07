@@ -7,12 +7,15 @@
     <data>
         <variable
             name="viewModel"
-            type="kies.mawaroute.viewmodel.ShopItemViewModel" />
+            type="kies.mawaroute.viewmodel.RestaurantItemViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
 
         <ImageView
             android:id="@+id/image"
@@ -23,12 +26,15 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:adjustViewBounds="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/restaurant_image_foreground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:shopImageSrc="@{viewModel.shop.imageUrl.shopImage1}"
-            tools:src="@drawable/shop_image_placeholder" />
+            app:restaurantImageSrc="@{viewModel.restaurant.imageUrl.restaurantImage1}"
+            tools:src="@drawable/restaurant_image_placeholder" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -49,17 +55,17 @@
                 android:id="@+id/category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.shop.category}"
+                android:text="@{viewModel.restaurant.category}"
                 android:textColor="@color/body_light_secondary"
                 android:textSize="12sp"
                 tools:text="カレーが美味しいお店" />
 
             <TextView
-                android:id="@+id/shop_name"
+                android:id="@+id/restaurant_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@{viewModel.shop.name}"
+                android:text="@{viewModel.restaurant.name}"
                 tools:text="はちみつカレー!!!!! 金沢工業大学店" />
 
         </LinearLayout>
