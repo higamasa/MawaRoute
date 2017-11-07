@@ -11,7 +11,7 @@ import kies.mawaroute.view.transform.CircleTransform
 object DataBindingHelper {
 
     @JvmStatic
-    @BindingAdapter("shopImageSrc")
+    @BindingAdapter("restaurantImageSrc")
     fun ImageView.imageSrc(imageUrl: String) {
         if (imageUrl.isNotEmpty()) {
             Picasso.with(this.context)
@@ -20,7 +20,7 @@ object DataBindingHelper {
                     .into(this)
             this.scaleType = ImageView.ScaleType.FIT_XY
         } else {
-            val bg = ContextCompat.getDrawable(this.context, R.drawable.shop_image_placeholder)
+            val bg = ContextCompat.getDrawable(this.context, R.drawable.restaurant_image_placeholder)
             bg?.setColorFilter(ContextCompat.getColor(this.context, R.color.red), PorterDuff.Mode.OVERLAY)
             this.background = bg
             this.scaleType = ImageView.ScaleType.CENTER_INSIDE

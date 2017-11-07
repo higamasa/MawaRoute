@@ -31,7 +31,7 @@
     android:layout_marginEnd="@dimen/spacing_xsmall"
     android:layout_marginRight="@dimen/spacing_xsmall"
     android:layout_marginTop="@dimen/spacing_xsmall"
-    android:text="@{viewModel.shop.name}" />
+    android:text="@{viewModel.restaurant.name}" />
 ```
 
 `@BindingAdapter` のアノテーションを付けることで独自の属性を追加できます。
