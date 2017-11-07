@@ -43,12 +43,12 @@ class HomeViewModel : ViewModel(), LifecycleObserver {
                         .location(location.latitude, location.longitude)
                         .hitPerPage(100)
                         .build()
-                compositeDisposable.add(getNearbyShops(query))
+                compositeDisposable.add(getNearbyRestaurant(query))
             }
         }
     }
 
-    private fun getNearbyShops(query: Map<String, String>): Disposable {
+    private fun getNearbyRestaurant(query: Map<String, String>): Disposable {
         return GnaviClient.service.restaurantSearch(query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -59,7 +59,7 @@ class HomeActivity : AppCompatActivity() {
         ContextCompat.getDrawable(this, R.drawable.divider)?.let { divider.setDrawable(it) }
 
         binding.restaurantList.apply {
-            adapter = ShopListAdapter(context, viewModel.restaurantViewModels)
+            adapter = RestaurantListAdapter(context, viewModel.restaurantViewModels)
             setHasFixedSize(true)
             addItemDecoration(divider)
             layoutManager = LinearLayoutManager(context)
@@ -104,7 +104,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    inner class ShopListAdapter(context: Context, list: ObservableList<RestaurantItemViewModel>) :
+    inner class RestaurantListAdapter(context: Context, list: ObservableList<RestaurantItemViewModel>) :
             ObservableListRecyclerAdapter<RestaurantItemViewModel, BindingHolder<ViewRestaurantItemBinding>>(context, list) {
 
         override fun onBindViewHolder(holder: BindingHolder<ViewRestaurantItemBinding>, position: Int) {
