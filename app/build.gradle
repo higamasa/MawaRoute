@@ -21,7 +21,7 @@ if (secretPropsFile.canRead()) {
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.0'
+    buildToolsVersion '27.0.1'
 
     defaultConfig {
         applicationId "kies.mawaroute"
@@ -71,7 +71,7 @@ android {
     }
 }
 
-ext.support_version = '27.0.0'
+ext.support_version = '27.0.1'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -89,12 +89,12 @@ dependencies {
 
     // Android Architecture Component
     implementation 'android.arch.lifecycle:runtime:1.0.3'
-    implementation 'android.arch.lifecycle:extensions:1.0.0-alpha9-1'
-    kapt "android.arch.lifecycle:compiler:1.0.0-alpha9-1"
+    implementation 'android.arch.lifecycle:extensions:1.0.0'
+    kapt "android.arch.lifecycle:compiler:1.0.0"
 
     // Google Map
-    implementation 'com.google.android.gms:play-services-location:11.4.2'
-    implementation 'com.google.android.gms:play-services-maps:11.4.2'
+    implementation 'com.google.android.gms:play-services-location:11.6.0'
+    implementation 'com.google.android.gms:play-services-maps:11.6.0'
 
     // Permission
     implementation('com.github.hotchemi:permissionsdispatcher:3.0.1') {
@@ -103,7 +103,7 @@ dependencies {
     kapt 'com.github.hotchemi:permissionsdispatcher-processor:3.0.1'
 
     // Reactive Stream
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.5'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
 
