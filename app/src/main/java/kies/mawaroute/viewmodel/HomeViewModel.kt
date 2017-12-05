@@ -27,6 +27,9 @@ class HomeViewModel : ViewModel(), LifecycleObserver {
 
     val isGpsPermissionValid: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
 
+    private var lat: Double = 0.0
+    private var lon: Double = 0.0
+
     override fun onCleared() {
         errorVisibility.onComplete()
         isGpsPermissionValid.onComplete()
@@ -39,6 +42,8 @@ class HomeViewModel : ViewModel(), LifecycleObserver {
             restaurantListVisibility.onNext(if (value) View.VISIBLE else View.GONE)
             errorVisibility.onNext(if (value) View.GONE else View.VISIBLE)
             if (value) {
+                lat = location.latitude
+                lon = location.longitude
                 val query = GnaviQuery()
                         .location(location.latitude, location.longitude)
                         .hitPerPage(100)
@@ -63,7 +68,11 @@ class HomeViewModel : ViewModel(), LifecycleObserver {
     }
 
     private fun convertToViewModel(restaurants: List<Restaurant>): List<RestaurantItemViewModel> {
-        return restaurants.map { restaurant -> RestaurantItemViewModel(restaurant) }
+        return restaurants.map { restaurant ->
+            val results = FloatArray(3)
+            Location.distanceBetween(lat, lon, restaurant.latitude, restaurant.longitude, results)
+            RestaurantItemViewModel(restaurant, results[0].toInt())
+        }
     }
 
     private fun updateViewModels(RestaurantViewModels: List<RestaurantItemViewModel>) {

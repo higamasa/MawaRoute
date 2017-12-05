@@ -36,7 +36,7 @@
             app:restaurantImageSrc="@{viewModel.restaurant.imageUrl.restaurantImage1}"
             tools:src="@drawable/restaurant_image_placeholder" />
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -54,21 +54,38 @@
             <TextView
                 android:id="@+id/category"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="18dp"
                 android:text="@{viewModel.restaurant.category}"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="カレーが美味しいお店" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/location_distance(viewModel.distance)}"
                 android:textColor="@color/body_light_secondary"
                 android:textSize="12sp"
-                tools:text="カレーが美味しいお店" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/category"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="現在地から300m" />
 
             <TextView
                 android:id="@+id/restaurant_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:text="@{viewModel.restaurant.name}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/category"
                 tools:text="はちみつカレー!!!!! 金沢工業大学店" />
 
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
 
