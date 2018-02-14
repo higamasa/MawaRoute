@@ -127,3 +127,8 @@ private val viewModel: ExampleViewModel by lazy {
 SQLiteの良さげなObject Mapper。長いので解説はなし
 
 こことか見ればいいと思うよ -> https://tech.recruit-mp.co.jp/mobile/post-12311/
+
+## License
+Copyright (c) 2015-2017 KIES Project.
+
+Released under the [MIT License](https://github.com/kiesproject/MawaRoute/blob/develop/LICENSE).
