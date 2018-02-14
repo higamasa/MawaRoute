@@ -23,7 +23,7 @@
         <!-- Google API の認証キー-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAzDp9qENdk2qQDhlLmEAI_RC5rrb-uXV8" />
+            android:value="${GOOGLE_MAP_API_KEY}" />
 
         <activity
             android:name=".view.activity.HomeActivity"

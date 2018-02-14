@@ -14,7 +14,12 @@
 
 ## Installation
 
-    $ git clone https://github.com/kiesproject/Android-kanazawa-2015
+    $ git clone https://github.com/kiesproject/MawaRoute
+
+暗号化されたシークレットファイルを復号化する。パスワードは[MawaRoute.md](https://github.com/kiesproject/account/blob/master/android/MawaRoute.md)に書いてある
+
+    $ openssl aes-256-cbc -d -in secret.properties.encrypted -out secret.properties
+    $ openssl aes-256-cbc -d -in app/google-services.json.encrypted -out app/google-services.json
 
 ## Environment
 ### Kotlin

@@ -10,6 +10,8 @@ def RELEASE_STORE_PASSWORD
 def RELEASE_KEY_ALIAS
 def RELEASE_KEY_PASSWORD
 
+def GOOGLE_MAP_API_KEY
+
 def secretPropsFile = file("$rootDir/secret.properties")
 if (secretPropsFile.canRead()) {
     Properties secretProps = new Properties()
@@ -18,6 +20,7 @@ if (secretPropsFile.canRead()) {
     RELEASE_KEY_ALIAS = secretProps['RELEASE_KEY_ALIAS']
     RELEASE_KEY_PASSWORD = secretProps['RELEASE_KEY_PASSWORD']
     GNAVI_API_KEY = secretProps['GNAVI_API_KEY']
+    GOOGLE_MAP_API_KEY = secretProps['GOOGLE_MAP_API_KEY']
 }
 
 android {
@@ -36,6 +39,7 @@ android {
 
         buildConfigField "String", "GNAVI_API_VERSION", "\"${GNAVI_API_VERSION}\""
         buildConfigField "String", "GNAVI_API_KEY", "\"${GNAVI_API_KEY}\""
+        manifestPlaceholders = [GOOGLE_MAP_API_KEY: "${GOOGLE_MAP_API_KEY}"]
     }
     signingConfigs {
         debug {
